@@ -91,10 +91,20 @@ export const portfolioData = {
       title: "ScoreCraft (Gestión Deportiva)",
       client: "Club Deportivo Miguel Ituralde",
       description: "Plataforma de gestión para el departamento de formativas del Instituto y el Club Deportivo. Controla métricas, administración de equipos y progreso de formativas.",
-      image: "https://images.unsplash.com/photo-1518605368461-1e1292234958?q=80&w=2070&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070&auto=format&fit=crop",
       technologies: ["C#", "TypeScript", "Angular", "API REST"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev"
+    },
+    {
+      id: 7,
+      title: "Proyecto Yui (Inteligencia Artificial)",
+      client: "Proyecto Personal Privado",
+      description: "Desarrollo de una Inteligencia Artificial conversacional enfocada en salud mental, inspirada en la funcionalidad de Yui. Incorpora procesamiento de lenguaje natural y modelos de IA.",
+      image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2065&auto=format&fit=crop",
+      technologies: ["Python", "Inteligencia Artificial", "Machine Learning"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig"
     }
   ]
 };
