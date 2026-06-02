@@ -165,7 +165,7 @@ function App() {
           Stack <span className="text-gradient">Tecnológico</span>
         </motion.h2>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Object.entries(portfolioData.skills).map(([category, skills], index) => (
             <motion.div 
               key={category}

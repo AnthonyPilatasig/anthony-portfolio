@@ -13,7 +13,7 @@ export const portfolioData = {
       company: "ItspetDev (Instituto Superior Tecnológico Mayor Pedro Traversari)",
       period: "2022 - Presente",
       description: "Desarrollo e implementación de proyectos profesionales, análisis y optimización de procesos tecnológicos. Creación de arquitectura de sistemas enfocados en la gestión académica.",
-      technologies: ["Angular", "C#", ".NET", "SQL Server", "TypeScript"]
+      technologies: ["C#", ".NET 8", "Angular", "React Native", "SQL Server", "MySQL", "SQLite", "Microservicios"]
     }
   ],
   education: [
@@ -31,9 +31,10 @@ export const portfolioData = {
     }
   ],
   skills: {
-    frontend: ["Angular", "React", "Vue", "TailwindCSS", "HTML5/CSS3"],
-    backend: ["C# .NET", "Node.js", "Python", "Java", "PHP (Laravel)"],
-    databases: ["MySQL", "SQL Server", "PostgreSQL", "MongoDB"]
+    frontend: ["Angular", "React / React Native", "TypeScript", "TailwindCSS"],
+    backend: ["C# (.NET Core / .NET 8)", "Python", "Java", "Node.js"],
+    databases: ["SQL Server", "MySQL", "SQLite", "PostgreSQL"],
+    architecture: ["Microservicios", "Clean Architecture", "CQRS", "Docker"]
   },
   projects: [
     {
