@@ -106,6 +106,36 @@ export const portfolioData = {
       technologies: ["Python", "Inteligencia Artificial", "Machine Learning"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig"
+    },
+    {
+      id: 8,
+      title: "Arquitectura Microservicios Educación",
+      client: "Proyecto Personal Avanzado",
+      description: "Arquitectura backend de alto rendimiento construida con .NET 8. Implementa patrones avanzados como CQRS, Event Sourcing y Domain-Driven Design (DDD). Incluye servicios de analítica y motor adaptativo con Machine Learning.",
+      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop",
+      technologies: ["C#", ".NET 8", "Microservicios", "Docker", "CQRS", "DDD"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig/net8-education-microservices"
+    },
+    {
+      id: 9,
+      title: "Optimización de Inventarios (Prog. Dinámica)",
+      client: "Proyecto Académico / Algorítmico",
+      description: "Sistema diseñado para la optimización de inventarios empresariales utilizando programación dinámica. Implementa y compara tres enfoques matemáticos (recursivo, bottom-up, top-down) para resolver el problema de la mochila.",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
+      technologies: ["Java", "Algoritmos", "Estructura de Datos"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig/Sistema_Optimazacion_Inventario_Algoritmos-y-Estructura-de-Datos-"
+    },
+    {
+      id: 10,
+      title: "Motor de Lógica: Buscaminas (POO)",
+      client: "Proyecto Personal",
+      description: "Desarrollo completo del clásico juego Buscaminas utilizando el paradigma de Programación Orientada a Objetos puro. Demuestra un fuerte dominio de la lógica de programación algorítmica y manejo de matrices bidimensionales complejas.",
+      image: "https://images.unsplash.com/photo-1614294149010-950b698f72c0?q=80&w=2070&auto=format&fit=crop",
+      technologies: ["Java", "POO", "Lógica Matemática"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig/ExamenPractico_POO"
     }
   ]
 };
