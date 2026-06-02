@@ -62,9 +62,39 @@ export const portfolioData = {
       client: "Proyecto Académico Universitario",
       description: "Sistema algorítmico diseñado para la optimización de inventarios empresariales utilizando programación dinámica. Implementa y compara tres enfoques matemáticos (recursivo, bottom-up, top-down) para resolver el problema de la mochila.",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-      technologies: ["Java", "Estructura de Datos", "Algoritmos", "Programación Dinámica"],
+      technologies: ["Java", "Algoritmos", "Estructura de Datos"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig/Sistema_Optimazacion_Inventario_Algoritmos-y-Estructura-de-Datos-"
+    },
+    {
+      id: 4,
+      title: "Juego Interactivo: Buscaminas (POO)",
+      client: "Proyecto Personal",
+      description: "Desarrollo completo del clásico juego Buscaminas utilizando el paradigma de Programación Orientada a Objetos en consola. Demuestra un fuerte dominio de la lógica de programación y manejo de matrices bidimensionales.",
+      image: "https://images.unsplash.com/photo-1614294149010-950b698f72c0?q=80&w=2070&auto=format&fit=crop",
+      technologies: ["Java", "POO", "Lógica de Juegos"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig/ExamenPractico_POO"
+    },
+    {
+      id: 5,
+      title: "Portal de Estudiantes ISTPET",
+      client: "ItspetDev (Proyecto Interno)",
+      description: "Módulo interno desarrollado para que los estudiantes del Instituto puedan consultar sus calificaciones, horarios y trámites en tiempo real. Interfaz moderna enfocada en la experiencia del usuario (UX) y conexión segura con bases de datos heredadas.",
+      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop",
+      technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/ItspetDev"
+    },
+    {
+      id: 6,
+      title: "API Gateway Institucional",
+      client: "ItspetDev (Proyecto Interno)",
+      description: "Desarrollo y mantenimiento de la API central que conecta los servicios administrativos con los portales educativos. Implementación de seguridad JWT, optimización de consultas SQL complejas y despliegue en entornos corporativos.",
+      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
+      technologies: ["C#", ".NET Core", "SQL Server", "REST API", "JWT"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/ItspetDev"
     }
   ]
 };
