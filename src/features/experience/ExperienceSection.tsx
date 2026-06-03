@@ -11,16 +11,16 @@ export const ExperienceSection = () => {
   return (
     <section id="experience" className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800/50">
       <div className="grid md:grid-cols-2 gap-12">
-        
+
         {/* Experience Column */}
         <div>
           <SectionHeading highlight={t('sections.experienceHighlight')}>
             {t('sections.experience')}
           </SectionHeading>
-          
+
           <div className="space-y-8">
             {experience.map((exp, index) => (
-              <motion.div 
+              <motion.div
                 key={exp.id}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -49,13 +49,13 @@ export const ExperienceSection = () => {
 
         {/* Education Column */}
         <div>
-          <SectionHeading icon={<span>📖</span>}>
+          <SectionHeading>
             {t('sections.education')}
           </SectionHeading>
-          
+
           <div className="space-y-6">
             {education.map((edu, index) => (
-              <motion.div 
+              <motion.div
                 key={edu.id}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
