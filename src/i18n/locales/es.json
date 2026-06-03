@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "greeting": "Hola, soy",
+    "cta": "Ver Proyectos",
+    "contact": "Contactar"
+  },
+  "sections": {
+    "experience": "Trayectoria",
+    "experienceHighlight": "Profesional",
+    "education": "Formación",
+    "skills": "Stack",
+    "skillsHighlight": "Tecnológico",
+    "projects": "Proyectos",
+    "projectsHighlight": "Destacados"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  }
+}

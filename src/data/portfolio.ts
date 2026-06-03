@@ -1,8 +1,10 @@
-export const portfolioData = {
+import type { IPortfolioData } from '../types/portfolio.types';
+
+export const portfolioData: IPortfolioData = {
   personal: {
     name: "Anthony Pilatasig",
     title: "Desarrollador Full Stack | Ingeniero de Software en Formación",
-    email: "tu-correo@ejemplo.com", // Puedes cambiarlo
+    email: "antpila3848@gmail.com", // Puedes cambiarlo
     github: "https://github.com/AnthonyPilatasig",
     linkedin: "https://linkedin.com/in/anthony-pilatasig"
   },
@@ -21,12 +23,12 @@ export const portfolioData = {
       id: 1,
       degree: "Ingeniería de Software",
       institution: "Universidad Politécnica Salesiana (Quito, Ecuador)",
-      status: "Cursando actualmente"
+      status: "Cursando actualmente 5to Semestre"
     },
     {
       id: 2,
       degree: "Tecnólogo Superior en Desarrollo de Software",
-      institution: "Formación Dual",
+      institution: "Instituto Superior Tecnológico Mayor Pedro Traversari",
       status: "Completado"
     }
   ],

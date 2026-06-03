@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "cta": "View Projects",
+    "contact": "Get in touch"
+  },
+  "sections": {
+    "experience": "Professional",
+    "experienceHighlight": "Experience",
+    "education": "Education",
+    "skills": "Tech",
+    "skillsHighlight": "Stack",
+    "projects": "Featured",
+    "projectsHighlight": "Projects"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}
