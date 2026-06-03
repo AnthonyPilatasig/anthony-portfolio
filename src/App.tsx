@@ -4,10 +4,12 @@ import { ExperienceSection } from './features/experience/ExperienceSection';
 import { SkillsSection } from './features/skills/SkillsSection';
 import { ProjectsSection } from './features/projects/ProjectsSection';
 import { Footer } from './components/layout/Footer';
+import { SEO } from './components/common/SEO';
 
 function App() {
   return (
     <div className="min-h-screen relative selection:bg-neon-cyan/30 selection:text-neon-cyan text-slate-300 font-sans">
+      <SEO />
       
       {/* Background Effects */}
       <div className="fixed inset-0 z-[-1] bg-dark-bg">

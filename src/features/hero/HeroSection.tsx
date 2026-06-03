@@ -2,13 +2,15 @@ import { motion } from 'framer-motion';
 import { FiGithub, FiLinkedin, FiMail, FiChevronDown } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { portfolioData } from '../../data/portfolio';
+import { Hero3DGraphic } from '../../components/common/Hero3DGraphic';
 
 export const HeroSection = () => {
   const { t } = useTranslation();
   const { personal } = portfolioData;
 
   return (
-    <section id="about" className="max-w-6xl mx-auto px-6 pt-40 pb-20 flex flex-col justify-center min-h-screen">
+    <section id="about" className="relative max-w-6xl mx-auto px-6 pt-40 pb-20 flex flex-col justify-center min-h-screen">
+      <Hero3DGraphic />
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
