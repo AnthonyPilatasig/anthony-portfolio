@@ -3,11 +3,13 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { SEO } from './components/common/SEO';
 import { MouseSpotlight } from './components/common/MouseSpotlight';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppRouter } from './routes/AppRouter';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-hidden transition-colors duration-500">
         <SEO />
         <MouseSpotlight />

@@ -68,7 +68,7 @@
   "about": {
     "badge": "Biografía & Filosofía Técnica",
     "title": "Sobre Mí & Firma de Ingeniería",
-    "subtitle": "Desarrollador Full Stack & Arquitecto de Software en Formación en Quito, Ecuador.",
+    "subtitle": "Desarrollador Full Stack & Ingeniero de Software en Formación en Quito, Ecuador.",
     "mainTitle": "Desarrollo de Software de Misión Crítica con Arquitecturas Limpias",
     "bio1": "Ingeniero de Software y Docente Técnico guiado por valores de excelencia. Especializado en transformar reglas de negocio complejas en productos digitales de alto rendimiento. Mi enfoque va más allá del código: busco erradicar fricciones operativas y optimizar el tiempo humano mediante sistemas sólidos y automatizados.",
     "bio2": "Lidero el diseño arquitectónico (Clean Architecture, CQRS) y el despliegue de sistemas complejos end-to-end (aplicaciones móviles nativas, plataformas de gestión académica y recursos humanos) utilizando microservicios en .NET 8. Acostumbrado a gestionar ciclos completos de desarrollo, integrando CI/CD para garantizar alta disponibilidad.",

@@ -7,7 +7,7 @@
 [![.NET 8 Core](https://img.shields.io/badge/.NET_8-Clean_Architecture-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Bienvenido al repositorio oficial del portafolio profesional y resumen curricular de **Anthony David Pilatasig Macas** — **Desarrollador Full Stack & Arquitecto de Software en Formación**.
+Bienvenido al repositorio oficial del portafolio profesional y resumen curricular de **Anthony David Pilatasig Macas** — **Desarrollador Full Stack & Ingeniero de Software en Formación**.
 
 Este repositorio almacena una aplicación web interactiva diseñada bajo un arquetipo visual **Linear Look / Bento Grid + Cyber Obsidian & Gold Amber**, inspirada en la arquitectura de portafolios de ingenieros Senior (`portfolio.jorgedoicela.com` / `jorgedoicela.com`).
 
@@ -28,32 +28,39 @@ Este repositorio almacena una aplicación web interactiva diseñada bajo un arqu
 ## 🏛️ Proyectos Institucionales & Nativos Destacados
 
 ### 1. 🎓 Gacad — Sistema de Gestión Académica (Core Institucional ISTPET)
+
 - **Descripción:** Core administrativo web integral para la gestión de miles de estudiantes, inscripciones, expedientes académicos y ofertas educativas.
 - **Stack:** Angular, TypeScript, C# .NET 8, Clean Architecture, SQL Server.
 - **Impacto:** Digitalización total del ciclo académico institucional.
 
 ### 2. 📱 Mi ISTPET — App Móvil Estudiantil
+
 - **Descripción:** Aplicación móvil oficial en tiempo real para la comunidad estudiantil.
 - **Funcionalidades:** Carnet digital QR verificado, estados financieros, horarios, notificaciones y consulta de notas.
 - **Stack:** React Native, TypeScript, API REST .NET 8, MySQL.
 
 ### 3. 🖥️ DebtManager — App Nativa de Escritorio (C# .NET)
+
 - **Descripción:** Software ejecutable de escritorio para la gestión de deudas, préstamos y finanzas personales con almacenamiento seguro fuera de línea.
 - **Stack:** C# .NET Desktop, SQLite Relacional, LINQ.
 
 ### 4. ⚙️ Arquitectura Microservicios Educación (.NET 8 & K8s)
+
 - **Descripción:** Plataforma backend distribuida para aprendizaje adaptativo e IA.
 - **Stack:** .NET 8, CQRS, Event Sourcing, Domain-Driven Design (DDD), Docker & Kubernetes.
 
 ### 5. 🎮 Motor de Lógica: Buscaminas POO (Java Desktop)
+
 - **Descripción:** Juego nativo de escritorio aplicando Programación Orientada a Objetos pura y destape recursivo en matrices bidimensionales.
 - **Stack:** Java Swing, POO, Recursividad.
 
 ### 6. 🎒 Optimización de Inventarios (Programación Dinámica)
+
 - **Descripción:** Aplicación algorítmica resolviendo el problema de la mochila (Knapsack 0/1) con memoización top-down y bottom-up.
 - **Stack:** Java, Algoritmos Avanzados.
 
 ### 7. 🚑 AVIALB / SIAT (Policía Nacional del Ecuador)
+
 - **Descripción:** Sistema de investigación de accidentes de tránsito y recolección de evidencias viales.
 - **Stack:** C# .NET Core, TypeScript, SQL Server.
 
@@ -73,34 +80,37 @@ Este repositorio almacena una aplicación web interactiva diseñada bajo un arqu
 ## 🛠️ Instalación & Ejecución Local
 
 ### Requisitos Previos
+
 - **Node.js:** v18.0 o superior
 - **npm:** v9.0 o superior
 
 ### Pasos
 
 1. **Clonar el repositorio:**
+
    ```bash
    git clone https://github.com/AnthonyPilatasig/anthony-portfolio.git
    cd anthony-portfolio
    ```
-
 2. **Instalar dependencias:**
+
    ```bash
    npm install
    ```
-
 3. **Ejecutar el servidor de desarrollo:**
+
    ```bash
    npm run dev
    ```
-   Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
 
+   Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
 4. **Compilar para Producción:**
+
    ```bash
    npm run build
    ```
-
 5. **Previsualizar la build de producción:**
+
    ```bash
    npm run preview
    ```
@@ -138,9 +148,11 @@ anthony-portfolio/
 ---
 
 ## 📧 Contacto & Redes
+
 - **Email:** [antpila3848@gmail.com](mailto:antpila3848@gmail.com)
 - **LinkedIn:** [linkedin.com/in/anthony-pilatasig](https://linkedin.com/in/anthony-pilatasig)
 - **GitHub:** [github.com/AnthonyPilatasig](https://github.com/AnthonyPilatasig)
 
 ---
+
 *Desarrollado por Anthony Pilatasig • Quito, Ecuador*

@@ -3,7 +3,7 @@ import type { IPortfolioData } from '../types/portfolio.types';
 export const portfolioData: IPortfolioData = {
   personal: {
     name: "Anthony David Pilatasig Macas",
-    title: "Desarrollador Full Stack & Arquitecto de Software en Formación",
+    title: "Desarrollador Full Stack & Ingeniero de Software en Formación",
     subtitle: "Especializado en .NET 8, Clean Architecture, CQRS, Angular, React Native y Aplicaciones Nativas de Escritorio",
     bio: "Desarrollador de software con sólida trayectoria en el diseño e implementación de sistemas institucionales de alto impacto (Gacad, Mi ISTPET, ERP RRHH) y soluciones de escritorio y móviles. Apasionado por las arquitecturas limpias (Clean Architecture, CQRS, Microservicios), el modelado algorítmico y el desarrollo Full-Stack seguro e intuitivo.",
     location: "Quito, Ecuador (UTC-5)",
