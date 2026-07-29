@@ -1,25 +1,114 @@
 {
   "nav": {
-    "about": "Sobre mí",
-    "experience": "Experiencia",
+    "home": "Inicio",
     "projects": "Proyectos",
+    "experience": "Trayectoria",
+    "about": "Sobre Mí",
+    "terminal": "Terminal",
     "contact": "Contacto"
   },
   "hero": {
-    "greeting": "Hola, soy",
-    "cta": "Ver Proyectos",
-    "contact": "Contactar"
+    "badgeArchitecture": "Clean Architecture & CQRS",
+    "statusAvailable": "Disponible para proyectos & Desafíos Full Stack",
+    "mainTitle": "Arquitectura de Software & Desarrollo Full-Stack de Alto Rendimiento",
+    "heroDesc": "Desarrollador de software residiendo en Quito, Ecuador. Me apasiona el desarrollo de sistemas web institucionales, aplicaciones nativas y móviles, con un enfoque orientado a arquitecturas escalables (Clean Architecture), seguridad y sistemas distribuidos.",
+    "viewProjects": "Ver Proyectos",
+    "cliMode": "Modo Consola CLI",
+    "statSystems": "Sistemas & Apps",
+    "statExperience": "Lead Developer",
+    "statEducation": "Semestre UPS",
+    "statArchitecture": "Clean & CQRS"
   },
-  "sections": {
-    "experience": "Trayectoria",
-    "experienceHighlight": "Profesional",
-    "education": "Formación",
-    "skills": "Stack",
-    "skillsHighlight": "Tecnológico",
-    "projects": "Proyectos",
-    "projectsHighlight": "Destacados"
+  "hub": {
+    "badge": "Navegación por Secciones",
+    "title": "Explora mi Portafolio",
+    "projectsDesc": "Gacad, Mi ISTPET, DebtManager, Buscaminas Java POO y Microservicios.",
+    "experienceDesc": "Experiencia en ItspetDev, SIAT Policía Nacional y formación académica.",
+    "aboutDesc": "Valores de ingeniería, principios de arquitectura y entorno de trabajo.",
+    "terminalDesc": "Terminal Unix interactiva en pantalla completa con comandos CLI."
   },
-  "footer": {
-    "rights": "Todos los derechos reservados."
+  "skills": {
+    "badge": "Firma Técnica & Capacidades",
+    "title": "Tecnologías, Stack & Patrones de Arquitectura",
+    "subtitle": "Dominio de stacks modernos para desarrollo web de alto tráfico, aplicaciones móviles híbridas y multiplataforma, software nativo de escritorio y backend distribuido bajo Clean Architecture.",
+    "frontend": "Frontend & Mobile",
+    "frontendDesc": "Interfaces modulares en Angular, aplicaciones móviles híbridas en React Native y portales web institucionales.",
+    "backend": "Server & Backend",
+    "backendDesc": "Desarrollo de REST APIs robustas en .NET 8, Node.js y Python con autenticación segura JWT y microservicios.",
+    "desktop": "Escritorio & Algoritmos",
+    "desktopDesc": "Aplicaciones nativas C# (DebtManager), motores POO Java (Buscaminas) y resolución de problemas algorítmicos.",
+    "architecture": "Arquitectura & Data",
+    "architectureDesc": "Arquitecturas desacopladas (Clean Architecture, CQRS, DDD), SQL Server/MySQL y despliegues con Docker & Kubernetes."
+  },
+  "projects": {
+    "badge": "Catálogo Completo de Software",
+    "title": "Proyectos & Sistemas",
+    "subtitle": "Sistemas institucionales, aplicaciones nativas de escritorio, soluciones móviles y arquitecturas backend.",
+    "catAll": "Todos",
+    "catWeb": "Web & Core (Gacad)",
+    "catMobile": "Móvil (Mi ISTPET)",
+    "catDesktop": "Escritorio (DebtManager / POO)",
+    "catArchitecture": "Arquitectura & IA",
+    "client": "Cliente / Contexto:",
+    "featured": "DESTACADO",
+    "viewDetails": "Ver arquitectura & especificaciones →",
+    "viewCode": "Ver Código en GitHub",
+    "close": "Cerrar"
+  },
+  "experience": {
+    "badge": "Resumen Curricular & Trayectoria",
+    "title": "Experiencia & CV",
+    "subtitle": "Liderazgo técnico en desarrollo institucional, educación superior y proyectos de software.",
+    "requestCv": "Solicitar CV en PDF",
+    "careerTitle": "Trayectoria Profesional",
+    "educationTitle": "Formación Académica",
+    "philosophyTitle": "Filosofía de Desarrollo",
+    "philosophyDesc": "Desarrollo de software centrado en arquitectura limpia, desacoplamiento de componentes, pruebas continuas y mantenibilidad a largo plazo."
+  },
+  "about": {
+    "badge": "Biografía & Filosofía Técnica",
+    "title": "Sobre Mí & Firma de Ingeniería",
+    "subtitle": "Desarrollador Full Stack & Arquitecto de Software en Formación en Quito, Ecuador.",
+    "mainTitle": "Desarrollo de Software a Nivel Empresarial con Arquitecturas Limpias",
+    "bio1": "Desarrollador de software residiendo en Quito, Ecuador, y guiado por valores de excelencia. Me apasiona el desarrollo de sistemas web institucionales, aplicaciones nativas y móviles, con un enfoque orientado a arquitecturas escalables, Clean Architecture, seguridad y desarrollo distribuido.",
+    "bio2": "Mi experiencia abarca el desarrollo Full-Stack, trabajando con tecnologías frontend y backend como Angular, React Native, C# (.NET 8), Node.js y Python, además de bases de datos relacionales como SQL Server y MySQL. Integro prácticas de CQRS, Microservicios y principios de diseño seguro desde el inicio del ciclo de desarrollo.",
+    "bio3": "En paralelo, expando mis conocimientos cursando la Ingeniería de Software en la UPS, lo que me permite aplicar un enfoque analítico y estructurado a los sistemas que diseño. Con una marcada sensibilidad por el código limpio y la arquitectura por capas, disfruto transformar reglas de negocio complejas en productos digitales de alto rendimiento y fáciles de mantener.",
+    "valuesTitle": "Valores de Código",
+    "valuesDesc": "Clean Code, mantenibilidad estandarizada, código auditable y arquitectura por capas.",
+    "securityTitle": "Enfoque de Seguridad",
+    "securityDesc": "Principios de DevSecOps, hashing seguro, tokens JWT y control estricto de roles.",
+    "ficheTitle": "Ficha Técnica",
+    "location": "Ubicación",
+    "timezone": "Zona Horaria",
+    "language": "Idioma",
+    "status": "Estado",
+    "toolsTitle": "Entorno & Herramientas",
+    "stackBreakdown": "Desglose de Tecnologías"
+  },
+  "contact": {
+    "badge": "Contacto Directo & Colaboración",
+    "title": "Contacto",
+    "subtitle": "¿Tienes un proyecto, propuesta laboral o desafío técnico? Conéctate directamente conmigo.",
+    "formTitle": "Enviar Mensaje",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre o empresa",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "subject": "Asunto",
+    "subjectPlaceholder": "Propuesta laboral / Proyecto Full-Stack / Consulta",
+    "message": "Mensaje",
+    "messagePlaceholder": "Describe los detalles de tu consulta...",
+    "sendBtn": "Enviar Mensaje",
+    "successTitle": "¡Mensaje Enviado con Éxito!",
+    "successDesc": "Gracias por ponerte en contacto. Te responderé a la brevedad posible a",
+    "sendAnother": "Enviar Otro Mensaje",
+    "directLinks": "Conexiones Directas"
+  },
+  "terminal": {
+    "title": "Consola Virtual UNIX CLI",
+    "fullscreenTitle": "MÓDULO INTERACTIVO CLI FULLSCREEN",
+    "backHome": "Volver al Inicio",
+    "prompt": "anthony@dev-shell:~$",
+    "placeholder": "Escribe 'help', 'projects', 'gacad' o 'desktop'..."
   }
 }

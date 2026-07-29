@@ -1,34 +1,36 @@
+import { HashRouter as Router } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
-import { HeroSection } from './features/hero/HeroSection';
-import { ExperienceSection } from './features/experience/ExperienceSection';
-import { SkillsSection } from './features/skills/SkillsSection';
-import { ProjectsSection } from './features/projects/ProjectsSection';
 import { Footer } from './components/layout/Footer';
 import { SEO } from './components/common/SEO';
+import { MouseSpotlight } from './components/common/MouseSpotlight';
+import { AppRouter } from './routes/AppRouter';
 
 function App() {
   return (
-    <div className="min-h-screen relative selection:bg-neon-cyan/30 selection:text-neon-cyan text-slate-300 font-sans">
-      <SEO />
-      
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-[-1] bg-dark-bg">
-        <div className="absolute top-0 -left-4 w-96 h-96 bg-neon-purple rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-96 h-96 bg-neon-cyan rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"></div>
+    <Router>
+      <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-hidden transition-colors duration-500">
+        <SEO />
+        <MouseSpotlight />
+        
+        {/* Background Ambient Glows */}
+        <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full mix-blend-screen filter blur-[140px] animate-pulse"></div>
+          <div className="absolute top-[20%] right-[-10%] w-[450px] h-[450px] bg-cyan-500/10 rounded-full mix-blend-screen filter blur-[140px]"></div>
+          <div className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[160px]"></div>
+        </div>
+
+        {/* Global Navigation Header */}
+        <Navbar />
+
+        {/* Multi-Page Routes */}
+        <main>
+          <AppRouter />
+        </main>
+
+        {/* Global Footer */}
+        <Footer />
       </div>
-
-      <Navbar />
-
-      <main>
-        <HeroSection />
-        <ExperienceSection />
-        <SkillsSection />
-        <ProjectsSection />
-      </main>
-
-      <Footer />
-    </div>
+    </Router>
   );
 }
 

@@ -1,12 +1,18 @@
+export type ProjectCategory = 'all' | 'web' | 'mobile' | 'desktop' | 'architecture';
+
 export interface IProject {
   id: number;
   title: string;
   client: string;
+  category: ProjectCategory;
   description: string;
+  longDescription?: string;
   image: string;
   technologies: string[];
-  liveUrl: string;
-  githubUrl: string;
+  architectureBadges?: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  isFeatured?: boolean;
 }
 
 export interface IExperience {
@@ -15,6 +21,7 @@ export interface IExperience {
   company: string;
   period: string;
   description: string;
+  achievements?: string[];
   technologies: string[];
 }
 
@@ -29,6 +36,7 @@ export interface IEducation {
 export interface ISkills {
   frontend: string[];
   backend: string[];
+  desktop: string[];
   databases: string[];
   architecture: string[];
 }
@@ -37,12 +45,17 @@ export interface IPortfolioData {
   personal: {
     name: string;
     title: string;
+    subtitle: string;
+    bio: string;
+    location: string;
     email: string;
     github: string;
     linkedin: string;
+    status: string;
   };
   experience: IExperience[];
   education: IEducation[];
   skills: ISkills;
   projects: IProject[];
 }
+

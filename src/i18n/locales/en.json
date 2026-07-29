@@ -1,25 +1,114 @@
 {
   "nav": {
-    "about": "About",
-    "experience": "Experience",
+    "home": "Home",
     "projects": "Projects",
+    "experience": "Experience",
+    "about": "About Me",
+    "terminal": "Terminal",
     "contact": "Contact"
   },
   "hero": {
-    "greeting": "Hi, I'm",
-    "cta": "View Projects",
-    "contact": "Get in touch"
+    "badgeArchitecture": "Clean Architecture & CQRS",
+    "statusAvailable": "Available for Projects & Full Stack Challenges",
+    "mainTitle": "Software Architecture & High-Performance Full-Stack Development",
+    "heroDesc": "Software developer based in Quito, Ecuador. I am passionate about developing institutional web systems, native desktop apps, and mobile solutions, with a focus on scalable architectures (Clean Architecture), security, and distributed systems.",
+    "viewProjects": "Explore Projects",
+    "cliMode": "CLI Console Mode",
+    "statSystems": "Systems & Apps",
+    "statExperience": "Lead Developer",
+    "statEducation": "UPS Semester",
+    "statArchitecture": "Clean & CQRS"
   },
-  "sections": {
-    "experience": "Professional",
-    "experienceHighlight": "Experience",
-    "education": "Education",
-    "skills": "Tech",
-    "skillsHighlight": "Stack",
-    "projects": "Featured",
-    "projectsHighlight": "Projects"
+  "hub": {
+    "badge": "Section Navigation",
+    "title": "Explore My Portfolio",
+    "projectsDesc": "Gacad, Mi ISTPET, DebtManager, Buscaminas Java OOP, and Microservices.",
+    "experienceDesc": "Career experience at ItspetDev, SIAT National Police, and academic education.",
+    "aboutDesc": "Engineering values, architecture principles, and dev environment.",
+    "terminalDesc": "Interactive full-screen Unix terminal with CLI commands."
   },
-  "footer": {
-    "rights": "All rights reserved."
+  "skills": {
+    "badge": "Technical Signature & Capabilities",
+    "title": "Technologies, Stack & Architecture Patterns",
+    "subtitle": "Mastery of modern stacks for high-traffic web development, hybrid mobile apps, desktop native software, and distributed backends under Clean Architecture.",
+    "frontend": "Frontend & Mobile",
+    "frontendDesc": "Modular interfaces in Angular, hybrid mobile apps in React Native, and institutional web portals.",
+    "backend": "Server & Backend",
+    "backendDesc": "Robust REST API development in .NET 8, Node.js, and Python with secure JWT authentication and microservices.",
+    "desktop": "Desktop & Algorithms",
+    "desktopDesc": "Native C# apps (DebtManager), Java OOP engines (Buscaminas), and algorithmic problem solving.",
+    "architecture": "Architecture & Data",
+    "architectureDesc": "Decoupled architectures (Clean Architecture, CQRS, DDD), SQL Server/MySQL, and deployments with Docker & Kubernetes."
+  },
+  "projects": {
+    "badge": "Complete Software Catalog",
+    "title": "Projects & Systems",
+    "subtitle": "Institutional systems, native desktop applications, mobile solutions, and backend architectures.",
+    "catAll": "All",
+    "catWeb": "Web & Core (Gacad)",
+    "catMobile": "Mobile (Mi ISTPET)",
+    "catDesktop": "Desktop (DebtManager / OOP)",
+    "catArchitecture": "Architecture & AI",
+    "client": "Client / Context:",
+    "featured": "FEATURED",
+    "viewDetails": "View architecture & specifications →",
+    "viewCode": "View Code on GitHub",
+    "close": "Close"
+  },
+  "experience": {
+    "badge": "Curriculum Resume & Career",
+    "title": "Experience & CV",
+    "subtitle": "Technical leadership in institutional development, higher education, and software projects.",
+    "requestCv": "Request PDF Resume",
+    "careerTitle": "Professional Career",
+    "educationTitle": "Academic Education",
+    "philosophyTitle": "Development Philosophy",
+    "philosophyDesc": "Software engineering focused on clean architecture, component decoupling, continuous testing, and long-term maintainability."
+  },
+  "about": {
+    "badge": "Biography & Technical Philosophy",
+    "title": "About Me & Engineering Signature",
+    "subtitle": "Full Stack Developer & Software Architect in Training in Quito, Ecuador.",
+    "mainTitle": "Enterprise-Level Software Development with Clean Architectures",
+    "bio1": "Software developer based in Quito, Ecuador, guided by values of excellence. I am passionate about developing institutional web systems, native and mobile applications, with a focus on scalable architectures, Clean Architecture, security, and distributed development.",
+    "bio2": "My experience spans Full-Stack development, working with frontend and backend technologies such as Angular, React Native, C# (.NET 8), Node.js, and Python, along with relational databases like SQL Server and MySQL. I integrate CQRS, Microservices, and secure design principles from the beginning of the development cycle.",
+    "bio3": "In parallel, I am expanding my knowledge by pursuing a Software Engineering degree at UPS, which allows me to apply an analytical and structured approach to the systems I design. With a strong sensibility for clean code and layered architecture, I enjoy transforming complex business rules into high-performance, easy-to-maintain digital products.",
+    "valuesTitle": "Code Values",
+    "valuesDesc": "Clean Code, standardized maintainability, auditable code, and layered architecture.",
+    "securityTitle": "Security Focus",
+    "securityDesc": "DevSecOps principles, secure hashing, JWT tokens, and strict role control.",
+    "ficheTitle": "Technical Sheet",
+    "location": "Location",
+    "timezone": "Time Zone",
+    "language": "Language",
+    "status": "Status",
+    "toolsTitle": "Environment & Tools",
+    "stackBreakdown": "Technology Breakdown"
+  },
+  "contact": {
+    "badge": "Direct Contact & Collaboration",
+    "title": "Contact",
+    "subtitle": "Do you have a project, job offer, or technical challenge? Connect directly with me.",
+    "formTitle": "Send Message",
+    "name": "Name",
+    "namePlaceholder": "Your name or company",
+    "email": "Email Address",
+    "emailPlaceholder": "you@email.com",
+    "subject": "Subject",
+    "subjectPlaceholder": "Job offer / Full-Stack Project / Inquiry",
+    "message": "Message",
+    "messagePlaceholder": "Describe the details of your inquiry...",
+    "sendBtn": "Send Message",
+    "successTitle": "Message Sent Successfully!",
+    "successDesc": "Thank you for getting in touch. I will reply as soon as possible to",
+    "sendAnother": "Send Another Message",
+    "directLinks": "Direct Connections"
+  },
+  "terminal": {
+    "title": "UNIX CLI Virtual Console",
+    "fullscreenTitle": "FULLSCREEN CLI INTERACTIVE MODULE",
+    "backHome": "Back to Home",
+    "prompt": "anthony@dev-shell:~$",
+    "placeholder": "Type 'help', 'projects', 'gacad', or 'desktop'..."
   }
 }

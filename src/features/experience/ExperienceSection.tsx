@@ -1,79 +1,120 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { FiBriefcase, FiAward, FiCheck } from 'react-icons/fi';
 import { portfolioData } from '../../data/portfolio';
-import { SectionHeading } from '../../components/common/SectionHeading';
-import { GlassCard } from '../../components/common/GlassCard';
 
-export const ExperienceSection = () => {
-  const { t } = useTranslation();
+export const ExperienceSection: React.FC = () => {
   const { experience, education } = portfolioData;
 
   return (
-    <section id="experience" className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800/50">
-      <div className="grid md:grid-cols-2 gap-12">
+    <section id="experience" className="max-w-5xl mx-auto px-6 py-16">
+      <hr className="luxury-divider" />
 
-        {/* Experience Column */}
-        <div>
-          <SectionHeading highlight={t('sections.experienceHighlight')}>
-            {t('sections.experience')}
-          </SectionHeading>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+        {/* Left Column: Experience Timeline */}
+        <div className="md:col-span-2 flex flex-col gap-6">
+          <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs tracking-widest uppercase">
+            <FiBriefcase className="w-4 h-4 text-yellow-400" />
+            <span>Trayectoria Profesional</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-light text-slate-100">
+            Experiencia Reciente en Desarrollo
+          </h2>
 
-          <div className="space-y-8">
+          <div className="space-y-8 mt-2">
             {experience.map((exp, index) => (
               <motion.div
                 key={exp.id}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="border-l-2 border-yellow-500/40 pl-5 relative"
               >
-                <GlassCard className="p-8 group hover:border-neon-cyan/50 transition-colors">
-                  <div className="flex flex-col md:flex-row justify-between mb-4">
-                    <h3 className="text-xl font-bold text-white group-hover:text-neon-cyan transition-colors">{exp.role}</h3>
-                    <span className="text-neon-cyan font-mono text-sm bg-neon-cyan/10 px-3 py-1 rounded-full w-fit mt-2 md:mt-0">{exp.period}</span>
-                  </div>
-                  <p className="text-slate-300 font-medium mb-4">{exp.company}</p>
-                  <p className="text-slate-400 mb-6">{exp.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map(tech => (
-                      <span key={tech} className="text-xs font-mono px-2 py-1 rounded border border-slate-700 text-slate-300">
-                        {tech}
-                      </span>
+                <div className="absolute w-3 h-3 rounded-full bg-yellow-400 -left-[7px] top-1.5 luxury-pulse" />
+                
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mb-2">
+                  <h3 className="text-base font-mono font-bold text-slate-100">
+                    {exp.role}
+                  </h3>
+                  <span className="text-[11px] font-mono text-yellow-400 bg-yellow-500/10 px-2.5 py-0.5 rounded border border-yellow-500/20">
+                    {exp.period}
+                  </span>
+                </div>
+
+                <p className="text-xs font-mono text-cyan-400 mb-2">
+                  {exp.company}
+                </p>
+
+                <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-3">
+                  {exp.description}
+                </p>
+
+                {exp.achievements && (
+                  <div className="space-y-1.5 mb-3">
+                    {exp.achievements.map((ach, aIdx) => (
+                      <div key={aIdx} className="flex items-start gap-2 text-xs text-slate-400 font-light">
+                        <FiCheck className="w-3.5 h-3.5 text-yellow-400 shrink-0 mt-0.5" />
+                        <span>{ach}</span>
+                      </div>
                     ))}
                   </div>
-                </GlassCard>
+                )}
+
+                <div className="flex flex-wrap gap-1.5 pt-2">
+                  {exp.technologies.map((tech, tIdx) => (
+                    <span key={tIdx} className="luxury-badge text-[10px]">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Education Column */}
-        <div>
-          <SectionHeading>
-            {t('sections.education')}
-          </SectionHeading>
+        {/* Right Column: Education & Certifications */}
+        <div className="flex flex-col gap-6 md:pl-6 md:border-l border-slate-800">
+          <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase">
+            <FiAward className="w-4 h-4 text-cyan-400" />
+            <span>Formación & Estudios</span>
+          </div>
+          <h2 className="text-2xl font-light text-slate-100">
+            Educación
+          </h2>
 
           <div className="space-y-6">
             {education.map((edu, index) => (
               <motion.div
                 key={edu.id}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 space-y-1.5"
               >
-                <GlassCard className="p-6 border-l-4 border-l-neon-purple">
-                  <h3 className="text-lg font-bold text-white mb-2">{edu.degree}</h3>
-                  <p className="text-slate-400 mb-4">{edu.institution}</p>
-                  <span className="text-xs font-bold tracking-widest uppercase text-neon-purple">
-                    {edu.status}
-                  </span>
-                </GlassCard>
+                <h3 className="text-xs md:text-sm font-mono font-bold text-slate-100">
+                  {edu.degree}
+                </h3>
+                <p className="text-xs text-slate-400 font-light">
+                  {edu.institution}
+                </p>
+                <p className="text-[10px] font-mono text-yellow-400 font-semibold pt-1">
+                  Status: {edu.status}
+                </p>
               </motion.div>
             ))}
           </div>
-        </div>
 
+          <div className="p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 space-y-2 mt-4">
+            <h4 className="text-xs font-mono font-bold text-yellow-300 uppercase">
+              Compromiso Profesional
+            </h4>
+            <p className="text-xs text-slate-400 font-light leading-relaxed">
+              Enfocado en la continua evolución tecnológica, patrones de diseño limpios y arquitecturas resilientes preparadas para alta concurrencia.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
