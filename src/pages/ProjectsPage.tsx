@@ -8,7 +8,7 @@ import type { IProject, ProjectCategory } from '../types/portfolio.types';
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
   
-  const translatedProjects: any[] = t('projectsData', { returnObjects: true });
+  const translatedProjects = (t('projectsData', { returnObjects: true }) as unknown) as any[];
   const projects = portfolioData.projects.map(p => {
     const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
     return { ...p, ...tr };

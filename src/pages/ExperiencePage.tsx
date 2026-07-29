@@ -17,13 +17,13 @@ const fadeUpVariant = {
 export const ExperiencePage: React.FC = () => {
   const { t } = useTranslation();
   
-  const translatedExp: any[] = t('experienceData', { returnObjects: true });
+  const translatedExp = (t('experienceData', { returnObjects: true }) as unknown) as any[];
   const experience = portfolioData.experience.map(e => {
     const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem: any) => tItem.id === e.id) || {};
     return { ...e, ...tr };
   });
 
-  const translatedEdu: any[] = t('educationData', { returnObjects: true });
+  const translatedEdu = (t('educationData', { returnObjects: true }) as unknown) as any[];
   const education = portfolioData.education.map(e => {
     const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem: any) => tItem.id === e.id) || {};
     return { ...e, ...tr };

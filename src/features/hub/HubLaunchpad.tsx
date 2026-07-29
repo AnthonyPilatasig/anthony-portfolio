@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiUser, FiTerminal, FiMonitor, FiCpu, FiLayers, FiArrowUpRight, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 import { portfolioData } from '../../data/portfolio';
-import type { PortfolioViewMode } from '../../components/layout/Navbar';
+export type PortfolioViewMode = 'executive' | 'terminal';
 
 interface HubLaunchpadProps {
   onSelectMode: (mode: PortfolioViewMode) => void;

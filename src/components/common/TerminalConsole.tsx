@@ -356,7 +356,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
           onKeyDown={handleKeyDown}
           placeholder="Escribe 'help', 'projects', 'gacad' o 'desktop'..."
           className="flex-1 bg-transparent text-slate-100 border-none outline-none focus:ring-0 font-mono text-xs placeholder-slate-600"
-          autoFocus
+          autoFocus={fullHeight}
         />
       </div>
     </div>

@@ -24,7 +24,7 @@ const fadeUpVariant = {
 export const HomePage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { personal } = portfolioData;
-  const translatedProjects: any[] = t('projectsData', { returnObjects: true });
+  const translatedProjects = (t('projectsData', { returnObjects: true }) as unknown) as any[];
   const projects = portfolioData.projects.map(p => {
     const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
     return { ...p, ...tr };
@@ -36,7 +36,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-16 flex flex-col justify-center">
       {/* Upper Status Bar */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -68,7 +68,7 @@ export const HomePage: React.FC = () => {
       </motion.div>
 
       {/* Main Pitch */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
@@ -108,10 +108,10 @@ export const HomePage: React.FC = () => {
             <span className="text-3xl font-mono font-bold text-yellow-600 dark:text-yellow-400">10+</span>
             <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 uppercase mt-1 tracking-wider">{t('hero.statSystems')}</span>
           </div>
-          
+
           <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50 flex flex-col justify-center hover:border-cyan-400 dark:hover:border-cyan-500 transition-colors group relative overflow-hidden">
             <div className="absolute -left-4 -bottom-4 w-12 h-12 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
-            <span className="text-xl md:text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400">2+ Yrs</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400">3+ Yrs</span>
             <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1 leading-tight tracking-wider">{t('hero.statExperience')}</span>
           </div>
 
@@ -124,7 +124,7 @@ export const HomePage: React.FC = () => {
       </motion.div>
 
       {/* Multipage Hub Cards */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
@@ -166,7 +166,7 @@ export const HomePage: React.FC = () => {
       </motion.div>
 
       {/* Featured Projects Showcase Teaser */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
@@ -210,7 +210,7 @@ export const HomePage: React.FC = () => {
       </motion.div>
 
       {/* Terminal CLI Teaser */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}

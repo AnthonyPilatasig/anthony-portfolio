@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiFolder, FiExternalLink, FiGithub, FiLayers, FiSmartphone, FiMonitor, FiCpu, FiX, FiCheckCircle } from 'react-icons/fi';
+import { FiFolder, FiGithub, FiLayers, FiSmartphone, FiMonitor, FiCpu, FiX, FiCheckCircle } from 'react-icons/fi';
 import { portfolioData } from '../../data/portfolio';
 import type { IProject, ProjectCategory } from '../../types/portfolio.types';
 
