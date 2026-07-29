@@ -7,7 +7,13 @@ import type { IProject, ProjectCategory } from '../types/portfolio.types';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
-  const { projects } = portfolioData;
+  
+  const translatedProjects: any[] = t('projectsData', { returnObjects: true });
+  const projects = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+    return { ...p, ...tr };
+  }) as IProject[];
+
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
 

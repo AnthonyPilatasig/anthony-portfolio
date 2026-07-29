@@ -11,7 +11,7 @@
     "badgeArchitecture": "Clean Architecture & CQRS",
     "statusAvailable": "Available for Projects & Full Stack Challenges",
     "mainTitle": "Software Architecture & High-Performance Full-Stack Development",
-    "heroDesc": "Software developer based in Quito, Ecuador. I am passionate about developing institutional web systems, native desktop apps, and mobile solutions, with a focus on scalable architectures (Clean Architecture), security, and distributed systems.",
+    "heroDesc": "Software Engineer and Technical Professor based in Quito, Ecuador. Passionate about leading institutional ecosystems and mission-critical applications using Clean Architecture, CQRS, and distributed backend development in .NET 8, with a strong focus on scalability and corporate impact.",
     "viewProjects": "Explore Projects",
     "cliMode": "CLI Console Mode",
     "statSystems": "Systems & Apps",
@@ -69,10 +69,10 @@
     "badge": "Biography & Technical Philosophy",
     "title": "About Me & Engineering Signature",
     "subtitle": "Full Stack Developer & Software Architect in Training in Quito, Ecuador.",
-    "mainTitle": "Enterprise-Level Software Development with Clean Architectures",
-    "bio1": "Software developer based in Quito, Ecuador, guided by values of excellence. I am passionate about developing institutional web systems, native and mobile applications, with a focus on scalable architectures, Clean Architecture, security, and distributed development.",
-    "bio2": "My experience spans Full-Stack development, working with frontend and backend technologies such as Angular, React Native, C# (.NET 8), Node.js, and Python, along with relational databases like SQL Server and MySQL. I integrate CQRS, Microservices, and secure design principles from the beginning of the development cycle.",
-    "bio3": "In parallel, I am expanding my knowledge by pursuing a Software Engineering degree at UPS, which allows me to apply an analytical and structured approach to the systems I design. With a strong sensibility for clean code and layered architecture, I enjoy transforming complex business rules into high-performance, easy-to-maintain digital products.",
+    "mainTitle": "Mission-Critical Software Development with Clean Architectures",
+    "bio1": "Software Engineer and Technical Professor guided by values of excellence. Specialized in transforming complex business rules into high-performance digital products. My focus goes beyond code: I aim to eradicate operational frictions and optimize human time through solid and automated systems.",
+    "bio2": "I lead the architectural design (Clean Architecture, CQRS) and the end-to-end deployment of complex systems (native mobile apps, academic management, and HR platforms) using microservices in .NET 8. Accustomed to managing complete development cycles, integrating CI/CD to guarantee high availability.",
+    "bio3": "In parallel, I teach technical higher education, training new generations of engineers in structured paradigms (OOP) and algorithms, which strengthens my technical leadership, mentoring, and promotion of good practices (Clean Code).",
     "valuesTitle": "Code Values",
     "valuesDesc": "Clean Code, standardized maintainability, auditable code, and layered architecture.",
     "securityTitle": "Security Focus",
@@ -110,5 +110,129 @@
     "backHome": "Back to Home",
     "prompt": "anthony@dev-shell:~$",
     "placeholder": "Type 'help', 'projects', 'gacad', or 'desktop'..."
-  }
+  },
+  "projectsData": [
+    {
+      "id": 1,
+      "title": "Gacad — Academic Management System",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Web administrative core for academic management. Orchestrates enrollments, schedules, and distributions under distributed architecture patterns.",
+      "longDescription": "Comprehensive system where I architected and implemented the core for enrollments, schedule distributions, and attendance. Centralized digitization that eradicated dependence on physical formats and critically reduced audit times."
+    },
+    {
+      "id": 2,
+      "title": "My ISTPET — Student Mobile App",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Official app (schedules, grades, payments, digital ID). Implementation of Clean Architecture and CQRS serving ~400 concurrent users.",
+      "longDescription": "Comprehensive design and development of the mobile app in React Native. Its deployment eradicated the logistical failures of physical ID cards (printing errors, high costs), centralizing identity in a validated digital QR for teachers and students."
+    },
+    {
+      "id": 3,
+      "title": "DebtManager — C# Desktop App",
+      "client": "Personal Desktop Project",
+      "description": "Native desktop application built in C# .NET for personal finance management, tracking debts, installments, and budgets with local storage.",
+      "longDescription": "Developed to provide agile, offline personal financial control. Features interactive loan amortization dashboards, due date alerts, report export, and secure storage in relational SQLite."
+    },
+    {
+      "id": 4,
+      "title": "Education Microservices Architecture",
+      "client": "Advanced Personal Project",
+      "description": "CDMI Formatives (Scorecraft) and Microservices. Clean Architecture and CQRS applied to training school management.",
+      "longDescription": "Implementation of business infrastructure for sports training schools, participating in the relational database design alongside the development team and ensuring high scalability."
+    },
+    {
+      "id": 5,
+      "title": "Logic Engine: Java OOP Minesweeper",
+      "client": "Algorithmic Desktop Project",
+      "description": "Complete engine of the Minesweeper game developed under the Object-Oriented Programming paradigm in Java with complex two-dimensional matrix handling.",
+      "longDescription": "Implementation demonstrating mastery of fundamental computer science concepts: encapsulation, polymorphism, recursive handling of free cell uncovering, and mine matrix management."
+    },
+    {
+      "id": 6,
+      "title": "Inventory Optimization (Dynamic Prog.)",
+      "client": "Algorithmic Project",
+      "description": "Java system for enterprise inventory optimization comparing recursive, top-down (memoization), and bottom-up approaches.",
+      "longDescription": "Algorithmic application focused on solving the 0/1 Knapsack Problem applied to logistics and inventory, analyzing O(n*W) time complexity and identifying maximum processing efficiency."
+    },
+    {
+      "id": 7,
+      "title": "AMMI Online — Educational Platform",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Job Board and AMMI Online: Institutional platforms structured with CQRS for corporate automation.",
+      "longDescription": "Development of key ecosystems. In the Job Board, I achieved the total automation of agreement and business proposal generation, fluidly connecting graduates with the productive sector."
+    },
+    {
+      "id": 8,
+      "title": "AVIALB / SIAT — Ecuadorian National Police",
+      "client": "Ecuadorian National Police",
+      "description": "Traffic accident management (SIAT). Armored security with encryption of sensitive data and strict authentication (JWT).",
+      "longDescription": "Guaranteed the integrity of legal information and expert reports by implementing vehicular data encryption and a secure, police-grade authentication flow."
+    },
+    {
+      "id": 9,
+      "title": "Human Resources ERP (HR)",
+      "client": "Higher Technological Institute Traversari",
+      "description": "HR ERP module with Clean Architecture and CQRS. Reduction from 2 days to 3 operational hours in payroll calculations.",
+      "longDescription": "Development of the web module architecture for comprehensive human talent management. Achieved a drastic reduction in the generation time of contracts, payroll, and vacation reports from 2 days to only 3 operational hours."
+    },
+    {
+      "id": 10,
+      "title": "Yui Project — Mental Health AI",
+      "client": "Personal / Artificial Intelligence Project",
+      "description": "Conversational intelligent assistant focused on mental health support developed in Python with NLP and Machine Learning models.",
+      "longDescription": "Artificial Intelligence prototype exploring sentiment analysis, recurrent neural networks, and NLP techniques for empathetic user interaction."
+    }
+  ],
+  "experienceData": [
+    {
+      "id": 1,
+      "role": "Lead Software Developer / Architect",
+      "company": "ItspetDev (Higher Technological Institute Mayor Pedro Traversari)",
+      "period": "2022 - Present",
+      "description": "Technical development and architecture lead. Redesign and implementation of the complete digital ecosystem including the Academic Core (Gacad), Mobile App (My ISTPET), Job Board, and HR ERP.",
+      "achievements": [
+        "Implementation of Clean Architecture and CQRS from scratch in HR, Job Board, and My ISTPET.",
+        "Reduction of payroll and contract generation time in HR from 2 days to 3 operational hours.",
+        "Eradication of logistical errors through the My ISTPET digital ID, supporting ~400 users.",
+        "Automation of corporate agreements in the new institutional Job Board."
+      ]
+    },
+    {
+      "id": 2,
+      "role": "Academic Professor (Part-Time) - Software Development",
+      "company": "Higher Technological Institute Mayor Pedro Traversari",
+      "period": "2024 - Present",
+      "description": "Higher Education Professor teaching fundamental and advanced courses to more than 25 students. Focused on training architects and developers with solid logical foundations.",
+      "achievements": [
+        "Main instruction in Programming Fundamentals and Object-Oriented Programming (OOP).",
+        "Strict evaluation based on good practices, Clean Code, and version control.",
+        "Substitutions and mentoring in advanced technical subjects."
+      ]
+    },
+    {
+      "id": 3,
+      "role": "Backend Developer & Software Engineer",
+      "company": "External Consulting Projects / Institutional Collaboration",
+      "period": "2023 - Present",
+      "description": "Development of backend solutions and data modeling (DB) for the public and private sectors, emphasizing security in handling sensitive data.",
+      "achievements": [
+        "Implementation of JWT authentication and sensitive data encryption for expert reports (SIAT National Police).",
+        "Collaborative database design and Clean Architecture implementation for CDMI Formatives (Scorecraft)."
+      ]
+    }
+  ],
+  "educationData": [
+    {
+      "id": 1,
+      "degree": "Software Engineering",
+      "institution": "Salesian Polytechnic University (Quito, Ecuador)",
+      "status": "Currently in 5th Semester"
+    },
+    {
+      "id": 2,
+      "degree": "Higher Technologist in Software Development",
+      "institution": "Higher Technological Institute Mayor Pedro Traversari (ISTPET)",
+      "status": "Graduated / Alumnus"
+    }
+  ]
 }

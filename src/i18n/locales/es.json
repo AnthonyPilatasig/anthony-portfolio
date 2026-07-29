@@ -11,7 +11,7 @@
     "badgeArchitecture": "Clean Architecture & CQRS",
     "statusAvailable": "Disponible para proyectos & Desafíos Full Stack",
     "mainTitle": "Arquitectura de Software & Desarrollo Full-Stack de Alto Rendimiento",
-    "heroDesc": "Desarrollador de software residiendo en Quito, Ecuador. Me apasiona el desarrollo de sistemas web institucionales, aplicaciones nativas y móviles, con un enfoque orientado a arquitecturas escalables (Clean Architecture), seguridad y sistemas distribuidos.",
+    "heroDesc": "Ingeniero de Software y Docente Técnico residiendo en Quito, Ecuador. Me apasiona liderar ecosistemas institucionales y aplicaciones de misión crítica utilizando Clean Architecture, CQRS y desarrollo backend distribuido en .NET 8, con un fuerte enfoque en escalabilidad e impacto corporativo.",
     "viewProjects": "Ver Proyectos",
     "cliMode": "Modo Consola CLI",
     "statSystems": "Sistemas & Apps",
@@ -69,10 +69,10 @@
     "badge": "Biografía & Filosofía Técnica",
     "title": "Sobre Mí & Firma de Ingeniería",
     "subtitle": "Desarrollador Full Stack & Arquitecto de Software en Formación en Quito, Ecuador.",
-    "mainTitle": "Desarrollo de Software a Nivel Empresarial con Arquitecturas Limpias",
-    "bio1": "Desarrollador de software residiendo en Quito, Ecuador, y guiado por valores de excelencia. Me apasiona el desarrollo de sistemas web institucionales, aplicaciones nativas y móviles, con un enfoque orientado a arquitecturas escalables, Clean Architecture, seguridad y desarrollo distribuido.",
-    "bio2": "Mi experiencia abarca el desarrollo Full-Stack, trabajando con tecnologías frontend y backend como Angular, React Native, C# (.NET 8), Node.js y Python, además de bases de datos relacionales como SQL Server y MySQL. Integro prácticas de CQRS, Microservicios y principios de diseño seguro desde el inicio del ciclo de desarrollo.",
-    "bio3": "En paralelo, expando mis conocimientos cursando la Ingeniería de Software en la UPS, lo que me permite aplicar un enfoque analítico y estructurado a los sistemas que diseño. Con una marcada sensibilidad por el código limpio y la arquitectura por capas, disfruto transformar reglas de negocio complejas en productos digitales de alto rendimiento y fáciles de mantener.",
+    "mainTitle": "Desarrollo de Software de Misión Crítica con Arquitecturas Limpias",
+    "bio1": "Ingeniero de Software y Docente Técnico guiado por valores de excelencia. Especializado en transformar reglas de negocio complejas en productos digitales de alto rendimiento. Mi enfoque va más allá del código: busco erradicar fricciones operativas y optimizar el tiempo humano mediante sistemas sólidos y automatizados.",
+    "bio2": "Lidero el diseño arquitectónico (Clean Architecture, CQRS) y el despliegue de sistemas complejos end-to-end (aplicaciones móviles nativas, plataformas de gestión académica y recursos humanos) utilizando microservicios en .NET 8. Acostumbrado a gestionar ciclos completos de desarrollo, integrando CI/CD para garantizar alta disponibilidad.",
+    "bio3": "En paralelo, ejerzo la docencia técnica, formando a las nuevas generaciones de ingenieros en paradigmas estructurados (POO) y algoritmos, lo que fortalece mi capacidad de liderazgo técnico, mentoría y promoción de buenas prácticas (Clean Code).",
     "valuesTitle": "Valores de Código",
     "valuesDesc": "Clean Code, mantenibilidad estandarizada, código auditable y arquitectura por capas.",
     "securityTitle": "Enfoque de Seguridad",
@@ -110,5 +110,129 @@
     "backHome": "Volver al Inicio",
     "prompt": "anthony@dev-shell:~$",
     "placeholder": "Escribe 'help', 'projects', 'gacad' o 'desktop'..."
-  }
+  },
+  "projectsData": [
+    {
+      "id": 1,
+      "title": "Gacad — Sistema de Gestión Académica",
+      "client": "Instituto Superior Tecnológico Traversari",
+      "description": "Core administrativo web para la gestión académica. Orquesta matrículas, horarios y distributivos bajo patrones de arquitectura distribuida.",
+      "longDescription": "Sistema integral donde arquitecté e implementé el core de matrículas, distributivos horarios y asistencia. Digitalización centralizada que erradicó la dependencia de formatos físicos y redujo críticamente los tiempos de auditoría."
+    },
+    {
+      "id": 2,
+      "title": "Mi ISTPET — App Móvil Estudiantil",
+      "client": "Instituto Superior Tecnológico Traversari",
+      "description": "App oficial (horarios, notas, pagos, carnet digital). Implementación de Clean Architecture y CQRS atendiendo a ~400 usuarios concurrentes.",
+      "longDescription": "Diseño y desarrollo integral de la app móvil en React Native. Su despliegue erradicó los fallos logísticos de los carnets físicos (errores de impresión, altos costos), centralizando la identidad en un QR digital validado para docentes y alumnos."
+    },
+    {
+      "id": 3,
+      "title": "DebtManager — App de Escritorio C#",
+      "client": "Proyecto de Escritorio Personal",
+      "description": "Aplicación nativa de escritorio construida en C# .NET para la gestión de finanzas personales, seguimiento de deudas, cuotas y presupuestos con almacenamiento local.",
+      "longDescription": "Desarrollada para brindar un control financiero personal ágil y fuera de línea. Cuenta con paneles interactivos de amortización de préstamos, alertas de vencimiento, exportación de reportes y almacenamiento seguro en SQLite relacional."
+    },
+    {
+      "id": 4,
+      "title": "Arquitectura Microservicios Educación",
+      "client": "Proyecto Personal Avanzado",
+      "description": "Formativas CDMI (Scorecraft) y Microservicios. Arquitectura Limpia y CQRS aplicados a gestión de escuelas de formación.",
+      "longDescription": "Implementación de infraestructura de negocio para escuelas de formación deportiva, participando en el diseño relacional de la BDD junto al equipo de desarrollo y garantizando alta escalabilidad."
+    },
+    {
+      "id": 5,
+      "title": "Motor de Lógica: Buscaminas POO Java",
+      "client": "Proyecto Algorítmico de Escritorio",
+      "description": "Motor completo del juego Buscaminas desarrollado bajo el paradigma de Programación Orientada a Objetos en Java con manejo de matrices bidimensionales complejas.",
+      "longDescription": "Implementación que demuestra el dominio de conceptos fundamentales de la ciencia de la computación: encapsulamiento, polimorfismo, manejo recursivo del destape de celdas libres y gestión de matriz de minas."
+    },
+    {
+      "id": 6,
+      "title": "Optimización de Inventarios (Prog. Dinámica)",
+      "client": "Proyecto Algorítmico",
+      "description": "Sistema en Java para la optimización de inventarios empresariales comparando enfoques recursivo, top-down (memoización) y bottom-up.",
+      "longDescription": "Aplicación algorítmica enfocada en la resolución del problema de la mochila (Knapsack Problem 0/1) aplicado a la logística e inventarios, analizando la complejidad temporal O(n*W) e identificando la eficiencia máxima de procesamiento."
+    },
+    {
+      "id": 7,
+      "title": "AMMI Online — Plataforma Educativa",
+      "client": "Instituto Superior Tecnológico Traversari",
+      "description": "Bolsa de Empleo y AMMI Online: Plataformas institucionales estructuradas con CQRS para automatización corporativa.",
+      "longDescription": "Desarrollo de ecosistemas clave. En la Bolsa de Empleo, logré la automatización total de generación de convenios y propuestas empresariales, conectando fluidamente a graduados con el sector productivo."
+    },
+    {
+      "id": 8,
+      "title": "AVIALB / SIAT — Policía Nacional del Ecuador",
+      "client": "Policía Nacional del Ecuador",
+      "description": "Gestión de accidentes de tránsito (SIAT). Seguridad blindada con encriptación de datos sensibles y autenticación estricta (JWT).",
+      "longDescription": "Garantizó la integridad de la información legal y reportes periciales mediante la implementación de encriptación de datos vehiculares y un flujo de autenticación seguro de grado policial."
+    },
+    {
+      "id": 9,
+      "title": "ERP Recursos Humanos (RRHH)",
+      "client": "Instituto Superior Tecnológico Traversari",
+      "description": "Módulo ERP de Recursos Humanos con Clean Architecture y CQRS. Reducción de 2 días a 3 horas operativas en cálculos de nómina.",
+      "longDescription": "Desarrollo de la arquitectura del módulo web para la gestión integral de talento humano. Logró una reducción drástica del tiempo de generación de contratos, nóminas y reportes vacacionales de 2 días a solo 3 horas operativas."
+    },
+    {
+      "id": 10,
+      "title": "Proyecto Yui — IA Salud Mental",
+      "client": "Proyecto Personal / Inteligencia Artificial",
+      "description": "Asistente inteligente conversacional enfocado en el acompañamiento de salud mental desarrollado en Python con NLP y modelos de Machine Learning.",
+      "longDescription": "Prototipo de Inteligencia Artificial que explora el análisis de sentimiento, redes neuronales recurrentes y técnicas de NLP para interacción empática con el usuario."
+    }
+  ],
+  "experienceData": [
+    {
+      "id": 1,
+      "role": "Desarrollador de Software Lead / Architect",
+      "company": "ItspetDev (Instituto Superior Tecnológico Mayor Pedro Traversari)",
+      "period": "2022 - Presente",
+      "description": "Líder de desarrollo técnico y arquitectura. Rediseño e implementación del ecosistema digital completo incluyendo el Core Académico (Gacad), App Móvil (Mi ISTPET), Bolsa de Empleo y ERP de RRHH.",
+      "achievements": [
+        "Implementación de Clean Architecture y CQRS desde cero en RRHH, Bolsa de Empleo y Mi ISTPET.",
+        "Reducción del tiempo de generación de nóminas y contratos en RRHH de 2 días a 3 horas operativas.",
+        "Erradicación de errores logísticos mediante el carnet digital de Mi ISTPET, soportando ~400 usuarios.",
+        "Automatización de convenios corporativos en el nuevo Job Board institucional."
+      ]
+    },
+    {
+      "id": 2,
+      "role": "Docente Académico (Tiempo Parcial) - Desarrollo de Software",
+      "company": "Instituto Superior Tecnológico Mayor Pedro Traversari",
+      "period": "2024 - Presente",
+      "description": "Docente de Educación Superior impartiendo cátedras fundamentales y avanzadas a más de 25 estudiantes. Enfoque en formar arquitectos y desarrolladores con bases lógicas sólidas.",
+      "achievements": [
+        "Instrucción principal en Fundamentos de Programación y Programación Orientada a Objetos (POO).",
+        "Evaluación estricta basada en buenas prácticas, Clean Code y control de versiones.",
+        "Suplencias y mentoría en asignaturas técnicas de niveles superiores."
+      ]
+    },
+    {
+      "id": 3,
+      "role": "Desarrollador Backend & Software Engineer",
+      "company": "Proyectos de Consultoría Externa / Colaboración Institucional",
+      "period": "2023 - Presente",
+      "description": "Desarrollo de soluciones backend y modelado de datos (BDD) para el sector público y privado, enfatizando la seguridad en el manejo de datos sensibles.",
+      "achievements": [
+        "Implementación de autenticación JWT y encriptación de datos sensibles para reportes periciales (SIAT Policía Nacional).",
+        "Diseño de base de datos colaborativo e implementación de Clean Architecture para Formativas CDMI (Scorecraft)."
+      ]
+    }
+  ],
+  "educationData": [
+    {
+      "id": 1,
+      "degree": "Ingeniería de Software",
+      "institution": "Universidad Politécnica Salesiana (Quito, Ecuador)",
+      "status": "Cursando actualmente 5to Semestre"
+    },
+    {
+      "id": 2,
+      "degree": "Tecnólogo Superior en Desarrollo de Software",
+      "institution": "Instituto Superior Tecnológico Mayor Pedro Traversari (ISTPET)",
+      "status": "Egresado / Graduado"
+    }
+  ]
 }

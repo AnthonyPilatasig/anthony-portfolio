@@ -16,7 +16,18 @@ const fadeUpVariant = {
 
 export const ExperiencePage: React.FC = () => {
   const { t } = useTranslation();
-  const { experience, education } = portfolioData;
+  
+  const translatedExp: any[] = t('experienceData', { returnObjects: true });
+  const experience = portfolioData.experience.map(e => {
+    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem: any) => tItem.id === e.id) || {};
+    return { ...e, ...tr };
+  });
+
+  const translatedEdu: any[] = t('educationData', { returnObjects: true });
+  const education = portfolioData.education.map(e => {
+    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem: any) => tItem.id === e.id) || {};
+    return { ...e, ...tr };
+  });
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">

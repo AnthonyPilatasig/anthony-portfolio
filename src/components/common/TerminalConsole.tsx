@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { portfolioData } from '../../data/portfolio';
 
 interface CommandOutput {
@@ -13,6 +14,26 @@ interface TerminalConsoleProps {
 }
 
 export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = false }) => {
+  const { t } = useTranslation();
+  
+  const translatedProjects: any[] = t('projectsData', { returnObjects: true });
+  const projects = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+    return { ...p, ...tr };
+  });
+
+  const translatedExp: any[] = t('experienceData', { returnObjects: true });
+  const experience = portfolioData.experience.map(e => {
+    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem: any) => tItem.id === e.id) || {};
+    return { ...e, ...tr };
+  });
+
+  const translatedEdu: any[] = t('educationData', { returnObjects: true });
+  const education = portfolioData.education.map(e => {
+    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem: any) => tItem.id === e.id) || {};
+    return { ...e, ...tr };
+  });
+
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
@@ -38,7 +59,9 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (logs.length > 1) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }, [logs]);
 
   const handleCommand = (cmd: string) => {
@@ -98,7 +121,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         outputNode = (
           <div className="text-xs space-y-2 font-mono text-slate-300">
             <p className="text-yellow-400 font-bold">Proyectos Destacados:</p>
-            {portfolioData.projects.map((p) => (
+            {projects.map((p) => (
               <div key={p.id} className="border-l-2 border-yellow-500/40 pl-2">
                 <p className="text-cyan-300 font-semibold">{p.title} <span className="text-slate-500 text-[10px]">[{p.category.toUpperCase()}]</span></p>
                 <p className="text-slate-400">{p.description}</p>
@@ -172,7 +195,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         outputNode = (
           <div className="text-xs space-y-2 font-mono text-slate-300">
             <p className="text-yellow-400 font-bold">Experiencia & Educación:</p>
-            {portfolioData.experience.map((exp) => (
+            {experience.map((exp) => (
               <div key={exp.id} className="border-l-2 border-yellow-500/40 pl-2 mb-2">
                 <p className="text-cyan-300 font-bold">{exp.role} @ {exp.company}</p>
                 <p className="text-slate-500 text-[10px]">{exp.period}</p>
@@ -180,7 +203,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
               </div>
             ))}
             <p className="text-yellow-400 font-bold mt-2">Formación Académica:</p>
-            {portfolioData.education.map((edu) => (
+            {education.map((edu) => (
               <div key={edu.id} className="pl-2">
                 <p className="text-slate-200 font-semibold">• {edu.degree}</p>
                 <p className="text-slate-400 text-[11px]">{edu.institution} ({edu.status})</p>

@@ -17,6 +17,9 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const subject = encodeURIComponent(formData.subject);
+    const body = encodeURIComponent(`De: ${formData.name} (${formData.email})\n\n${formData.message}`);
+    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
     setFormSubmitted(true);
   };
 

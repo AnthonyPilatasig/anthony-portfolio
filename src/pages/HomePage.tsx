@@ -23,7 +23,12 @@ const fadeUpVariant = {
 
 export const HomePage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { personal, projects } = portfolioData;
+  const { personal } = portfolioData;
+  const translatedProjects: any[] = t('projectsData', { returnObjects: true });
+  const projects = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+    return { ...p, ...tr };
+  });
   const featuredProjects = projects.filter((p) => p.isFeatured).slice(0, 4);
 
   const isEn = i18n.language === 'en';
@@ -96,23 +101,24 @@ export const HomePage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Quick Stats Bento */}
-        <motion.div variants={fadeUpVariant} className="grid grid-cols-2 gap-3.5 p-4 rounded-2xl border border-slate-300 dark:border-slate-800 bg-white/40 dark:bg-slate-900/40">
-          <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/60 flex flex-col hover:scale-105 transition-transform cursor-default">
-            <span className="text-2xl font-mono font-bold text-yellow-600 dark:text-yellow-400">10+</span>
-            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1">{t('hero.statSystems')}</span>
+        {/* Premium Bento Stats (Semi-Senior Level) */}
+        <motion.div variants={fadeUpVariant} className="grid grid-cols-2 gap-3 md:gap-4 w-full md:w-auto shrink-0">
+          <div className="col-span-2 p-5 rounded-2xl border border-slate-300/80 dark:border-yellow-500/20 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900/80 dark:to-slate-950/80 flex flex-col justify-center relative overflow-hidden group shadow-sm dark:shadow-none hover:border-yellow-400 dark:hover:border-yellow-500 transition-colors">
+            <div className="absolute -right-4 -top-4 w-16 h-16 bg-yellow-500/10 dark:bg-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
+            <span className="text-3xl font-mono font-bold text-yellow-600 dark:text-yellow-400">10+</span>
+            <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 uppercase mt-1 tracking-wider">{t('hero.statSystems')}</span>
           </div>
-          <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/60 flex flex-col hover:scale-105 transition-transform cursor-default">
-            <span className="text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400">2+ Yrs</span>
-            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1">{t('hero.statExperience')}</span>
+          
+          <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50 flex flex-col justify-center hover:border-cyan-400 dark:hover:border-cyan-500 transition-colors group relative overflow-hidden">
+            <div className="absolute -left-4 -bottom-4 w-12 h-12 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
+            <span className="text-xl md:text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400">2+ Yrs</span>
+            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1 leading-tight tracking-wider">{t('hero.statExperience')}</span>
           </div>
-          <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/60 flex flex-col hover:scale-105 transition-transform cursor-default">
-            <span className="text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400">5th</span>
-            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1">{t('hero.statEducation')}</span>
-          </div>
-          <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/60 flex flex-col hover:scale-105 transition-transform cursor-default">
-            <span className="text-2xl font-mono font-bold text-purple-600 dark:text-purple-400">.NET 8</span>
-            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1">{t('hero.statArchitecture')}</span>
+
+          <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50 flex flex-col justify-center hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors group relative overflow-hidden">
+            <div className="absolute -right-4 -bottom-4 w-12 h-12 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
+            <span className="text-xl md:text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400">.NET 8</span>
+            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1 leading-tight tracking-wider">{t('hero.statArchitecture')}</span>
           </div>
         </motion.div>
       </motion.div>
