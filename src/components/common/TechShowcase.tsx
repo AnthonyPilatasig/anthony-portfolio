@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { useScroll } from 'framer-motion';
 import { FiMonitor, FiServer, FiLayers, FiBox, FiCheckCircle } from 'react-icons/fi';
 
 interface Chapter {
@@ -64,41 +64,19 @@ const useReducedMotion = () => {
   return reduced;
 };
 
-const ChapterPanel: React.FC<{
-  chapter: Chapter;
-  index: number;
-  total: number;
-  scrollYProgress: MotionValue<number>;
-}> = ({ chapter, index, total, scrollYProgress }) => {
-  const segment = 1 / total;
-  const start = index * segment;
-  const end = start + segment;
-  const fade = segment * 0.28;
-
-  const opacity = useTransform(
-    scrollYProgress,
-    [Math.max(0, start - fade), start, end - fade, end],
-    [0, 1, 1, 0]
-  );
-  const scale = useTransform(
-    scrollYProgress,
-    [Math.max(0, start - fade), start, end - fade, end],
-    [0.88, 1, 1, 0.94]
-  );
-  const y = useTransform(
-    scrollYProgress,
-    [Math.max(0, start - fade), start, end - fade, end],
-    [36, 0, 0, -24]
-  );
+const ChapterPanel: React.FC<{ chapter: Chapter; state: 'before' | 'active' | 'after' }> = ({ chapter, state }) => {
+  const visibility =
+    state === 'active'
+      ? 'opacity-100 scale-100 translate-y-0'
+      : state === 'before'
+        ? 'opacity-0 scale-95 translate-y-9 pointer-events-none'
+        : 'opacity-0 scale-95 -translate-y-6 pointer-events-none';
 
   return (
-    <motion.div style={{ opacity, scale, y }} className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+    <div className={`absolute inset-0 flex flex-col items-center justify-center text-center px-6 transition-all duration-500 ease-out ${visibility}`}>
       <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl border ${chapter.accentBorder} ${chapter.accentBg} ${chapter.accentText} flex items-center justify-center mb-6`}>
         {chapter.icon}
       </div>
-      <span className="text-xs font-mono text-slate-500 uppercase tracking-widest mb-2">
-        {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-      </span>
       <h3 className={`text-3xl md:text-5xl font-bold ${chapter.accentText} mb-4 max-w-2xl`}>
         {chapter.label}
       </h3>
@@ -113,42 +91,55 @@ const ChapterPanel: React.FC<{
           </span>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
-};
-
-const ChapterDot: React.FC<{ index: number; total: number; scrollYProgress: MotionValue<number> }> = ({ index, total, scrollYProgress }) => {
-  const segment = 1 / total;
-  const start = index * segment;
-  const end = start + segment;
-  const opacity = useTransform(scrollYProgress, [start, start + segment * 0.2, end], [0.3, 1, 0.3]);
-  const scale = useTransform(scrollYProgress, [start, start + segment * 0.2, end], [1, 1.6, 1]);
-
-  return <motion.div style={{ opacity, scale }} className="w-1.5 h-1.5 rounded-full bg-yellow-400" />;
 };
 
 const PinnedShowcase: React.FC = () => {
   const targetRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { scrollYProgress } = useScroll({ target: targetRef, offset: ['start start', 'end end'] });
 
+  // Driven via a plain subscription + React state rather than style-bound motion values —
+  // more predictable for a small, discrete number of chapters, and the crossfade itself
+  // is handled by CSS transitions (see ChapterPanel), not scroll-scrubbed transforms.
+  useEffect(() => {
+    return scrollYProgress.on('change', (p) => {
+      const idx = Math.min(CHAPTERS.length - 1, Math.max(0, Math.floor(p * CHAPTERS.length)));
+      setActiveIndex(idx);
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${Math.min(1, Math.max(0, p))})`;
+      }
+    });
+  }, [scrollYProgress]);
+
   return (
-    <section ref={targetRef} className="relative" style={{ height: `${CHAPTERS.length * 90}vh` }}>
+    <section ref={targetRef} className="relative" style={{ height: `${CHAPTERS.length * 60}vh` }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden rounded-[2rem] bg-[#080c14] border border-slate-800">
         <div className="absolute right-6 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-3">
           {CHAPTERS.map((_, i) => (
-            <ChapterDot key={i} index={i} total={CHAPTERS.length} scrollYProgress={scrollYProgress} />
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-yellow-400 scale-[1.6]' : 'bg-yellow-400/30'}`}
+            />
           ))}
         </div>
 
         <div className="relative w-full h-full">
           {CHAPTERS.map((chapter, i) => (
-            <ChapterPanel key={chapter.label} chapter={chapter} index={i} total={CHAPTERS.length} scrollYProgress={scrollYProgress} />
+            <ChapterPanel
+              key={chapter.label}
+              chapter={chapter}
+              state={i === activeIndex ? 'active' : i < activeIndex ? 'after' : 'before'}
+            />
           ))}
         </div>
 
-        <motion.div
-          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-yellow-400 to-cyan-400 origin-left w-full"
-          style={{ scaleX: scrollYProgress }}
+        <div
+          ref={barRef}
+          className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-yellow-400 to-cyan-400 origin-left"
+          style={{ transform: 'scaleX(0)' }}
         />
       </div>
     </section>
@@ -174,7 +165,8 @@ const StaticShowcase: React.FC = () => (
   </div>
 );
 
-/** Apple-style pinned scroll showcase of the stack, built on framer-motion's scroll-linked values. */
+/** Apple-style pinned scroll showcase of the stack: framer-motion's useScroll reads scroll
+ * position, but the actual chapter crossfade is plain React state + CSS transitions. */
 export const TechShowcase: React.FC = () => {
   const reducedMotion = useReducedMotion();
   return reducedMotion ? <StaticShowcase /> : <PinnedShowcase />;

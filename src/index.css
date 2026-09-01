@@ -28,7 +28,7 @@
   --theme-card-bg-end: rgba(245, 243, 239, 0.6);
   --theme-badge-bg: rgba(202, 138, 4, 0.08);
   --theme-badge-border: rgba(202, 138, 4, 0.2);
-  --theme-badge-text: #9a6b04;
+  --theme-badge-text: #7c4f00;
   
   --theme-badge-cyan-bg: rgba(6, 182, 212, 0.08);
   --theme-badge-cyan-border: rgba(6, 182, 212, 0.2);
@@ -60,7 +60,9 @@ body {
   background-color: var(--theme-bg);
   color: var(--theme-text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
+  /* overflow-clip (not hidden) avoids implicitly forcing overflow-y to `auto`,
+     which otherwise breaks position: sticky in descendants (e.g. TechShowcase). */
+  overflow-x: clip;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
@@ -108,9 +110,9 @@ html.dark .luxury-card {
 }
 
 .luxury-card:hover {
-  border-color: rgba(234, 179, 8, 0.45);
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 16px 36px -10px rgba(202, 138, 4, 0.15);
+  border-color: rgba(234, 179, 8, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px rgba(202, 138, 4, 0.10);
 }
 html.dark .luxury-card:hover {
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 0 24px 0 rgba(234, 179, 8, 0.15);
@@ -197,7 +199,8 @@ html:not(.dark) .text-gold-gradient {
   animation: reel-scroll 32s linear infinite;
 }
 
-.project-reel:hover .project-reel-track {
+.project-reel:hover .project-reel-track,
+.project-reel:focus-within .project-reel-track {
   animation-play-state: paused;
 }
 
@@ -230,6 +233,31 @@ html:not(.dark) .text-gold-gradient {
 .cursor-dot--active {
   width: 44px;
   height: 44px;
+}
+
+html:not(.dark) .cursor-dot {
+  background: #1a1c20;
+  mix-blend-mode: difference;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   Accesibilidad — Focus Visible (WCAG 2.2 AA: criterio 2.4.11)
+   ============================================================ */
+*:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Botones y links con focus propio */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 3px;
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {

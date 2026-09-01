@@ -38,8 +38,6 @@ export const HomePage: React.FC = () => {
   });
   const featuredProjects = projects.filter((p) => p.isFeatured).slice(0, 4);
 
-  const isEn = i18n.language === 'en';
-
   const [copied, setCopied] = useState(false);
   const handleCopyEmail = async () => {
     try {
@@ -63,13 +61,13 @@ export const HomePage: React.FC = () => {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-mono text-xs tracking-widest uppercase">
             <FiCpu className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-            <span>{isEn ? 'Professional Profile & Architecture' : 'Perfil Profesional & Arquitectura'}</span>
+            <span>{t('home.profileBadge')}</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-extralight tracking-tight text-gold-gradient uppercase">
             {personal.name}
           </h1>
           <p className="text-slate-600 dark:text-slate-400 text-xs md:text-sm tracking-wider font-mono">
-            {isEn ? 'Full Stack Developer & Software Architect in Training' : personal.title}
+            {t('home.subtitle')}
           </p>
         </div>
 
@@ -248,7 +246,7 @@ export const HomePage: React.FC = () => {
             <h3 className="text-2xl font-light text-slate-800 dark:text-slate-100">{t('projects.title')}</h3>
           </div>
           <Link to="/proyectos" className="text-xs font-mono text-yellow-600 dark:text-yellow-400 hover:underline flex items-center gap-1">
-            <span>{isEn ? `View all (${projects.length})` : `Ver todos (${projects.length})`}</span>
+            <span>{t('home.viewAll', { count: projects.length })}</span>
             <FiArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

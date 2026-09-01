@@ -1,4 +1,4 @@
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { SEO } from './components/common/SEO';
@@ -11,16 +11,37 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-hidden transition-colors duration-500">
+      <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-clip transition-colors duration-500">
         <SEO />
         <MouseSpotlight />
         <CustomCursor />
         
-        {/* Background Ambient Glows */}
-        <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
-          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full mix-blend-screen filter blur-[140px] animate-pulse"></div>
-          <div className="absolute top-[20%] right-[-10%] w-[450px] h-[450px] bg-cyan-500/10 rounded-full mix-blend-screen filter blur-[140px]"></div>
-          <div className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[160px]"></div>
+        {/* Background Ambient Glows — optimizado: sin animate-pulse para no dregar GPU */}
+        <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(234,179,8,0.08) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              willChange: 'auto',
+            }}
+          />
+          <div
+            className="absolute top-[20%] right-[-10%] w-[450px] h-[450px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              willChange: 'auto',
+            }}
+          />
+          <div
+            className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
+              filter: 'blur(100px)',
+              willChange: 'auto',
+            }}
+          />
         </div>
 
         {/* Global Navigation Header */}

@@ -13,14 +13,42 @@ export const ContactPage: React.FC = () => {
   const { t } = useTranslation();
   const { personal } = portfolioData;
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(formData.subject);
-    const body = encodeURIComponent(`De: ${formData.name} (${formData.email})\n\n${formData.message}`);
-    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
-    setFormSubmitted(true);
+    setIsLoading(true);
+    setFormError(null);
+    try {
+      // NOTA: Reemplaza 'YOUR_FORM_ID' con tu ID real de formspree.io
+      // Crear cuenta gratis en https://formspree.io y obtener el endpoint
+      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+      if (response.ok) {
+        setFormSubmitted(true);
+      } else {
+        const data = await response.json();
+        setFormError(data?.error || 'Error al enviar. Intenta de nuevo.');
+      }
+    } catch {
+      // Fallback: abrir mailto si Formspree falla
+      const subject = encodeURIComponent(formData.subject);
+      const body = encodeURIComponent(`De: ${formData.name} (${formData.email})\n\n${formData.message}`);
+      window.open(`mailto:${personal.email}?subject=${subject}&body=${body}`, '_blank');
+      setFormSubmitted(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -129,11 +157,28 @@ export const ContactPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-slate-950 font-bold text-xs font-mono tracking-wider uppercase transition-all shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2 hover:scale-[1.01]"
+                disabled={isLoading}
+                className={`w-full py-3 rounded-xl font-bold text-xs font-mono tracking-wider uppercase transition-all flex items-center justify-center gap-2 ${
+                  isLoading
+                    ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-slate-950 shadow-lg shadow-yellow-500/20 hover:scale-[1.01]'
+                }`}
               >
-                <FiSend className="w-4 h-4" />
-                <span>{t('contact.sendBtn')}</span>
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
+                    <span>{t('contact.sending')}</span>
+                  </>
+                ) : (
+                  <>
+                    <FiSend className="w-4 h-4" />
+                    <span>{t('contact.sendBtn')}</span>
+                  </>
+                )}
               </button>
+              {formError && (
+                <p className="text-xs text-red-500 dark:text-red-400 font-mono text-center">{formError}</p>
+              )}
             </form>
           )}
         </motion.div>

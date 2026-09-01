@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { HomePage } from '../pages/HomePage';
-import { ProjectsPage } from '../pages/ProjectsPage';
-import { ExperiencePage } from '../pages/ExperiencePage';
-import { AboutPage } from '../pages/AboutPage';
-import { TerminalPage } from '../pages/TerminalPage';
-import { ContactPage } from '../pages/ContactPage';
+
+const HomePage = React.lazy(() => import('../pages/HomePage').then(m => ({ default: m.HomePage })));
+const ProjectsPage = React.lazy(() => import('../pages/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
+const ExperiencePage = React.lazy(() => import('../pages/ExperiencePage').then(m => ({ default: m.ExperiencePage })));
+const AboutPage = React.lazy(() => import('../pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const TerminalPage = React.lazy(() => import('../pages/TerminalPage').then(m => ({ default: m.TerminalPage })));
+const ContactPage = React.lazy(() => import('../pages/ContactPage').then(m => ({ default: m.ContactPage })));
 
 export const AppRouter: React.FC = () => {
   const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border-2 border-yellow-500 border-t-transparent animate-spin" />
+        </div>
+      }>
+        <Routes location={location} key={location.pathname}>
         <Route
           path="/"
           element={
@@ -71,6 +77,7 @@ export const AppRouter: React.FC = () => {
           }
         />
       </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 };

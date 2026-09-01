@@ -157,7 +157,7 @@ export const ExperiencePage: React.FC = () => {
                     {edu.institution}
                   </p>
                   <p className="text-[10px] font-mono text-yellow-700 dark:text-yellow-400 font-semibold pt-1">
-                    Status: {edu.status}
+                    {t('experience.statusLabel')}: {edu.status}
                   </p>
                 </motion.div>
               ))}

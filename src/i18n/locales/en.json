@@ -7,6 +7,11 @@
     "terminal": "Terminal",
     "contact": "Contact"
   },
+  "home": {
+    "profileBadge": "Professional Profile & Architecture",
+    "subtitle": "Full Stack Developer & Software Architect in Training",
+    "viewAll": "View all ({{count}})"
+  },
   "hero": {
     "badgeArchitecture": "Clean Architecture & CQRS",
     "statusAvailable": "Available for Projects & Full Stack Challenges",
@@ -75,6 +80,7 @@
     "requestCv": "Download CV (PDF)",
     "careerTitle": "Professional Career",
     "educationTitle": "Academic Education",
+    "statusLabel": "Status",
     "philosophyTitle": "Development Philosophy",
     "philosophyDesc": "Software engineering focused on clean architecture, component decoupling, continuous testing, and long-term maintainability."
   },
@@ -115,7 +121,8 @@
     "successTitle": "Message Sent Successfully!",
     "successDesc": "Thank you for getting in touch. I will reply as soon as possible to",
     "sendAnother": "Send Another Message",
-    "directLinks": "Direct Connections"
+    "directLinks": "Direct Connections",
+    "sending": "Enviando..."
   },
   "terminal": {
     "title": "UNIX CLI Virtual Console",

@@ -7,6 +7,11 @@
     "terminal": "Terminal",
     "contact": "Contacto"
   },
+  "home": {
+    "profileBadge": "Perfil Profesional & Arquitectura",
+    "subtitle": "Full Stack Developer & Arquitecto de Software en Formación",
+    "viewAll": "Ver todos ({{count}})"
+  },
   "hero": {
     "badgeArchitecture": "Clean Architecture & CQRS",
     "statusAvailable": "Disponible para proyectos & Desafíos Full Stack",
@@ -75,6 +80,7 @@
     "requestCv": "Descargar CV (PDF)",
     "careerTitle": "Trayectoria Profesional",
     "educationTitle": "Formación Académica",
+    "statusLabel": "Estado",
     "philosophyTitle": "Filosofía de Desarrollo",
     "philosophyDesc": "Desarrollo de software centrado en arquitectura limpia, desacoplamiento de componentes, pruebas continuas y mantenibilidad a largo plazo."
   },
@@ -115,7 +121,8 @@
     "successTitle": "¡Mensaje Enviado con Éxito!",
     "successDesc": "Gracias por ponerte en contacto. Te responderé a la brevedad posible a",
     "sendAnother": "Enviar Otro Mensaje",
-    "directLinks": "Conexiones Directas"
+    "directLinks": "Conexiones Directas",
+    "sending": "Enviando..."
   },
   "terminal": {
     "title": "Consola Virtual UNIX CLI",
