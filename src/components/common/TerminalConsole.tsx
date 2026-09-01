@@ -1,7 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { portfolioData } from '../../data/portfolio';
+import { SnakeGame } from './SnakeGame';
 import type { IProject, IExperience, IEducation } from '../../types/portfolio.types';
+
+type OSTheme = 'macos' | 'windows' | 'linux';
+
+const OS_LABELS: Record<OSTheme, string> = { macos: 'macOS', windows: 'Windows', linux: 'Linux' };
 
 interface CommandOutput {
   id: string;
@@ -60,6 +65,8 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [matrixActive, setMatrixActive] = useState(false);
   const [ctfStage, setCtfStage] = useState(0); // 0=inactive, 1=base64 puzzle, 2=caesar puzzle, 3=solved
+  const [snakeActive, setSnakeActive] = useState(false);
+  const [osTheme, setOsTheme] = useState<OSTheme>('macos');
 
   useEffect(() => {
     if (!matrixActive) return;
@@ -118,6 +125,14 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
 
     if (lower.startsWith('echo ')) {
       outputNode = <div className="text-xs font-mono text-slate-300">{trimmed.substring(5)}</div>;
+    } else if (lower.startsWith('os ')) {
+      const target = lower.substring(3).trim() as OSTheme;
+      if (target === 'macos' || target === 'windows' || target === 'linux') {
+        setOsTheme(target);
+        outputNode = <p className="text-xs font-mono text-emerald-400">Chrome de ventana cambiado a {OS_LABELS[target]}.</p>;
+      } else {
+        outputNode = <p className="text-xs font-mono text-red-400">Opciones válidas: macos, windows, linux.</p>;
+      }
     } else if (lower.startsWith('decode ') && (ctfStage === 1 || ctfStage === 2)) {
       const answer = trimmed.substring(7).trim().toLowerCase();
       if (ctfStage === 1 && answer === 'root') {
@@ -152,6 +167,15 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
           );
           break;
 
+        case 'play':
+        case 'snake':
+        case 'play snake':
+          setSnakeActive(true);
+          outputNode = (
+            <p className="text-xs font-mono text-cyan-300">Cargando snake.exe... usa las flechas del teclado, ESC para salir.</p>
+          );
+          break;
+
         case 'hack':
         case 'ctf':
           setCtfStage(1);
@@ -183,6 +207,8 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
                 <div><span className="text-cyan-400 font-bold">sudo</span> : Permiso concedido de administrador</div>
                 <div><span className="text-cyan-400 font-bold">matrix</span> : Activa/desactiva la lluvia de código</div>
                 <div><span className="text-cyan-400 font-bold">hack</span> : Inicia un mini reto CTF de 2 niveles</div>
+                <div><span className="text-cyan-400 font-bold">play</span> : Juega Snake sin salir de la terminal</div>
+                <div><span className="text-cyan-400 font-bold">os &lt;macos|windows|linux&gt;</span> : Cambia el chrome de la ventana</div>
                 <div><span className="text-cyan-400 font-bold">clear / cls</span> : Limpiar la pantalla de la consola</div>
                 <div><span className="text-cyan-400 font-bold">ls / dir</span> : Listar comandos (alias de help)</div>
                 <div><span className="text-cyan-400 font-bold">whoami</span> : Mostrar usuario actual</div>
@@ -398,58 +424,117 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
   };
 
   return (
-    <div
-      className={`relative w-full max-w-5xl mx-auto rounded-2xl bg-[#090d16]/90 border border-yellow-500/20 shadow-2xl p-6 font-mono text-sm overflow-hidden backdrop-blur-xl ${fullHeight ? 'min-h-[75vh] flex flex-col justify-between' : ''
-        }`}
-      onClick={() => inputRef.current?.focus()}
-    >
-      {matrixActive && (
-        <canvas ref={canvasRef} className="absolute inset-0 -z-10 pointer-events-none opacity-70" />
-      )}
-
-      {/* Header bar */}
-      <div className="flex justify-between items-center pb-4 mb-4 border-b border-yellow-500/20 text-xs select-none">
-        <div className="flex gap-2">
-          <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
-          <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
-          <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-        </div>
-        <div className="text-yellow-400/80 font-mono text-[11px] tracking-wider uppercase">
-          anthony@dev-shell: ~/portfolio
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-[10px] text-slate-400 tracking-widest uppercase">online</span>
-        </div>
-      </div>
-
-      {/* Terminal log output */}
-      <div className={`overflow-y-auto pr-2 space-y-4 text-slate-300 scrollbar-thin scrollbar-thumb-slate-700 ${fullHeight ? 'flex-1 mb-4' : 'max-h-[420px]'}`}>
-        {logs.map((log) => (
-          <div key={log.id} className="space-y-1">
-            <div className="flex items-center text-xs text-yellow-400 font-semibold">
-              <span className="text-cyan-400 mr-2">anthony@dev-shell:~$</span>
-              <span>{log.command}</span>
-            </div>
-            <div className="pl-4">{log.output}</div>
-          </div>
+    <div className="w-full max-w-5xl mx-auto">
+      {/* OS chrome selector */}
+      <div className="flex justify-end gap-1.5 mb-2 pr-1">
+        {(['macos', 'windows', 'linux'] as OSTheme[]).map((os) => (
+          <button
+            key={os}
+            onClick={() => setOsTheme(os)}
+            className={`px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider border transition-all ${osTheme === os
+              ? 'bg-yellow-500 text-slate-950 border-yellow-400 font-bold'
+              : 'bg-slate-900/60 text-slate-500 border-slate-800 hover:text-slate-300 hover:border-slate-700'
+              }`}
+          >
+            {OS_LABELS[os]}
+          </button>
         ))}
-        <div ref={bottomRef} />
       </div>
 
-      {/* Terminal input form */}
-      <div className="flex items-center border-t border-yellow-500/20 pt-4 mt-2">
-        <span className="text-cyan-400 font-semibold text-xs mr-2 select-none">anthony@dev-shell:~$</span>
+      <div
+        className={`relative w-full bg-[#090d16]/90 border border-yellow-500/20 shadow-2xl p-4 sm:p-6 font-mono text-sm overflow-hidden backdrop-blur-xl ${fullHeight ? 'min-h-[60vh] sm:min-h-[75vh] flex flex-col justify-between' : ''
+          } ${osTheme === 'windows' ? 'rounded-lg' : 'rounded-2xl'}`}
+        onClick={() => inputRef.current?.focus()}
+      >
+        {matrixActive && (
+          <canvas ref={canvasRef} className="absolute inset-0 -z-10 pointer-events-none opacity-70" />
+        )}
+
+        {/* Header bar — chrome varies per simulated OS */}
+        {osTheme === 'macos' && (
+          <div className="flex justify-between items-center pb-4 mb-4 border-b border-yellow-500/20 text-xs select-none">
+            <div className="flex gap-2 shrink-0">
+              <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+            </div>
+            <div className="hidden sm:block text-yellow-400/80 font-mono text-[11px] tracking-wider uppercase truncate px-2">
+              anthony@dev-shell — zsh — 80×24
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="text-[10px] text-slate-400 tracking-widest uppercase">online</span>
+            </div>
+          </div>
+        )}
+
+        {osTheme === 'windows' && (
+          <div className="flex justify-between items-center pb-3 mb-4 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 px-3 sm:px-4 py-2 bg-slate-900/80 border-b border-slate-700 text-xs select-none">
+            <div className="flex items-center gap-2 text-slate-300 text-[11px] min-w-0 truncate">
+              <span className="w-3.5 h-3.5 rounded-sm bg-cyan-500/80 inline-block shrink-0"></span>
+              <span className="truncate">Windows Terminal</span>
+            </div>
+            <div className="flex items-center gap-3 sm:gap-4 text-slate-400 text-xs font-sans shrink-0">
+              <span className="hover:text-slate-200 cursor-default">─</span>
+              <span className="hover:text-slate-200 cursor-default">▢</span>
+              <span className="hover:text-red-400 cursor-default">✕</span>
+            </div>
+          </div>
+        )}
+
+        {osTheme === 'linux' && (
+          <div className="flex justify-between items-center pb-4 mb-4 border-b border-slate-700 text-xs select-none">
+            <span className="text-[10px] text-slate-500 tracking-widest uppercase shrink-0">GNOME</span>
+            <div className="hidden sm:block text-slate-300 font-mono text-[11px] tracking-wider truncate px-2">
+              anthony@dev-shell:~/portfolio
+            </div>
+            <span className="w-3 h-3 rounded-full border border-slate-600 hover:border-red-400 inline-block shrink-0"></span>
+          </div>
+        )}
+
+        {/* Terminal log output */}
+        <div className={`overflow-y-auto pr-2 space-y-4 text-slate-300 scrollbar-thin scrollbar-thumb-slate-700 ${fullHeight ? 'flex-1 mb-4' : 'max-h-[420px]'}`}>
+          {logs.map((log) => (
+            <div key={log.id} className="space-y-1">
+              <div className="flex items-center text-xs text-yellow-400 font-semibold">
+                <span className="text-cyan-400 mr-2 shrink-0">
+                  <span className="sm:hidden">$</span>
+                  <span className="hidden sm:inline">anthony@dev-shell:~$</span>
+                </span>
+                <span className="break-all">{log.command}</span>
+              </div>
+              <div className="pl-4">{log.output}</div>
+            </div>
+          ))}
+          {snakeActive && (
+            <SnakeGame onExit={() => { setSnakeActive(false); inputRef.current?.focus(); }} />
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Terminal input form */}
+        {!snakeActive && (
+        <div className="flex items-center border-t border-yellow-500/20 pt-4 mt-2">
+        <span className="text-cyan-400 font-semibold text-xs mr-2 select-none shrink-0">
+          <span className="sm:hidden">$</span>
+          <span className="hidden sm:inline">anthony@dev-shell:~$</span>
+        </span>
         <input
           ref={inputRef}
           type="text"
+          inputMode="text"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Escribe 'help', 'hack', 'matrix' o 'projects'..."
-          className="flex-1 bg-transparent text-slate-100 border-none outline-none focus:ring-0 font-mono text-xs placeholder-slate-600"
+          placeholder="help, hack, matrix, play..."
+          className="flex-1 min-w-0 bg-transparent text-slate-100 border-none outline-none focus:ring-0 font-mono text-xs placeholder-slate-600"
           autoFocus={fullHeight}
         />
+        </div>
+        )}
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export const MouseSpotlight: React.FC = () => {
     <div
       className="pointer-events-none fixed inset-0 z-30 transition duration-300"
       style={{
-        background: `radial-gradient(800px circle at ${position.x}px ${position.y}px, rgba(234, 179, 8, 0.05), transparent 80%)`
+        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(27, 79, 232, 0.04), transparent 80%)`
       }}
     />
   );

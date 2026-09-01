@@ -18,36 +18,36 @@ const CHAPTERS: Chapter[] = [
     label: 'Frontend & Mobile',
     description: 'Interfaces que conectan a miles de usuarios en tiempo real, en web y en el bolsillo.',
     tech: ['Angular', 'React Native', 'TypeScript', 'Tailwind CSS'],
-    accentText: 'text-cyan-400',
-    accentBorder: 'border-cyan-500/30',
-    accentBg: 'bg-cyan-500/10',
+    accentText: 'text-[var(--theme-accent)]',
+    accentBorder: 'border-[var(--theme-accent)]/30',
+    accentBg: 'bg-[var(--theme-accent)]/8',
   },
   {
     icon: <FiServer className="w-9 h-9" />,
     label: 'Backend & APIs',
     description: 'APIs RESTful seguras en .NET 8, con autenticación JWT y latencias sub-100ms.',
     tech: ['.NET 8', 'C#', 'JWT', 'REST'],
-    accentText: 'text-yellow-400',
-    accentBorder: 'border-yellow-500/30',
-    accentBg: 'bg-yellow-500/10',
+    accentText: 'text-[var(--theme-ink)]',
+    accentBorder: 'border-[var(--theme-border-strong)]',
+    accentBg: 'bg-[var(--theme-border)]',
   },
   {
     icon: <FiLayers className="w-9 h-9" />,
     label: 'Arquitectura',
     description: 'Clean Architecture, CQRS y DDD — lectura y escritura separadas desde el diseño.',
     tech: ['Clean Architecture', 'CQRS', 'DDD'],
-    accentText: 'text-purple-400',
-    accentBorder: 'border-purple-500/30',
-    accentBg: 'bg-purple-500/10',
+    accentText: 'text-[var(--theme-accent)]',
+    accentBorder: 'border-[var(--theme-accent)]/25',
+    accentBg: 'bg-[var(--theme-accent)]/6',
   },
   {
     icon: <FiBox className="w-9 h-9" />,
     label: 'Infraestructura',
     description: 'Contenedores y orquestación pensados para producción, no para la demo.',
     tech: ['Docker', 'Kubernetes', 'CI/CD'],
-    accentText: 'text-emerald-400',
-    accentBorder: 'border-emerald-500/30',
-    accentBg: 'bg-emerald-500/10',
+    accentText: 'text-[var(--theme-ink-muted)]',
+    accentBorder: 'border-[var(--theme-border-strong)]',
+    accentBg: 'bg-[var(--theme-border)]',
   },
 ];
 
@@ -80,7 +80,7 @@ const ChapterPanel: React.FC<{ chapter: Chapter; state: 'before' | 'active' | 'a
       <h3 className={`text-3xl md:text-5xl font-bold ${chapter.accentText} mb-4 max-w-2xl`}>
         {chapter.label}
       </h3>
-      <p className="text-slate-300 text-sm md:text-base max-w-xl leading-relaxed font-light mb-6">
+      <p className="text-[var(--theme-ink-muted)] text-sm md:text-base max-w-xl leading-relaxed font-light mb-6">
         {chapter.description}
       </p>
       <div className="flex flex-wrap justify-center gap-2">
@@ -116,12 +116,12 @@ const PinnedShowcase: React.FC = () => {
 
   return (
     <section ref={targetRef} className="relative" style={{ height: `${CHAPTERS.length * 60}vh` }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden rounded-[2rem] bg-[#080c14] border border-slate-800">
+      <div className="sticky top-0 h-screen w-full overflow-hidden rounded-[2rem] bg-[var(--theme-surface)] dark:bg-[#0A0A0A] border border-[var(--theme-border)]">
         <div className="absolute right-6 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-3">
           {CHAPTERS.map((_, i) => (
             <div
               key={i}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-yellow-400 scale-[1.6]' : 'bg-yellow-400/30'}`}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-[var(--theme-accent)] scale-[1.6]' : 'bg-[var(--theme-accent)]/30'}`}
             />
           ))}
         </div>
@@ -138,7 +138,7 @@ const PinnedShowcase: React.FC = () => {
 
         <div
           ref={barRef}
-          className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-yellow-400 to-cyan-400 origin-left"
+          className="absolute bottom-0 left-0 h-1 w-full bg-[var(--theme-accent)] origin-left"
           style={{ transform: 'scaleX(0)' }}
         />
       </div>
@@ -154,7 +154,7 @@ const StaticShowcase: React.FC = () => (
           {chapter.icon}
         </div>
         <h3 className={`text-lg font-bold ${chapter.accentText}`}>{chapter.label}</h3>
-        <p className="text-slate-400 text-sm font-light leading-relaxed">{chapter.description}</p>
+        <p className="text-[var(--theme-ink-muted)] text-sm font-light leading-relaxed">{chapter.description}</p>
         <div className="flex flex-wrap gap-2">
           {chapter.tech.map((t) => (
             <span key={t} className="luxury-badge-cyan">{t}</span>

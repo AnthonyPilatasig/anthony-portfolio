@@ -7,9 +7,28 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.mzstatic.com https://images.unsplash.com; media-src 'self' https://*.itunes.apple.com https://*.mzstatic.com; connect-src 'self' ws: https://itunes.apple.com https://*.itunes.apple.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'self';"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://*.mzstatic.com https://images.unsplash.com; media-src 'self' https://*.itunes.apple.com https://*.mzstatic.com; connect-src 'self' ws: https://itunes.apple.com https://*.itunes.apple.com https://api.github.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self';"
     />
     <title>Anthony Pilatasig — Full Stack Developer & Software Architect</title>
+    <script>
+      // Counterpart to public/404.html's redirect: restores the real deep-link path
+      // (e.g. /anthony-portfolio/proyectos) before React Router reads window.location.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, '', l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>

@@ -35,31 +35,28 @@ export const ExperiencePage: React.FC = () => {
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">
       {/* Header */}
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-slate-300 dark:border-yellow-500/20 pb-8"
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-14 border-b border-[var(--theme-border)] pb-8"
       >
         <div>
-          <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-mono text-xs tracking-widest uppercase mb-2">
-            <FiBriefcase className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-            <span>{t('experience.badge')}</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white tracking-tighter">
+          <span className="section-index">03 / {t('experience.badge')}</span>
+          <h1 className="text-4xl md:text-6xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight">
             <RevealText text={t('experience.title')} />
           </h1>
-          <p className="text-xs md:text-sm font-mono text-slate-600 dark:text-slate-400 mt-2">
+          <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
             {t('experience.subtitle')}
           </p>
         </div>
 
         <a
-          href="./CV_Anthony_Pilatasig.pdf"
+          href={`${import.meta.env.BASE_URL}CV_Anthony_Pilatasig.pdf`}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-yellow-500/40 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-500 hover:text-slate-900 dark:hover:text-slate-950 text-xs font-mono font-bold transition-all flex items-center gap-2 shadow-lg shadow-yellow-500/10 hover:shadow-yellow-500/20 hover:scale-105"
+          className="btn-secondary text-xs flex items-center gap-2"
         >
-          <FiDownload className="w-4 h-4" />
+          <FiDownload className="w-4 h-4 text-[var(--theme-accent)]" />
           <span>{t('experience.requestCv')}</span>
         </a>
       </motion.div>
@@ -69,9 +66,9 @@ export const ExperiencePage: React.FC = () => {
         <div className="md:col-span-2 space-y-8">
           <motion.h2 
             initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUpVariant}
-            className="text-2xl font-light text-slate-900 dark:text-slate-100 flex items-center gap-2"
+            className="text-2xl font-light text-[var(--theme-ink)] flex items-center gap-2"
           >
-            <FiBriefcase className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+            <FiBriefcase className="w-5 h-5 text-[var(--theme-accent)]" />
             <span>{t('experience.careerTitle')}</span>
           </motion.h2>
 
@@ -84,32 +81,32 @@ export const ExperiencePage: React.FC = () => {
                 viewport={{ once: true, margin: "-50px" }}
                 variants={fadeLeftVariant}
                 transition={{ delay: index * 0.1 }}
-                className="border-l-2 border-slate-300 dark:border-yellow-500/40 pl-5 relative group"
+                className="border-l-2 border-[var(--theme-border-strong)] pl-5 relative group"
               >
-                <div className="absolute w-3 h-3 rounded-full bg-slate-400 dark:bg-yellow-400 -left-[7.5px] top-1.5 luxury-pulse group-hover:bg-yellow-500 transition-colors" />
+                <div className="absolute w-3 h-3 rounded-full bg-[var(--theme-accent)] -left-[7.5px] top-1.5 transition-colors" />
                 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mb-2">
-                  <h3 className="text-base font-mono font-bold text-slate-900 dark:text-slate-100 group-hover:text-yellow-600 dark:group-hover:text-yellow-300 transition-colors">
+                  <h3 className="text-base font-mono font-bold text-[var(--theme-ink)] group-hover:text-[var(--theme-accent)] transition-colors">
                     {exp.role}
                   </h3>
-                  <span className="text-[11px] font-mono text-yellow-700 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/10 px-2.5 py-0.5 rounded border border-yellow-300 dark:border-yellow-500/20">
+                  <span className="badge-accent">
                     {exp.period}
                   </span>
                 </div>
 
-                <p className="text-xs font-mono text-cyan-600 dark:text-cyan-400 mb-2">
+                <p className="text-xs font-mono text-[var(--theme-ink-muted)] mb-2">
                   {exp.company}
                 </p>
 
-                <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-light mb-3">
+                <p className="text-xs md:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light mb-3">
                   {exp.description}
                 </p>
 
                 {exp.achievements && (
                   <div className="space-y-1.5 mb-3">
                     {exp.achievements.map((ach, aIdx) => (
-                      <div key={aIdx} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400 font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
-                        <FiCheck className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+                      <div key={aIdx} className="flex items-start gap-2 text-xs text-[var(--theme-ink-muted)] font-light transition-colors">
+                        <FiCheck className="w-3.5 h-3.5 text-[var(--theme-accent)] shrink-0 mt-0.5" />
                         <span>{ach}</span>
                       </div>
                     ))}
@@ -118,7 +115,7 @@ export const ExperiencePage: React.FC = () => {
 
                 <div className="flex flex-wrap gap-1.5 pt-2">
                   {exp.technologies.map((tech, tIdx) => (
-                    <span key={tIdx} className="luxury-badge text-[10px]">
+                    <span key={tIdx} className="badge">
                       {tech}
                     </span>
                   ))}
@@ -129,13 +126,13 @@ export const ExperiencePage: React.FC = () => {
         </div>
 
         {/* Education & Values Column */}
-        <div className="space-y-8 md:pl-6 md:border-l border-slate-300 dark:border-slate-800">
+        <div className="space-y-8 md:pl-6 md:border-l border-[var(--theme-border)]">
           <div>
             <motion.h2 
               initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUpVariant}
-              className="text-2xl font-light text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-6"
+              className="text-2xl font-light text-[var(--theme-ink)] flex items-center gap-2 mb-6"
             >
-              <FiAward className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+              <FiAward className="w-5 h-5 text-[var(--theme-accent)]" />
               <span>{t('experience.educationTitle')}</span>
             </motion.h2>
 
@@ -148,15 +145,15 @@ export const ExperiencePage: React.FC = () => {
                   viewport={{ once: true, margin: "-50px" }}
                   variants={fadeUpVariant}
                   transition={{ delay: index * 0.1 }}
-                  className="p-4 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 space-y-1.5 hover:scale-105 transition-transform"
+                  className="editorial-card p-4 rounded-lg space-y-1.5"
                 >
-                  <h3 className="text-xs md:text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <h3 className="text-xs md:text-sm font-mono font-bold text-[var(--theme-ink)]">
                     {edu.degree}
                   </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-light">
+                  <p className="text-xs text-[var(--theme-ink-muted)] font-light">
                     {edu.institution}
                   </p>
-                  <p className="text-[10px] font-mono text-yellow-700 dark:text-yellow-400 font-semibold pt-1">
+                  <p className="text-[10px] font-mono text-[var(--theme-accent)] font-semibold pt-1">
                     {t('experience.statusLabel')}: {edu.status}
                   </p>
                 </motion.div>
@@ -166,13 +163,13 @@ export const ExperiencePage: React.FC = () => {
 
           <motion.div 
             initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
-            className="p-5 rounded-2xl border border-yellow-300 dark:border-yellow-500/20 bg-yellow-50 dark:bg-yellow-500/5 space-y-3 hover:shadow-lg transition-shadow"
+            className="editorial-card p-5 rounded-lg border border-[var(--theme-border-strong)] space-y-3"
           >
-            <h4 className="text-xs font-mono font-bold text-yellow-700 dark:text-yellow-300 uppercase flex items-center gap-2">
+            <h4 className="text-xs font-mono font-bold text-[var(--theme-accent)] uppercase flex items-center gap-2">
               <FiFileText className="w-4 h-4" />
               <span>{t('experience.philosophyTitle')}</span>
             </h4>
-            <p className="text-xs text-slate-700 dark:text-slate-300 font-light leading-relaxed">
+            <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
               {t('experience.philosophyDesc')}
             </p>
           </motion.div>

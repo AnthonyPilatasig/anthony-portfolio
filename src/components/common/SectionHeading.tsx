@@ -3,21 +3,23 @@ import { motion } from 'framer-motion';
 
 interface SectionHeadingProps {
   children: ReactNode;
-  highlight?: string;
-  icon?: ReactNode;
+  index?: string; // ej. '01', '02'
 }
 
-export const SectionHeading = ({ children, highlight, icon }: SectionHeadingProps) => {
+export const SectionHeading = ({ children, index }: SectionHeadingProps) => {
   return (
-    <motion.h2 
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="text-3xl md:text-4xl font-bold mb-12 flex items-center gap-3"
+      className="mb-8"
     >
-      {icon && <span className="text-neon-purple">{icon}</span>}
-      <span>{children}</span>
-      {highlight && <span className="text-gradient"> {highlight}</span>}
-    </motion.h2>
+      {index && (
+        <span className="section-index">{index} /</span>
+      )}
+      <h2 className="text-2xl md:text-3xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight">
+        {children}
+      </h2>
+    </motion.div>
   );
 };

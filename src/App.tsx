@@ -9,9 +9,9 @@ import { AppRouter } from './routes/AppRouter';
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <ScrollToTop />
-      <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-clip transition-colors duration-500">
+      <div className="min-h-screen relative selection:bg-blue-500/15 selection:text-blue-900 font-sans overflow-x-clip transition-colors duration-500">
         <SEO />
         <MouseSpotlight />
         <CustomCursor />

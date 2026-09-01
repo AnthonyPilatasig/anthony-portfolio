@@ -9,7 +9,7 @@ interface GlassCardProps extends HTMLMotionProps<"div"> {
 export const GlassCard = ({ children, className = '', ...props }: GlassCardProps) => {
   return (
     <motion.div 
-      className={`glass-panel ${className}`}
+      className={`editorial-card ${className}`}
       {...props}
     >
       {children}

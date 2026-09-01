@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiCheckCircle } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
+import { RevealText } from '../components/common/RevealText';
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -55,20 +56,17 @@ export const ContactPage: React.FC = () => {
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">
       {/* Header */}
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-slate-300 dark:border-yellow-500/20 pb-8"
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-14 border-b border-[var(--theme-border)] pb-8"
       >
         <div>
-          <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-mono text-xs tracking-widest uppercase mb-2">
-            <FiMail className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-            <span>{t('contact.badge')}</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-extralight text-gold-gradient uppercase tracking-tight">
-            {t('contact.title')}
+          <span className="section-index">05 / {t('contact.badge')}</span>
+          <h1 className="text-4xl md:text-6xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight">
+            <RevealText text={t('contact.title')} />
           </h1>
-          <p className="text-xs md:text-sm font-mono text-slate-600 dark:text-slate-400 mt-2">
+          <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
             {t('contact.subtitle')}
           </p>
         </div>
@@ -78,10 +76,10 @@ export const ContactPage: React.FC = () => {
         {/* Contact Form */}
         <motion.div 
           initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
-          className="md:col-span-2 luxury-card p-6 md:p-8 rounded-2xl border border-slate-300 dark:border-slate-800 space-y-6"
+          className="md:col-span-2 editorial-card p-6 md:p-8 rounded-lg space-y-6"
         >
-          <h2 className="text-xl font-mono font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <FiSend className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+          <h2 className="text-lg font-semibold text-[var(--theme-ink)] flex items-center gap-2">
+            <FiSend className="w-5 h-5 text-[var(--theme-accent)]" />
             <span>{t('contact.formTitle')}</span>
           </h2>
 
@@ -89,16 +87,16 @@ export const ContactPage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-6 rounded-xl border border-emerald-400 dark:border-emerald-500/40 bg-emerald-100/60 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 space-y-2 text-center"
+              className="p-6 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-center space-y-2"
             >
               <FiCheckCircle className="w-10 h-10 mx-auto text-emerald-600 dark:text-emerald-400" />
-              <h3 className="text-base font-mono font-bold">{t('contact.successTitle')}</h3>
-              <p className="text-xs font-light text-slate-700 dark:text-slate-300">
-                {t('contact.successDesc')} <span className="text-yellow-700 dark:text-yellow-300 font-bold">{formData.email}</span>.
+              <h3 className="text-base font-mono font-bold text-emerald-800 dark:text-emerald-300">{t('contact.successTitle')}</h3>
+              <p className="text-xs font-light text-emerald-700 dark:text-emerald-400">
+                {t('contact.successDesc')} <span className="font-bold">{formData.email}</span>.
               </p>
               <button
                 onClick={() => setFormSubmitted(false)}
-                className="mt-4 px-4 py-2 rounded-full bg-emerald-500 text-slate-950 font-mono text-xs font-bold hover:bg-emerald-400 transition-colors"
+                className="mt-4 px-4 py-2 rounded-full bg-emerald-500 text-white font-mono text-xs font-bold hover:bg-emerald-600 transition-colors"
               >
                 {t('contact.sendAnother')}
               </button>
@@ -107,66 +105,64 @@ export const ContactPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono text-slate-600 dark:text-slate-400 uppercase mb-1">{t('contact.name')}</label>
+                  <label className="block text-xs font-mono text-[var(--theme-ink-muted)] uppercase mb-1">{t('contact.name')}</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder={t('contact.namePlaceholder')}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-xs font-mono text-slate-900 dark:text-slate-200 focus:border-yellow-500 dark:focus:border-yellow-400 outline-none transition-colors"
+                    className="bg-[var(--theme-bg)] border border-[var(--theme-border)] focus:border-[var(--theme-accent)] text-[var(--theme-ink)] font-mono text-sm rounded-lg px-4 py-2.5 outline-none transition-colors w-full"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-600 dark:text-slate-400 uppercase mb-1">{t('contact.email')}</label>
+                  <label className="block text-xs font-mono text-[var(--theme-ink-muted)] uppercase mb-1">{t('contact.email')}</label>
                   <input
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder={t('contact.emailPlaceholder')}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-xs font-mono text-slate-900 dark:text-slate-200 focus:border-yellow-500 dark:focus:border-yellow-400 outline-none transition-colors"
+                    className="bg-[var(--theme-bg)] border border-[var(--theme-border)] focus:border-[var(--theme-accent)] text-[var(--theme-ink)] font-mono text-sm rounded-lg px-4 py-2.5 outline-none transition-colors w-full"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-600 dark:text-slate-400 uppercase mb-1">{t('contact.subject')}</label>
+                <label className="block text-xs font-mono text-[var(--theme-ink-muted)] uppercase mb-1">{t('contact.subject')}</label>
                 <input
                   type="text"
                   required
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   placeholder={t('contact.subjectPlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-xs font-mono text-slate-900 dark:text-slate-200 focus:border-yellow-500 dark:focus:border-yellow-400 outline-none transition-colors"
+                  className="bg-[var(--theme-bg)] border border-[var(--theme-border)] focus:border-[var(--theme-accent)] text-[var(--theme-ink)] font-mono text-sm rounded-lg px-4 py-2.5 outline-none transition-colors w-full"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-600 dark:text-slate-400 uppercase mb-1">{t('contact.message')}</label>
+                <label className="block text-xs font-mono text-[var(--theme-ink-muted)] uppercase mb-1">{t('contact.message')}</label>
                 <textarea
                   rows={5}
                   required
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder={t('contact.messagePlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 text-xs font-mono text-slate-900 dark:text-slate-200 focus:border-yellow-500 dark:focus:border-yellow-400 outline-none transition-colors resize-none"
+                  className="bg-[var(--theme-bg)] border border-[var(--theme-border)] focus:border-[var(--theme-accent)] text-[var(--theme-ink)] font-mono text-sm rounded-lg px-4 py-2.5 outline-none transition-colors w-full resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 rounded-xl font-bold text-xs font-mono tracking-wider uppercase transition-all flex items-center justify-center gap-2 ${
-                  isLoading
-                    ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-slate-950 shadow-lg shadow-yellow-500/20 hover:scale-[1.01]'
+                className={`btn-primary w-full justify-center py-3 flex items-center gap-2 ${
+                  isLoading ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
                 {isLoading ? (
                   <>
-                    <div className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
+                    <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
                     <span>{t('contact.sending')}</span>
                   </>
                 ) : (
@@ -177,7 +173,7 @@ export const ContactPage: React.FC = () => {
                 )}
               </button>
               {formError && (
-                <p className="text-xs text-red-500 dark:text-red-400 font-mono text-center">{formError}</p>
+                <p className="text-red-500 text-xs font-mono text-center">{formError}</p>
               )}
             </form>
           )}
@@ -188,7 +184,7 @@ export const ContactPage: React.FC = () => {
           initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
           className="space-y-4"
         >
-          <span className="text-[11px] font-mono text-yellow-700 dark:text-yellow-400 tracking-widest uppercase block mb-1">
+          <span className="section-index block mb-1">
             {t('contact.directLinks')}
           </span>
 
@@ -196,45 +192,45 @@ export const ContactPage: React.FC = () => {
             href={personal.github}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between p-4 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 hover:bg-slate-200 dark:hover:bg-slate-800 hover:border-yellow-500/40 transition-all text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white group"
+            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
-              <FiGithub className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-              <span>GitHub Profile</span>
+              <FiGithub className="w-5 h-5 text-[var(--theme-accent)]" />
+              <span className="text-sm font-mono text-[var(--theme-ink)]">GitHub Profile</span>
             </span>
-            <span className="text-slate-500 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">↗</span>
+            <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">↗</span>
           </a>
 
           <a
             href={personal.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between p-4 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 hover:bg-slate-200 dark:hover:bg-slate-800 hover:border-yellow-500/40 transition-all text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white group"
+            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
-              <FiLinkedin className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-              <span>LinkedIn</span>
+              <FiLinkedin className="w-5 h-5 text-[var(--theme-accent)]" />
+              <span className="text-sm font-mono text-[var(--theme-ink)]">LinkedIn</span>
             </span>
-            <span className="text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">↗</span>
+            <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">↗</span>
           </a>
 
           <a
             href={`mailto:${personal.email}`}
-            className="flex items-center justify-between p-4 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 hover:bg-slate-200 dark:hover:bg-slate-800 hover:border-yellow-500/40 transition-all text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white group"
+            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
-              <FiMail className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-              <span>{personal.email}</span>
+              <FiMail className="w-5 h-5 text-[var(--theme-accent)]" />
+              <span className="text-sm font-mono text-[var(--theme-ink)]">{personal.email}</span>
             </span>
-            <span className="text-slate-500 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">✉</span>
+            <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">✉</span>
           </a>
 
-          <div className="p-4 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-200/60 dark:bg-slate-950/60 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center justify-between">
+          <div className="editorial-card p-4 rounded-lg flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <FiMapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>Quito, Ecuador</span>
+              <FiMapPin className="w-4 h-4 text-[var(--theme-accent)]" />
+              <span className="text-sm font-mono text-[var(--theme-ink)]">Quito, Ecuador</span>
             </span>
-            <span className="text-[10px] text-slate-500">UTC-5</span>
+            <span className="text-[10px] font-mono text-[var(--theme-ink-muted)]">UTC-5</span>
           </div>
         </motion.div>
       </div>

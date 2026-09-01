@@ -1,5 +1,9 @@
 import type { IPortfolioData } from '../types/portfolio.types';
 
+// BrowserRouter puts each page on its own URL path, so plain relative paths ("./assets/...")
+// resolve differently per route. import.meta.env.BASE_URL is absolute and always correct.
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
 export const portfolioData: IPortfolioData = {
   personal: {
     name: "Anthony David Pilatasig Macas",
@@ -87,7 +91,7 @@ export const portfolioData: IPortfolioData = {
       tradeoff: "Mayor tiempo de desarrollo inicial y sobrecosto conceptual en la definición de DTOs y Handlers a cambio de escalabilidad y aislamiento de errores.",
       impact: "Tiempos de respuesta sub-100ms en consultas de notas y 100% de digitalización sin caídas del sistema en los últimos 4 periodos lectivos.",
       metrics: ["Sub-100ms Latencia", "+2,500 Usuarios Activos", "100% Uptime Lectivo"],
-      image: "./assets/projects/gacad_preview.jpg",
+      image: asset("assets/projects/gacad_preview.jpg"),
       technologies: ["Angular", "TypeScript", "C#", ".NET 8", "SQL Server", "Clean Architecture", "CQRS"],
       architectureBadges: ["Core Académico", "Clean Architecture", "CQRS Pattern"],
       liveUrl: "#",
@@ -106,7 +110,7 @@ export const portfolioData: IPortfolioData = {
       tradeoff: "Compatibilidad entre versiones iOS/Android requirió optimización rigurosa de re-renders y bundling de assets.",
       impact: "+2,500 descargas activas y reducción del 70% en consultas presenciales en ventanilla de secretaría.",
       metrics: ["+2,500 Estudiantes", "-70% Trámites Presenciales", "QR Validado"],
-      image: "./assets/projects/mi_istpet_preview.jpg",
+      image: asset("assets/projects/mi_istpet_preview.jpg"),
       technologies: ["React Native", "TypeScript", "API REST", ".NET 8", "MySQL", "JWT"],
       architectureBadges: ["Mobile Native", "Offline Persistence", "QR Security"],
       liveUrl: "#",
@@ -125,7 +129,7 @@ export const portfolioData: IPortfolioData = {
       tradeoff: "Limitación al entorno de escritorio a cambio de cero latencia de red y privacidad total del usuario.",
       impact: "Cálculo instantáneo de cuotas y reportes financieros exportables con tiempo de respuesta < 5ms.",
       metrics: ["< 5ms Respuesta", "100% Offline", "Cifrado SQLite"],
-      image: "./assets/projects/debtmanager_preview.jpg",
+      image: asset("assets/projects/debtmanager_preview.jpg"),
       technologies: ["C#", ".NET Desktop", "SQLite", "LINQ", "UI Design"],
       architectureBadges: ["Desktop Native", "Local DB Persistence", "Finance Engine"],
       liveUrl: "#",
@@ -144,7 +148,7 @@ export const portfolioData: IPortfolioData = {
       tradeoff: "Mayor complejidad operacional y necesidad de tracing distribuido a cambio de aislamiento total de fallos.",
       impact: "Aislamiento completo de fallos: un fallo en analítica no interrumpe la toma de exámenes.",
       metrics: ["Fault Isolation", "Zero-Downtime K8s", "CQRS / DDD"],
-      image: "./assets/projects/microservices_preview.jpg",
+      image: asset("assets/projects/microservices_preview.jpg"),
       technologies: ["C#", ".NET 8", "CQRS", "DDD", "Docker", "Kubernetes", "gRPC"],
       architectureBadges: ["Microservices", "Event-Driven", "K8s Distributed"],
       liveUrl: "#",
