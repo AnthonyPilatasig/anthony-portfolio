@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiUser, FiServer, FiMonitor, FiCpu, FiLayers, FiMapPin } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { AudioVisualizer } from '../components/common/AudioVisualizer';
 import { GithubActivity } from '../components/common/GithubActivity';
+import { VulnHunterGame } from '../components/common/VulnHunterGame';
 import { RevealText } from '../components/common/RevealText';
 
 // Fed to the public iTunes Search API at runtime — no audio files to upload. Swap these for
@@ -27,6 +28,7 @@ const staggerContainer = {
 export const AboutPage: React.FC = () => {
   const { t } = useTranslation();
   const { personal, skills } = portfolioData;
+  const [vulnGameOpen, setVulnGameOpen] = useState(false);
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">
@@ -68,12 +70,20 @@ export const AboutPage: React.FC = () => {
               <h4 className="text-[var(--theme-accent)] uppercase font-mono text-xs font-semibold">{t('about.valuesTitle')}</h4>
               <p className="text-xs text-[var(--theme-ink-muted)] font-light">{t('about.valuesDesc')}</p>
             </div>
-            <div className="editorial-card p-4 rounded-lg space-y-1">
+            <div className="editorial-card p-4 rounded-lg space-y-2">
               <h4 className="text-[var(--theme-ink)] uppercase font-mono text-xs font-semibold">{t('about.securityTitle')}</h4>
               <p className="text-xs text-[var(--theme-ink-muted)] font-light">{t('about.securityDesc')}</p>
+              <button
+                onClick={() => setVulnGameOpen(true)}
+                className="text-[10px] font-mono uppercase tracking-wider text-red-500 hover:text-red-400 underline decoration-dotted"
+              >
+                Jugar: Detecta la Vulnerabilidad →
+              </button>
             </div>
           </div>
         </motion.div>
+
+        {vulnGameOpen && <VulnHunterGame onClose={() => setVulnGameOpen(false)} />}
 
         {/* Sidebar info */}
         <motion.div

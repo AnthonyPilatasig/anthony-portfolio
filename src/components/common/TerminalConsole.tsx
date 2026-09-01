@@ -2,11 +2,36 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { portfolioData } from '../../data/portfolio';
 import { SnakeGame } from './SnakeGame';
+import { Game2048 } from './Game2048';
 import type { IProject, IExperience, IEducation } from '../../types/portfolio.types';
 
 type OSTheme = 'macos' | 'windows' | 'linux';
 
 const OS_LABELS: Record<OSTheme, string> = { macos: 'macOS', windows: 'Windows', linux: 'Linux' };
+
+// Each simulated OS gets its own prompt convention, font stack and body tint —
+// the window chrome alone doesn't read as "really" macOS/Windows/Linux without these.
+const PROMPT_FULL: Record<OSTheme, string> = {
+  macos: 'anthony@MacBook-Pro ~ %',
+  windows: 'PS C:\\Users\\anthony>',
+  linux: 'anthony@ubuntu:~$',
+};
+const PROMPT_SHORT: Record<OSTheme, string> = { macos: '%', windows: '>', linux: '$' };
+const OS_FONT: Record<OSTheme, string> = {
+  macos: "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+  windows: "'Cascadia Code', 'Cascadia Mono', Consolas, monospace",
+  linux: "'Ubuntu Mono', 'DejaVu Sans Mono', monospace",
+};
+const OS_BODY_CLASS: Record<OSTheme, string> = {
+  macos: 'bg-[#0d1117]/90',
+  windows: 'bg-[#0c0c0c]/95',
+  linux: 'bg-[#2c0e37]/90',
+};
+const OS_BORDER_CLASS: Record<OSTheme, string> = {
+  macos: 'border-yellow-500/20',
+  windows: 'border-slate-700',
+  linux: 'border-[#5c2a54]',
+};
 
 interface CommandOutput {
   id: string;
@@ -65,7 +90,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [matrixActive, setMatrixActive] = useState(false);
   const [ctfStage, setCtfStage] = useState(0); // 0=inactive, 1=base64 puzzle, 2=caesar puzzle, 3=solved
-  const [snakeActive, setSnakeActive] = useState(false);
+  const [activeGame, setActiveGame] = useState<'snake' | '2048' | null>(null);
   const [osTheme, setOsTheme] = useState<OSTheme>('macos');
 
   useEffect(() => {
@@ -170,9 +195,17 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         case 'play':
         case 'snake':
         case 'play snake':
-          setSnakeActive(true);
+          setActiveGame('snake');
           outputNode = (
             <p className="text-xs font-mono text-cyan-300">Cargando snake.exe... usa las flechas del teclado, ESC para salir.</p>
+          );
+          break;
+
+        case '2048':
+        case 'play 2048':
+          setActiveGame('2048');
+          outputNode = (
+            <p className="text-xs font-mono text-cyan-300">Cargando 2048.exe... usa las flechas del teclado, ESC para salir.</p>
           );
           break;
 
@@ -208,6 +241,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
                 <div><span className="text-cyan-400 font-bold">matrix</span> : Activa/desactiva la lluvia de código</div>
                 <div><span className="text-cyan-400 font-bold">hack</span> : Inicia un mini reto CTF de 2 niveles</div>
                 <div><span className="text-cyan-400 font-bold">play</span> : Juega Snake sin salir de la terminal</div>
+                <div><span className="text-cyan-400 font-bold">2048</span> : Juega 2048 sin salir de la terminal</div>
                 <div><span className="text-cyan-400 font-bold">os &lt;macos|windows|linux&gt;</span> : Cambia el chrome de la ventana</div>
                 <div><span className="text-cyan-400 font-bold">clear / cls</span> : Limpiar la pantalla de la consola</div>
                 <div><span className="text-cyan-400 font-bold">ls / dir</span> : Listar comandos (alias de help)</div>
@@ -442,8 +476,9 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
       </div>
 
       <div
-        className={`relative w-full bg-[#090d16]/90 border border-yellow-500/20 shadow-2xl p-4 sm:p-6 font-mono text-sm overflow-hidden backdrop-blur-xl ${fullHeight ? 'min-h-[60vh] sm:min-h-[75vh] flex flex-col justify-between' : ''
+        className={`relative w-full border shadow-2xl p-4 sm:p-6 text-sm overflow-hidden backdrop-blur-xl ${OS_BODY_CLASS[osTheme]} ${OS_BORDER_CLASS[osTheme]} ${fullHeight ? 'min-h-[60vh] sm:min-h-[75vh] flex flex-col justify-between' : ''
           } ${osTheme === 'windows' ? 'rounded-lg' : 'rounded-2xl'}`}
+        style={{ fontFamily: OS_FONT[osTheme] }}
         onClick={() => inputRef.current?.focus()}
       >
         {matrixActive && (
@@ -453,13 +488,13 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         {/* Header bar — chrome varies per simulated OS */}
         {osTheme === 'macos' && (
           <div className="flex justify-between items-center pb-4 mb-4 border-b border-yellow-500/20 text-xs select-none">
-            <div className="flex gap-2 shrink-0">
-              <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
-              <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
-              <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+            <div className="flex gap-[7px] shrink-0">
+              <span className="w-[13px] h-[13px] rounded-full bg-gradient-to-b from-red-400 to-red-600 inline-block"></span>
+              <span className="w-[13px] h-[13px] rounded-full bg-gradient-to-b from-yellow-300 to-yellow-500 inline-block"></span>
+              <span className="w-[13px] h-[13px] rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600 inline-block"></span>
             </div>
-            <div className="hidden sm:block text-yellow-400/80 font-mono text-[11px] tracking-wider uppercase truncate px-2">
-              anthony@dev-shell — zsh — 80×24
+            <div className="hidden sm:block text-slate-300 text-[11px] tracking-wide truncate px-2">
+              anthony — zsh — 80×24
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -469,26 +504,26 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         )}
 
         {osTheme === 'windows' && (
-          <div className="flex justify-between items-center pb-3 mb-4 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 px-3 sm:px-4 py-2 bg-slate-900/80 border-b border-slate-700 text-xs select-none">
-            <div className="flex items-center gap-2 text-slate-300 text-[11px] min-w-0 truncate">
-              <span className="w-3.5 h-3.5 rounded-sm bg-cyan-500/80 inline-block shrink-0"></span>
-              <span className="truncate">Windows Terminal</span>
+          <div className="flex justify-between items-center pb-0 mb-4 -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 pl-3 sm:pl-4 bg-[#1f1f1f] border-b border-slate-700 text-xs select-none">
+            <div className="flex items-center gap-2 text-slate-300 text-[11px] min-w-0 truncate py-2.5">
+              <span className="w-3.5 h-3.5 rounded-sm bg-gradient-to-br from-cyan-400 to-blue-600 inline-block shrink-0"></span>
+              <span className="truncate">Windows PowerShell</span>
             </div>
-            <div className="flex items-center gap-3 sm:gap-4 text-slate-400 text-xs font-sans shrink-0">
-              <span className="hover:text-slate-200 cursor-default">─</span>
-              <span className="hover:text-slate-200 cursor-default">▢</span>
-              <span className="hover:text-red-400 cursor-default">✕</span>
+            <div className="flex items-center shrink-0 text-slate-300 text-sm font-sans h-full">
+              <span className="px-3.5 py-2.5 hover:bg-white/10 cursor-default">─</span>
+              <span className="px-3.5 py-2.5 hover:bg-white/10 cursor-default text-[10px]">▢</span>
+              <span className="px-3.5 py-2.5 hover:bg-red-600 hover:text-white cursor-default">✕</span>
             </div>
           </div>
         )}
 
         {osTheme === 'linux' && (
-          <div className="flex justify-between items-center pb-4 mb-4 border-b border-slate-700 text-xs select-none">
-            <span className="text-[10px] text-slate-500 tracking-widest uppercase shrink-0">GNOME</span>
-            <div className="hidden sm:block text-slate-300 font-mono text-[11px] tracking-wider truncate px-2">
-              anthony@dev-shell:~/portfolio
+          <div className="flex justify-between items-center pb-4 mb-4 border-b border-[#5c2a54] text-xs select-none">
+            <span className="text-[10px] text-purple-300/60 tracking-widest uppercase shrink-0">Terminal</span>
+            <div className="hidden sm:block text-purple-100 text-[11px] tracking-wider truncate px-2">
+              anthony@ubuntu: ~
             </div>
-            <span className="w-3 h-3 rounded-full border border-slate-600 hover:border-red-400 inline-block shrink-0"></span>
+            <span className="w-3 h-3 rounded-full border border-purple-300/40 hover:border-red-400 inline-block shrink-0"></span>
           </div>
         )}
 
@@ -498,26 +533,29 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
             <div key={log.id} className="space-y-1">
               <div className="flex items-center text-xs text-yellow-400 font-semibold">
                 <span className="text-cyan-400 mr-2 shrink-0">
-                  <span className="sm:hidden">$</span>
-                  <span className="hidden sm:inline">anthony@dev-shell:~$</span>
+                  <span className="sm:hidden">{PROMPT_SHORT[osTheme]}</span>
+                  <span className="hidden sm:inline">{PROMPT_FULL[osTheme]}</span>
                 </span>
                 <span className="break-all">{log.command}</span>
               </div>
               <div className="pl-4">{log.output}</div>
             </div>
           ))}
-          {snakeActive && (
-            <SnakeGame onExit={() => { setSnakeActive(false); inputRef.current?.focus(); }} />
+          {activeGame === 'snake' && (
+            <SnakeGame onExit={() => { setActiveGame(null); inputRef.current?.focus(); }} />
+          )}
+          {activeGame === '2048' && (
+            <Game2048 onExit={() => { setActiveGame(null); inputRef.current?.focus(); }} />
           )}
           <div ref={bottomRef} />
         </div>
 
         {/* Terminal input form */}
-        {!snakeActive && (
+        {!activeGame && (
         <div className="flex items-center border-t border-yellow-500/20 pt-4 mt-2">
         <span className="text-cyan-400 font-semibold text-xs mr-2 select-none shrink-0">
-          <span className="sm:hidden">$</span>
-          <span className="hidden sm:inline">anthony@dev-shell:~$</span>
+          <span className="sm:hidden">{PROMPT_SHORT[osTheme]}</span>
+          <span className="hidden sm:inline">{PROMPT_FULL[osTheme]}</span>
         </span>
         <input
           ref={inputRef}
