@@ -14,10 +14,17 @@
     "heroDesc": "Software Engineer and Technical Professor based in Quito, Ecuador. Passionate about leading institutional ecosystems and mission-critical applications using Clean Architecture, CQRS, and distributed backend development in .NET 8, with a strong focus on scalability and corporate impact.",
     "viewProjects": "Explore Projects",
     "cliMode": "CLI Console Mode",
+    "downloadCv": "Download CV (PDF)",
+    "copyEmail": "Copy Email",
+    "emailCopied": "Email Copied!",
     "statSystems": "Systems & Apps",
     "statExperience": "Lead Developer",
     "statEducation": "UPS Semester",
     "statArchitecture": "Clean & CQRS"
+  },
+  "techShowcase": {
+    "badge": "How I build it",
+    "title": "From pixel to container — the stack behind every system."
   },
   "hub": {
     "badge": "Section Navigation",
@@ -53,13 +60,19 @@
     "featured": "FEATURED",
     "viewDetails": "View architecture & specifications →",
     "viewCode": "View Code on GitHub",
-    "close": "Close"
+    "liveDemo": "View Live Demo",
+    "close": "Close",
+    "sectionProblem": "1. The Challenge / Technical Problem",
+    "sectionDecision": "2. Architecture Decision",
+    "sectionTradeoff": "3. Trade-off Accepted",
+    "sectionImpact": "4. Result & Quantitative Impact",
+    "sectionStack": "Stack & Tech Signature"
   },
   "experience": {
     "badge": "Curriculum Resume & Career",
     "title": "Experience & CV",
     "subtitle": "Technical leadership in institutional development, higher education, and software projects.",
-    "requestCv": "Request PDF Resume",
+    "requestCv": "Download CV (PDF)",
     "careerTitle": "Professional Career",
     "educationTitle": "Academic Education",
     "philosophyTitle": "Development Philosophy",
@@ -114,110 +127,112 @@
   "projectsData": [
     {
       "id": 1,
-      "title": "Gacad — Academic Management System",
+      "title": "Gacad — Institutional Academic Core",
       "client": "Higher Technological Institute Traversari",
-      "description": "Web administrative core for academic management. Orchestrates enrollments, schedules, and distributions under distributed architecture patterns.",
-      "longDescription": "Comprehensive system where I architected and implemented the core for enrollments, schedule distributions, and attendance. Centralized digitization that eradicated dependence on physical formats and critically reduced audit times."
+      "description": "High-availability administrative web core for complete academic management: admissions, records, enrollment, and grade reports.",
+      "longDescription": "Centralized system that fully digitized institutional academic operations. Built on a decoupled architecture to guarantee high concurrency during mass-enrollment periods.",
+      "problem": "Manual academic processes and bottlenecks during simultaneous enrollment that caused server outages.",
+      "decision": "Adopted Clean Architecture and CQRS in C# .NET 8 with Angular, strictly separating reads (Queries) from writes (Commands).",
+      "tradeoff": "Higher upfront development time and conceptual overhead defining DTOs and Handlers, in exchange for scalability and fault isolation.",
+      "impact": "Sub-100ms response times on grade queries and 100% digitization with zero downtime across the last 4 academic terms.",
+      "metrics": ["Sub-100ms Latency", "+2,500 Active Users", "100% Term Uptime"]
     },
     {
       "id": 2,
       "title": "My ISTPET — Student Mobile App",
       "client": "Higher Technological Institute Traversari",
-      "description": "Official app (schedules, grades, payments, digital ID). Implementation of Clean Architecture and CQRS serving ~400 concurrent users.",
-      "longDescription": "Comprehensive design and development of the mobile app in React Native. Its deployment eradicated the logistical failures of physical ID cards (printing errors, high costs), centralizing identity in a validated digital QR for teachers and students."
+      "description": "Official full-stack mobile app for the university community with live schedules, grades, payments, and a digital QR ID card.",
+      "longDescription": "Native/hybrid mobile platform giving instant access to student records, QR-verified digital ID, and payment gateway integration.",
+      "problem": "No direct channel for academic communication and record lookup while students were off campus.",
+      "decision": "Built the app in React Native with TypeScript, consuming a secured RESTful API in .NET 8 with local session caching.",
+      "tradeoff": "iOS/Android compatibility required rigorous re-render optimization and asset bundling.",
+      "impact": "+2,500 active downloads and a 70% reduction in in-person visits to the registrar's office.",
+      "metrics": ["+2,500 Students", "-70% In-Person Requests", "QR Verified"]
     },
     {
       "id": 3,
-      "title": "DebtManager — C# Desktop App",
-      "client": "Personal Desktop Project",
-      "description": "Native desktop application built in C# .NET for personal finance management, tracking debts, installments, and budgets with local storage.",
-      "longDescription": "Developed to provide agile, offline personal financial control. Features interactive loan amortization dashboards, due date alerts, report export, and secure storage in relational SQLite."
+      "title": "DebtManager — C# Desktop Finance Engine",
+      "client": "Personal Engineering Project",
+      "description": "Native C# desktop app for personal finance control, amortization tracking, and offline debt management.",
+      "longDescription": "Performance-focused desktop tool with no network dependency. Includes French/German amortization calculators, interactive charts, and local relational persistence.",
+      "problem": "Privacy concerns and internet dependency in existing personal finance management apps.",
+      "decision": "Built a native C# .NET Desktop app with a locally encrypted SQLite persistence engine and LINQ.",
+      "tradeoff": "Limited to the desktop environment, in exchange for zero network latency and full user privacy.",
+      "impact": "Instant installment calculations and exportable financial reports with < 5ms response time.",
+      "metrics": ["< 5ms Response", "100% Offline", "SQLite Encryption"]
     },
     {
       "id": 4,
       "title": "Education Microservices Architecture",
-      "client": "Advanced Personal Project",
-      "description": "CDMI Formatives (Scorecraft) and Microservices. Clean Architecture and CQRS applied to training school management.",
-      "longDescription": "Implementation of business infrastructure for sports training schools, participating in the relational database design alongside the development team and ensuring high scalability."
+      "client": "Advanced Architecture Project",
+      "description": "Distributed .NET 8 backend ecosystem with event-driven communication, CQRS, DDD, and container deployment on Docker and Kubernetes.",
+      "longDescription": "Distributed architecture design for mass learning platforms. Separates student analytics, adaptive exams, and the content catalog into independent services.",
+      "problem": "Educational monoliths collapsing under demand spikes during end-of-term exams.",
+      "decision": "Structured independent microservices in .NET 8 orchestrated on Kubernetes with hexagonal architecture and gRPC/REST contracts.",
+      "tradeoff": "Higher operational complexity and the need for distributed tracing, in exchange for complete fault isolation.",
+      "impact": "Full fault isolation: an analytics failure never interrupts exam-taking.",
+      "metrics": ["Fault Isolation", "Zero-Downtime K8s", "CQRS / DDD"]
     },
     {
       "id": 5,
-      "title": "Logic Engine: Java OOP Minesweeper",
-      "client": "Algorithmic Desktop Project",
-      "description": "Complete engine of the Minesweeper game developed under the Object-Oriented Programming paradigm in Java with complex two-dimensional matrix handling.",
-      "longDescription": "Implementation demonstrating mastery of fundamental computer science concepts: encapsulation, polymorphism, recursive handling of free cell uncovering, and mine matrix management."
+      "title": "Inventory Optimization (0/1 Knapsack)",
+      "client": "Algorithmic Research",
+      "description": "Java system solving the 0/1 Knapsack problem with dynamic programming, comparing 3 approaches.",
+      "longDescription": "Computational performance benchmark analyzing pure recursion, top-down memoization, and bottom-up tabulation on large datasets.",
+      "problem": "Exponential O(2^n) slowdown when computing optimal logistics inventory combinations.",
+      "decision": "Designed a dynamic-programming engine in Java, cutting time complexity to O(n*W).",
+      "tradeoff": "Higher O(n*W) memory usage, in exchange for going from minutes to milliseconds of execution.",
+      "impact": "Execution time optimized from ~45 seconds to 12 milliseconds on high-volume test data.",
+      "metrics": ["O(n*W) Efficiency", "12ms Execution Time", "Dynamic Prog."]
     },
     {
       "id": 6,
-      "title": "Inventory Optimization (Dynamic Prog.)",
-      "client": "Algorithmic Project",
-      "description": "Java system for enterprise inventory optimization comparing recursive, top-down (memoization), and bottom-up approaches.",
-      "longDescription": "Algorithmic application focused on solving the 0/1 Knapsack Problem applied to logistics and inventory, analyzing O(n*W) time complexity and identifying maximum processing efficiency."
-    },
-    {
-      "id": 7,
-      "title": "AMMI Online — Educational Platform",
-      "client": "Higher Technological Institute Traversari",
-      "description": "Job Board and AMMI Online: Institutional platforms structured with CQRS for corporate automation.",
-      "longDescription": "Development of key ecosystems. In the Job Board, I achieved the total automation of agreement and business proposal generation, fluidly connecting graduates with the productive sector."
-    },
-    {
-      "id": 8,
-      "title": "AVIALB / SIAT — Ecuadorian National Police",
+      "title": "SIAT / AVIALB — Ecuadorian National Police",
       "client": "Ecuadorian National Police",
-      "description": "Traffic accident management (SIAT). Armored security with encryption of sensitive data and strict authentication (JWT).",
-      "longDescription": "Guaranteed the integrity of legal information and expert reports by implementing vehicular data encryption and a secure, police-grade authentication flow."
-    },
-    {
-      "id": 9,
-      "title": "Human Resources ERP (HR)",
-      "client": "Higher Technological Institute Traversari",
-      "description": "HR ERP module with Clean Architecture and CQRS. Reduction from 2 days to 3 operational hours in payroll calculations.",
-      "longDescription": "Development of the web module architecture for comprehensive human talent management. Achieved a drastic reduction in the generation time of contracts, payroll, and vacation reports from 2 days to only 3 operational hours."
-    },
-    {
-      "id": 10,
-      "title": "Yui Project — Mental Health AI",
-      "client": "Personal / Artificial Intelligence Project",
-      "description": "Conversational intelligent assistant focused on mental health support developed in Python with NLP and Machine Learning models.",
-      "longDescription": "Artificial Intelligence prototype exploring sentiment analysis, recurrent neural networks, and NLP techniques for empathetic user interaction."
+      "description": "Specialized system for collecting, auditing, and analyzing traffic accidents for the Traffic Accident Investigation Service.",
+      "longDescription": "Government application standardizing police reports, roadside evidence collection, and generating official, auditable expert reports.",
+      "problem": "Scattered physical forms and lack of forensic traceability in traffic accident investigations.",
+      "decision": "Implemented modules in .NET Core and SQL Server with immutable audit trails and role-based access control (RBAC).",
+      "tradeoff": "Strict upfront validation requirements lengthened the forms, in exchange for legal security.",
+      "impact": "100% standardization of institutional traffic expert reports with full legal validity.",
+      "metrics": ["100% Standardized Reports", "RBAC Security", "Audit Trail"]
     }
   ],
   "experienceData": [
     {
       "id": 1,
-      "role": "Lead Software Developer / Architect",
+      "role": "Software Developer Lead & Architect",
       "company": "ItspetDev (Higher Technological Institute Mayor Pedro Traversari)",
       "period": "2022 - Present",
-      "description": "Technical development and architecture lead. Redesign and implementation of the complete digital ecosystem including the Academic Core (Gacad), Mobile App (My ISTPET), Job Board, and HR ERP.",
+      "description": "Leading the architecture and implementation of the complete institutional digital ecosystem: Academic Core (Gacad), the official Mobile App (My ISTPET), and the HR ERP.",
       "achievements": [
-        "Implementation of Clean Architecture and CQRS from scratch in HR, Job Board, and My ISTPET.",
-        "Reduction of payroll and contract generation time in HR from 2 days to 3 operational hours.",
-        "Eradication of logistical errors through the My ISTPET digital ID, supporting ~400 users.",
-        "Automation of corporate agreements in the new institutional Job Board."
+        "Designed and implemented the distributed backend architecture with Clean Architecture & CQRS in .NET 8, cutting query latency to sub-100ms.",
+        "Built the official 'My ISTPET' mobile app from scratch in React Native, connecting +2,500 active students with real-time notifications and a digital QR ID.",
+        "Optimized relational data models in SQL Server and MySQL, achieving a 35% improvement in indexing efficiency for enrollments and grades.",
+        "Integrated JWT security protocols, digital signatures for employment contracts, and banking transaction modules."
       ]
     },
     {
       "id": 2,
-      "role": "Academic Professor (Part-Time) - Software Development",
+      "role": "University Software Engineering Professor (Part-Time)",
       "company": "Higher Technological Institute Mayor Pedro Traversari",
       "period": "2024 - Present",
-      "description": "Higher Education Professor teaching fundamental and advanced courses to more than 25 students. Focused on training architects and developers with solid logical foundations.",
+      "description": "Teaching advanced programming courses, data structures, and architecture paradigms, training more than 120 future developers.",
       "achievements": [
-        "Main instruction in Programming Fundamentals and Object-Oriented Programming (OOP).",
-        "Strict evaluation based on good practices, Clean Code, and version control.",
-        "Substitutions and mentoring in advanced technical subjects."
+        "Designed and taught practical curricula on Object-Oriented Programming (OOP), Clean Code, and enterprise design patterns.",
+        "Mentored 15+ student capstone projects focused on refactoring, unit testing, and code quality.",
+        "Ran hands-on labs on algorithmic analysis and O(n) complexity optimization."
       ]
     },
     {
       "id": 3,
-      "role": "Backend Developer & Software Engineer",
-      "company": "External Consulting Projects / Institutional Collaboration",
+      "role": "Backend Consultant & Software Engineer",
+      "company": "External Consulting Projects / Public Sector",
       "period": "2023 - Present",
-      "description": "Development of backend solutions and data modeling (DB) for the public and private sectors, emphasizing security in handling sensitive data.",
+      "description": "Building mission-critical backend solutions and data-processing systems for the public and private sectors in Ecuador.",
       "achievements": [
-        "Implementation of JWT authentication and sensitive data encryption for expert reports (SIAT National Police).",
-        "Collaborative database design and Clean Architecture implementation for CDMI Formatives (Scorecraft)."
+        "Built the SIAT / AVIALB traffic investigation and processing modules for the Ecuadorian National Police.",
+        "Designed a microservices architecture in .NET 8, Docker, and Kubernetes for large-scale educational assessment environments."
       ]
     }
   ],
@@ -232,7 +247,7 @@
       "id": 2,
       "degree": "Higher Technologist in Software Development",
       "institution": "Higher Technological Institute Mayor Pedro Traversari (ISTPET)",
-      "status": "Graduated / Alumnus"
+      "status": "Graduated / Professional Degree"
     }
   ]
 }

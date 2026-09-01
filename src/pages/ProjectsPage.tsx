@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers, FiX, FiCheckCircle } from 'react-icons/fi';
+import { FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers, FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle, FiSettings, FiGitBranch } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
+import { RevealText } from '../components/common/RevealText';
 import type { IProject, ProjectCategory } from '../types/portfolio.types';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
   
-  const translatedProjects = (t('projectsData', { returnObjects: true }) as unknown) as any[];
-  const projects = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
+  const projects: IProject[] = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem) => tItem.id === p.id) || {};
     return { ...p, ...tr };
-  }) as IProject[];
+  });
 
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
@@ -44,7 +45,7 @@ export const ProjectsPage: React.FC = () => {
             <span>{t('projects.badge')}</span>
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white tracking-tighter">
-            {t('projects.title')}
+            <RevealText text={t('projects.title')} />
           </h1>
           <p className="text-xs md:text-sm font-mono text-slate-600 dark:text-slate-400 mt-2">
             {t('projects.subtitle')}
@@ -112,6 +113,16 @@ export const ProjectsPage: React.FC = () => {
 
               {/* Badges & Technologies */}
               <div className="mt-auto space-y-3">
+                {project.metrics && project.metrics.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.metrics.map((m, mIdx) => (
+                      <span key={mIdx} className="text-[10px] font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <FiTrendingUp className="w-2.5 h-2.5" />
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {project.architectureBadges && (
                   <div className="flex flex-wrap gap-1.5">
                     {project.architectureBadges.map((badge, bIdx) => (
@@ -171,17 +182,65 @@ export const ProjectsPage: React.FC = () => {
               </div>
 
               <div className="space-y-4 text-xs md:text-sm text-slate-700 dark:text-slate-300 font-light leading-relaxed">
-                <div>
-                  <h4 className="text-xs font-mono font-bold text-yellow-600 dark:text-yellow-400 uppercase mb-1">
-                    Descripción del Sistema & Arquitectura
-                  </h4>
+                {!selectedProject.problem && (
                   <p>{selectedProject.longDescription || selectedProject.description}</p>
-                </div>
+                )}
+
+                {selectedProject.problem && (
+                  <div className="p-4 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-red-500/20 space-y-1.5">
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-mono font-bold text-xs uppercase tracking-wider">
+                      <FiAlertCircle className="w-4 h-4" />
+                      <span>{t('projects.sectionProblem')}</span>
+                    </div>
+                    <p>{selectedProject.problem}</p>
+                  </div>
+                )}
+
+                {selectedProject.decision && (
+                  <div className="p-4 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-cyan-500/20 space-y-1.5">
+                    <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono font-bold text-xs uppercase tracking-wider">
+                      <FiSettings className="w-4 h-4" />
+                      <span>{t('projects.sectionDecision')}</span>
+                    </div>
+                    <p>{selectedProject.decision}</p>
+                  </div>
+                )}
+
+                {selectedProject.tradeoff && (
+                  <div className="p-4 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-yellow-500/20 space-y-1.5">
+                    <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 font-mono font-bold text-xs uppercase tracking-wider">
+                      <FiGitBranch className="w-4 h-4" />
+                      <span>{t('projects.sectionTradeoff')}</span>
+                    </div>
+                    <p>{selectedProject.tradeoff}</p>
+                  </div>
+                )}
+
+                {selectedProject.impact && (
+                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs uppercase tracking-wider">
+                      <FiTrendingUp className="w-4 h-4" />
+                      <span>{t('projects.sectionImpact')}</span>
+                    </div>
+                    <p className="text-slate-800 dark:text-slate-200 font-normal">{selectedProject.impact}</p>
+
+                    {selectedProject.metrics && (
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {selectedProject.metrics.map((metric, idx) => (
+                          <span key={idx} className="luxury-badge bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 font-mono">
+                            <FiCheckCircle className="w-3 h-3" />
+                            <span>{metric}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {selectedProject.architectureBadges && (
                   <div>
                     <h4 className="text-xs font-mono font-bold text-yellow-600 dark:text-yellow-400 uppercase mb-2">
-                      Patrones de Diseño
+                      {t('projects.sectionStack')}
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.architectureBadges.map((badge, idx) => (
@@ -195,9 +254,6 @@ export const ProjectsPage: React.FC = () => {
                 )}
 
                 <div>
-                  <h4 className="text-xs font-mono font-bold text-yellow-600 dark:text-yellow-400 uppercase mb-2">
-                    Stack Tecnológico Utilizado
-                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedProject.technologies.map((tech, idx) => (
                       <span key={idx} className="luxury-badge">
@@ -218,6 +274,17 @@ export const ProjectsPage: React.FC = () => {
                   >
                     <FiGithub className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                     <span>{t('projects.viewCode')}</span>
+                  </a>
+                )}
+                {selectedProject.liveUrl && selectedProject.liveUrl !== '#' && (
+                  <a
+                    href={selectedProject.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-5 py-2 rounded-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs font-mono flex items-center gap-2 transition-all"
+                  >
+                    <FiExternalLink className="w-4 h-4" />
+                    <span>{t('projects.liveDemo')}</span>
                   </a>
                 )}
                 <button

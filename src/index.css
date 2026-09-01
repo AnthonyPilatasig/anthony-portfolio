@@ -186,3 +186,54 @@ html:not(.dark) .text-gold-gradient {
   z-index: -1;
   animation: pulse-glow 2s infinite ease-in-out;
 }
+
+/* Project Reel Marquee */
+@keyframes reel-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.project-reel-track {
+  animation: reel-scroll 32s linear infinite;
+}
+
+.project-reel:hover .project-reel-track {
+  animation-play-state: paused;
+}
+
+.project-reel {
+  mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-reel-track {
+    animation: none;
+  }
+}
+
+/* Custom difference-blend cursor companion */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cursor-dot--active {
+  width: 44px;
+  height: 44px;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-dot {
+    display: none;
+  }
+}

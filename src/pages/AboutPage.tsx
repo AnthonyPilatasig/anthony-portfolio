@@ -3,6 +3,12 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiUser, FiServer, FiMonitor, FiCpu, FiLayers, FiMapPin } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
+import { AudioVisualizer } from '../components/common/AudioVisualizer';
+import { RevealText } from '../components/common/RevealText';
+
+// Fed to the public iTunes Search API at runtime — no audio files to upload. Swap these for
+// whatever genres/artists fit your taste; the widget adapts automatically.
+const musicTasteSearchTerms = ['lofi hip hop', 'synthwave'];
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -51,7 +57,7 @@ export const AboutPage: React.FC = () => {
           className="md:col-span-2 space-y-6"
         >
           <h2 className="text-2xl font-light text-slate-900 dark:text-slate-100 leading-snug">
-            {t('about.mainTitle')}
+            <RevealText text={t('about.mainTitle')} stagger={30} />
           </h2>
           <div className="space-y-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-light">
             <p>{t('about.bio1')}</p>
@@ -72,8 +78,12 @@ export const AboutPage: React.FC = () => {
         </motion.div>
 
         {/* Sidebar info */}
-        <motion.div 
-          initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
+        <motion.div
+          initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={staggerContainer}
+          className="space-y-6"
+        >
+        <motion.div
+          variants={fadeUpVariant}
           className="p-6 rounded-2xl border border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 space-y-6 hover:shadow-lg transition-shadow"
         >
           <div>
@@ -113,6 +123,11 @@ export const AboutPage: React.FC = () => {
               <span className="luxury-badge">SQL Management</span>
             </div>
           </div>
+        </motion.div>
+
+        <motion.div variants={fadeUpVariant}>
+          <AudioVisualizer searchTerms={musicTasteSearchTerms} />
+        </motion.div>
         </motion.div>
       </div>
 

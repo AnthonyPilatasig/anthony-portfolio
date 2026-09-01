@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiArrowRight, FiShield, FiCpu, FiTerminal, FiBriefcase, FiUser, FiFolder } from 'react-icons/fi';
+import { FiArrowRight, FiShield, FiCpu, FiTerminal, FiBriefcase, FiUser, FiFolder, FiDownload, FiCopy, FiCheck } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { TerminalConsole } from '../components/common/TerminalConsole';
+import { Hero3DGraphic } from '../components/common/Hero3DGraphic';
+import { ProjectReel } from '../components/common/ProjectReel';
+import { CountUp } from '../components/common/CountUp';
+import { RevealText } from '../components/common/RevealText';
+import { Magnetic } from '../components/common/Magnetic';
+import { TechShowcase } from '../components/common/TechShowcase';
+import type { IProject } from '../types/portfolio.types';
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -24,14 +31,25 @@ const fadeUpVariant = {
 export const HomePage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { personal } = portfolioData;
-  const translatedProjects = (t('projectsData', { returnObjects: true }) as unknown) as any[];
-  const projects = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
+  const projects: IProject[] = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem) => tItem.id === p.id) || {};
     return { ...p, ...tr };
   });
   const featuredProjects = projects.filter((p) => p.isFeatured).slice(0, 4);
 
   const isEn = i18n.language === 'en';
+
+  const [copied, setCopied] = useState(false);
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(personal.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Clipboard API unavailable (non-secure context / old browser) — silently ignore.
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-16 flex flex-col justify-center">
@@ -73,31 +91,65 @@ export const HomePage: React.FC = () => {
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
         variants={staggerContainer}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start mb-16"
+        className="relative grid grid-cols-1 md:grid-cols-3 gap-8 items-start mb-16"
       >
+        <Hero3DGraphic />
         <motion.div variants={fadeUpVariant} className="md:col-span-2 space-y-6">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
-            {t('hero.mainTitle')}
+            <RevealText text={t('hero.mainTitle')} stagger={35} />
           </h2>
           <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-light max-w-2xl">
             {t('hero.heroDesc')}
           </p>
-          <div className="flex flex-wrap gap-4 pt-2">
-            <Link
-              to="/proyectos"
-              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-950 font-bold text-xs tracking-wider uppercase hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg shadow-yellow-500/20 flex items-center gap-2 hover:scale-105"
-            >
-              <FiFolder className="w-4 h-4" />
-              <span>{t('hero.viewProjects')}</span>
-            </Link>
+          <div className="flex flex-wrap gap-3 pt-2 items-center">
+            <Magnetic>
+              <Link
+                to="/proyectos"
+                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-950 font-bold text-xs tracking-wider uppercase hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg shadow-yellow-500/20 flex items-center gap-2"
+              >
+                <FiFolder className="w-4 h-4" />
+                <span>{t('hero.viewProjects')}</span>
+              </Link>
+            </Magnetic>
 
             <Link
               to="/terminal"
-              className="px-6 py-2.5 rounded-full border border-slate-300 dark:border-yellow-500/30 hover:border-yellow-600 dark:hover:border-yellow-400 bg-slate-100/60 dark:bg-slate-900/60 text-yellow-700 dark:text-yellow-300 font-mono text-xs tracking-wider uppercase transition-all flex items-center gap-2 hover:scale-105"
+              className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-yellow-500/30 hover:border-yellow-600 dark:hover:border-yellow-400 bg-slate-100/60 dark:bg-slate-900/60 text-yellow-700 dark:text-yellow-300 font-mono text-xs tracking-wider uppercase transition-all flex items-center gap-2 hover:scale-105"
             >
               <FiTerminal className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
               <span>{t('hero.cliMode')}</span>
             </Link>
+
+            <a
+              href="./CV_Anthony_Pilatasig.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-yellow-600 dark:hover:border-yellow-400 bg-slate-100/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-200 font-mono text-xs tracking-wider uppercase transition-all flex items-center gap-2 hover:scale-105"
+            >
+              <FiDownload className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+              <span>{t('hero.downloadCv')}</span>
+            </a>
+
+            <button
+              onClick={handleCopyEmail}
+              className={`px-5 py-2.5 rounded-full border font-mono text-xs tracking-wider uppercase transition-all flex items-center gap-2 ${
+                copied
+                  ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                  : 'border-slate-300 dark:border-slate-700 bg-slate-100/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-200 hover:border-yellow-600 dark:hover:border-yellow-400'
+              }`}
+            >
+              {copied ? (
+                <>
+                  <FiCheck className="w-4 h-4 text-emerald-500" />
+                  <span>{t('hero.emailCopied')}</span>
+                </>
+              ) : (
+                <>
+                  <FiCopy className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                  <span>{t('hero.copyEmail')}</span>
+                </>
+              )}
+            </button>
           </div>
         </motion.div>
 
@@ -105,13 +157,13 @@ export const HomePage: React.FC = () => {
         <motion.div variants={fadeUpVariant} className="grid grid-cols-2 gap-3 md:gap-4 w-full md:w-auto shrink-0">
           <div className="col-span-2 p-5 rounded-2xl border border-slate-300/80 dark:border-yellow-500/20 bg-gradient-to-br from-slate-100 to-white dark:from-slate-900/80 dark:to-slate-950/80 flex flex-col justify-center relative overflow-hidden group shadow-sm dark:shadow-none hover:border-yellow-400 dark:hover:border-yellow-500 transition-colors">
             <div className="absolute -right-4 -top-4 w-16 h-16 bg-yellow-500/10 dark:bg-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
-            <span className="text-3xl font-mono font-bold text-yellow-600 dark:text-yellow-400">10+</span>
+            <span className="text-3xl font-mono font-bold text-yellow-600 dark:text-yellow-400"><CountUp end={10} suffix="+" /></span>
             <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 uppercase mt-1 tracking-wider">{t('hero.statSystems')}</span>
           </div>
 
           <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50 flex flex-col justify-center hover:border-cyan-400 dark:hover:border-cyan-500 transition-colors group relative overflow-hidden">
             <div className="absolute -left-4 -bottom-4 w-12 h-12 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700" />
-            <span className="text-xl md:text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400">3+ Yrs</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-cyan-600 dark:text-cyan-400"><CountUp end={3} suffix="+ Yrs" /></span>
             <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase mt-1 leading-tight tracking-wider">{t('hero.statExperience')}</span>
           </div>
 
@@ -165,6 +217,23 @@ export const HomePage: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* Tech Showcase — Apple-style pinned scroll section */}
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeUpVariant}
+        className="mb-16 space-y-4"
+      >
+        <div className="border-b border-slate-300 dark:border-slate-800 pb-3">
+          <span className="text-[10px] font-mono text-yellow-600 dark:text-yellow-400 tracking-widest uppercase">{t('techShowcase.badge')}</span>
+          <h3 className="text-xl font-light text-slate-800 dark:text-slate-100">
+            <RevealText text={t('techShowcase.title')} stagger={30} />
+          </h3>
+        </div>
+        <TechShowcase />
+      </motion.div>
+
       {/* Featured Projects Showcase Teaser */}
       <motion.div
         initial="hidden"
@@ -207,6 +276,8 @@ export const HomePage: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        <ProjectReel projects={projects} />
       </motion.div>
 
       {/* Terminal CLI Teaser */}

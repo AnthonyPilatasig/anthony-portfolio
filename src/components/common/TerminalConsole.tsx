@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { portfolioData } from '../../data/portfolio';
+import type { IProject, IExperience, IEducation } from '../../types/portfolio.types';
 
 interface CommandOutput {
   id: string;
@@ -9,28 +10,27 @@ interface CommandOutput {
 }
 
 interface TerminalConsoleProps {
-  onSelectCategory?: (category: any) => void;
   fullHeight?: boolean;
 }
 
 export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = false }) => {
   const { t } = useTranslation();
 
-  const translatedProjects = (t('projectsData', { returnObjects: true }) as unknown) as any[];
-  const projects = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem: any) => tItem.id === p.id) || {};
+  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
+  const projects: IProject[] = portfolioData.projects.map(p => {
+    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem) => tItem.id === p.id) || {};
     return { ...p, ...tr };
   });
 
-  const translatedExp = (t('experienceData', { returnObjects: true }) as unknown) as any[];
-  const experience = portfolioData.experience.map(e => {
-    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem: any) => tItem.id === e.id) || {};
+  const translatedExp = t('experienceData', { returnObjects: true }) as Partial<IExperience>[];
+  const experience: IExperience[] = portfolioData.experience.map(e => {
+    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem) => tItem.id === e.id) || {};
     return { ...e, ...tr };
   });
 
-  const translatedEdu = (t('educationData', { returnObjects: true }) as unknown) as any[];
-  const education = portfolioData.education.map(e => {
-    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem: any) => tItem.id === e.id) || {};
+  const translatedEdu = t('educationData', { returnObjects: true }) as Partial<IEducation>[];
+  const education: IEducation[] = portfolioData.education.map(e => {
+    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem) => tItem.id === e.id) || {};
     return { ...e, ...tr };
   });
 
@@ -57,6 +57,48 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [matrixActive, setMatrixActive] = useState(false);
+  const [ctfStage, setCtfStage] = useState(0); // 0=inactive, 1=base64 puzzle, 2=caesar puzzle, 3=solved
+
+  useEffect(() => {
+    if (!matrixActive) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    let animationId: number;
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const fontSize = 14;
+    const chars = 'アカサタナハマヤラワ01ANTHONYAP0123456789';
+    let drops = new Array(Math.floor(canvas.width / fontSize)).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(8, 12, 20, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#22c55e';
+      ctx.font = `${fontSize}px monospace`;
+      drops = drops.map((y, i) => {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(char, i * fontSize, y * fontSize);
+        const next = y * fontSize > canvas.height && Math.random() > 0.975 ? 0 : y + 1;
+        return next;
+      });
+      animationId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
+  }, [matrixActive]);
 
   useEffect(() => {
     if (logs.length > 1) {
@@ -76,8 +118,52 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
 
     if (lower.startsWith('echo ')) {
       outputNode = <div className="text-xs font-mono text-slate-300">{trimmed.substring(5)}</div>;
+    } else if (lower.startsWith('decode ') && (ctfStage === 1 || ctfStage === 2)) {
+      const answer = trimmed.substring(7).trim().toLowerCase();
+      if (ctfStage === 1 && answer === 'root') {
+        setCtfStage(2);
+        outputNode = (
+          <div className="text-xs space-y-1.5 font-mono">
+            <p className="text-emerald-400 font-bold">✓ Correcto. Nivel 1 superado.</p>
+            <p className="text-slate-300">Nivel 2 — Cifrado César (desplazamiento +3). Descifra y responde con <span className="text-cyan-300">decode &lt;respuesta&gt;</span>:</p>
+            <p className="text-yellow-300 tracking-widest text-sm">lvwshw</p>
+          </div>
+        );
+      } else if (ctfStage === 2 && answer === 'istpet') {
+        setCtfStage(3);
+        outputNode = (
+          <div className="text-xs space-y-1 font-mono">
+            <p className="text-emerald-400 font-bold">[ACCESS GRANTED] Firewall perimetral evadido.</p>
+            <p className="text-yellow-300 tracking-wider">FLAG&#123;ISTPET_DEV_2026&#125;</p>
+            <p className="text-slate-400">Bien jugado. Escribe <span className="text-cyan-300 underline cursor-pointer" onClick={() => handleCommand('hack')}>hack</span> para reiniciar el reto.</p>
+          </div>
+        );
+      } else {
+        outputNode = <p className="text-xs text-red-400 font-mono">✗ Respuesta incorrecta. Sigue intentando.</p>;
+      }
     } else {
       switch (lower) {
+        case 'matrix':
+          setMatrixActive((prev) => !prev);
+          outputNode = (
+            <p className="text-xs font-mono text-emerald-400">
+              {matrixActive ? 'Saliendo de la Matrix...' : 'Wake up, Anthony... Sigue al conejo blanco.'}
+            </p>
+          );
+          break;
+
+        case 'hack':
+        case 'ctf':
+          setCtfStage(1);
+          outputNode = (
+            <div className="text-xs space-y-1.5 font-mono">
+              <p className="text-red-400 font-bold">[!] Intrusión simulada iniciada — reto CTF de 2 niveles.</p>
+              <p className="text-slate-300">Nivel 1 — Base64. Decodifica y responde con <span className="text-cyan-300">decode &lt;respuesta&gt;</span>:</p>
+              <p className="text-yellow-300 tracking-widest text-sm">cm9vdA==</p>
+            </div>
+          );
+          break;
+
         case 'help':
         case 'ls':
         case 'dir':
@@ -95,6 +181,8 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
                 <div><span className="text-cyan-400 font-bold">contact</span> : Canales de contacto y redes sociales</div>
                 <div><span className="text-cyan-400 font-bold">neofetch</span> : Información del sistema y desarrollador</div>
                 <div><span className="text-cyan-400 font-bold">sudo</span> : Permiso concedido de administrador</div>
+                <div><span className="text-cyan-400 font-bold">matrix</span> : Activa/desactiva la lluvia de código</div>
+                <div><span className="text-cyan-400 font-bold">hack</span> : Inicia un mini reto CTF de 2 niveles</div>
                 <div><span className="text-cyan-400 font-bold">clear / cls</span> : Limpiar la pantalla de la consola</div>
                 <div><span className="text-cyan-400 font-bold">ls / dir</span> : Listar comandos (alias de help)</div>
                 <div><span className="text-cyan-400 font-bold">whoami</span> : Mostrar usuario actual</div>
@@ -311,10 +399,14 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
 
   return (
     <div
-      className={`w-full max-w-5xl mx-auto rounded-2xl bg-[#090d16]/90 border border-yellow-500/20 shadow-2xl p-6 font-mono text-sm overflow-hidden backdrop-blur-xl ${fullHeight ? 'min-h-[75vh] flex flex-col justify-between' : ''
+      className={`relative w-full max-w-5xl mx-auto rounded-2xl bg-[#090d16]/90 border border-yellow-500/20 shadow-2xl p-6 font-mono text-sm overflow-hidden backdrop-blur-xl ${fullHeight ? 'min-h-[75vh] flex flex-col justify-between' : ''
         }`}
       onClick={() => inputRef.current?.focus()}
     >
+      {matrixActive && (
+        <canvas ref={canvasRef} className="absolute inset-0 -z-10 pointer-events-none opacity-70" />
+      )}
+
       {/* Header bar */}
       <div className="flex justify-between items-center pb-4 mb-4 border-b border-yellow-500/20 text-xs select-none">
         <div className="flex gap-2">
@@ -354,7 +446,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Escribe 'help', 'projects', 'gacad' o 'desktop'..."
+          placeholder="Escribe 'help', 'hack', 'matrix' o 'projects'..."
           className="flex-1 bg-transparent text-slate-100 border-none outline-none focus:ring-0 font-mono text-xs placeholder-slate-600"
           autoFocus={fullHeight}
         />

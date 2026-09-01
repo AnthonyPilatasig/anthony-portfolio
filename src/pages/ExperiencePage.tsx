@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
+import { RevealText } from '../components/common/RevealText';
+import type { IExperience, IEducation } from '../types/portfolio.types';
 
 const fadeLeftVariant = {
   hidden: { opacity: 0, x: -30 },
@@ -17,15 +19,15 @@ const fadeUpVariant = {
 export const ExperiencePage: React.FC = () => {
   const { t } = useTranslation();
   
-  const translatedExp = (t('experienceData', { returnObjects: true }) as unknown) as any[];
-  const experience = portfolioData.experience.map(e => {
-    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem: any) => tItem.id === e.id) || {};
+  const translatedExp = t('experienceData', { returnObjects: true }) as Partial<IExperience>[];
+  const experience: IExperience[] = portfolioData.experience.map(e => {
+    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem) => tItem.id === e.id) || {};
     return { ...e, ...tr };
   });
 
-  const translatedEdu = (t('educationData', { returnObjects: true }) as unknown) as any[];
-  const education = portfolioData.education.map(e => {
-    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem: any) => tItem.id === e.id) || {};
+  const translatedEdu = t('educationData', { returnObjects: true }) as Partial<IEducation>[];
+  const education: IEducation[] = portfolioData.education.map(e => {
+    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem) => tItem.id === e.id) || {};
     return { ...e, ...tr };
   });
 
@@ -44,7 +46,7 @@ export const ExperiencePage: React.FC = () => {
             <span>{t('experience.badge')}</span>
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white tracking-tighter">
-            {t('experience.title')}
+            <RevealText text={t('experience.title')} />
           </h1>
           <p className="text-xs md:text-sm font-mono text-slate-600 dark:text-slate-400 mt-2">
             {t('experience.subtitle')}
@@ -52,7 +54,9 @@ export const ExperiencePage: React.FC = () => {
         </div>
 
         <a
-          href={`mailto:${portfolioData.personal.email}?subject=Solicitud%20de%20CV%20-%20Anthony%20Pilatasig`}
+          href="./CV_Anthony_Pilatasig.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-yellow-500/40 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-500 hover:text-slate-900 dark:hover:text-slate-950 text-xs font-mono font-bold transition-all flex items-center gap-2 shadow-lg shadow-yellow-500/10 hover:shadow-yellow-500/20 hover:scale-105"
         >
           <FiDownload className="w-4 h-4" />

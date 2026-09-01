@@ -7,6 +7,11 @@ export interface IProject {
   category: ProjectCategory;
   description: string;
   longDescription?: string;
+  problem?: string;
+  decision?: string;
+  tradeoff?: string;
+  impact?: string;
+  metrics?: string[];
   image: string;
   technologies: string[];
   architectureBadges?: string[];

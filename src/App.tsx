@@ -3,6 +3,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { SEO } from './components/common/SEO';
 import { MouseSpotlight } from './components/common/MouseSpotlight';
+import { CustomCursor } from './components/common/CustomCursor';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppRouter } from './routes/AppRouter';
 
@@ -13,6 +14,7 @@ function App() {
       <div className="min-h-screen relative selection:bg-yellow-500/20 selection:text-yellow-200 font-sans overflow-x-hidden transition-colors duration-500">
         <SEO />
         <MouseSpotlight />
+        <CustomCursor />
         
         {/* Background Ambient Glows */}
         <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
