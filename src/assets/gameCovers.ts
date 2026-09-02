@@ -106,7 +106,7 @@ export const GAME_COVERS = {
   <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
   <rect x="0" y="360" width="8" height="40" fill="#F43F5E" />
   <rect x="392" y="360" width="8" height="40" fill="#F59E0B" />
-  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDA4AF" text-anchor="middle" letter-spacing="3">RANURA DE EMULACIÓN</text>
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDA4AF" text-anchor="middle" letter-spacing="3">INTÉRPRETE VIRTUAL</text>
 </svg>`)}`,
 
   cyberEncounter: `data:image/svg+xml;utf8,${encodeURIComponent(`

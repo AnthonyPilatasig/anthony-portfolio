@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<title>Ranura de Emulación Virtual — AP-Deck</title>
+<title>Intérprete WebAssembly — AP-Deck</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <link rel="shortcut icon" href="media/retroarch.ico" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,7 +19,7 @@
     user-select: none;
   }
 
-  /* ── Canvas: Edge-to-Edge Widescreen Display ─────────────────────── */
+  /* ── Canvas: Edge-to-Edge Display ────────────────────────────────── */
   #canvas {
     position: absolute;
     inset: 0;
@@ -32,7 +32,7 @@
     z-index: 10;
   }
 
-  /* ── Floating Minimal In-Game Control HUD (Appears on hover) ──────── */
+  /* ── In-Game Floating Action HUD ─────────────────────────────────── */
   .ingame-hud {
     position: absolute;
     top: 14px;
@@ -43,7 +43,7 @@
     align-items: center;
     gap: 8px;
     padding: 6px 14px;
-    background: rgba(10, 14, 26, 0.85);
+    background: rgba(10, 14, 26, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 999px;
     backdrop-filter: blur(16px);
@@ -189,7 +189,6 @@
     color: #cbd5e1;
   }
 
-  /* Status spinner */
   .loader-spinner {
     display: none;
     align-items: center;
@@ -207,10 +206,8 @@
 </head>
 <body>
 
-<!-- ── Canvas Fullscreen Element ────────────────────────────────────── -->
 <canvas id="canvas" class="webplayer"></canvas>
 
-<!-- ── In-Game Floating HUD (Shows on hover during gameplay) ────────── -->
 <div class="ingame-hud" id="ingameHud">
   <button class="hud-btn" id="btnChangeGame">
     <i class="fa fa-folder-open"></i> Cargar otro archivo
@@ -226,15 +223,14 @@
   </button>
 </div>
 
-<!-- ── Fullscreen Slot Loader Overlay (Initial Screen) ──────────────── -->
 <div class="slot-loader" id="slotLoader">
   <div class="slot-box" id="dropBox">
     <div class="slot-icon">
       <i class="fa fa-microchip"></i>
     </div>
-    <h2 class="slot-title">Ranura de Emulación Virtual</h2>
+    <h2 class="slot-title">Intérprete WebAssembly</h2>
     <p class="slot-subtitle">
-      Arrastra y suelta tu archivo personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) o haz clic para cargarlo en memoria.
+      Arrastra y suelta tu archivo (<strong>.bin</strong>, <strong>.rom</strong>, <strong>.zip</strong>) o haz clic para ejecutarlo en el entorno local.
     </p>
 
     <button class="btn-upload" id="btnPickFile" type="button">
@@ -243,13 +239,13 @@
 
     <div class="loader-spinner" id="loaderSpinner">
       <i class="fa fa-spinner fa-spin"></i>
-      <span id="loaderSpinnerText">Iniciando núcleo de emulación...</span>
+      <span id="loaderSpinnerText">Iniciando entorno WebAssembly...</span>
     </div>
 
     <div class="slot-tags">
-      <span class="slot-tag">Núcleos Libretro WASM</span>
+      <span class="slot-tag">WebAssembly Runtime</span>
       <span class="slot-tag">100% Local en Navegador</span>
-      <span class="slot-tag">Guardado Automático</span>
+      <span class="slot-tag">Sandbox Seguro</span>
     </div>
   </div>
 </div>

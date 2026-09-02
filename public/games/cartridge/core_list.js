@@ -1,5 +1,5 @@
 const libretroCores = {
-	"mgba": "Núcleo Virtual 32-Bit (mGBA WASM)",
-	"gambatte": "Núcleo Virtual 8-Bit Color (Gambatte WASM)",
-	"fceumm": "Núcleo Virtual 8-Bit Classic (FCEUmm WASM)",
+	"mgba": "Motor Virtual 32-Bit (WASM Core)",
+	"gambatte": "Motor Virtual 8-Bit Color (WASM Core)",
+	"fceumm": "Motor Virtual 8-Bit Classic (WASM Core)",
 };
