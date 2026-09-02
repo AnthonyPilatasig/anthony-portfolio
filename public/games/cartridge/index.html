@@ -13,23 +13,21 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000000;
+    background: #050811;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #e2e8f0;
     user-select: none;
   }
 
-  /* ── Canvas: Fullscreen Edge-to-Edge ─────────────────────────────── */
-  #canvas {
+  /* ── Game Viewport Container ─────────────────────────────────────── */
+  #game-container {
     position: absolute;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    object-fit: contain;
-    image-rendering: pixelated;
+    display: none;
+    z-index: 10;
     background: #000000;
-    display: block;
-    z-index: 1;
   }
 
   /* ── Top Floating Command Bar ────────────────────────────────────── */
@@ -43,11 +41,12 @@
     align-items: center;
     gap: 8px;
     padding: 6px 14px;
-    background: rgba(10, 14, 26, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(10, 14, 26, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
   .hud-btn {
@@ -83,16 +82,15 @@
     color: #ffffff;
   }
 
-  /* ── Startup Modal / File Picker Prompt ──────────────────────────── */
+  /* ── Initial Selection Card (Prompt) ─────────────────────────────── */
   .rom-prompt-overlay {
     position: fixed;
     inset: 0;
-    z-index: 99998;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(5, 8, 17, 0.82);
-    backdrop-filter: blur(14px);
+    background: radial-gradient(circle at 50% 40%, #111827 0%, #050811 100%);
     padding: 20px;
     transition: opacity 0.3s ease;
   }
@@ -102,35 +100,31 @@
   }
 
   .rom-prompt-card {
-    max-width: 480px;
+    max-width: 500px;
     width: 100%;
     background: #0f172a;
-    border: 2px solid rgba(244, 63, 94, 0.4);
-    border-radius: 24px;
-    padding: 34px 26px;
+    border: 2px dashed rgba(244, 63, 94, 0.45);
+    border-radius: 28px;
+    padding: 40px 30px;
     text-align: center;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 50px rgba(244, 63, 94, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 16px;
     cursor: pointer;
-    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
   }
 
-  @keyframes popIn {
-    0% { transform: scale(0.9); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .rom-prompt-card:hover {
+  .rom-prompt-card:hover, .rom-prompt-card.dragover {
     border-color: #f43f5e;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 60px rgba(244, 63, 94, 0.3);
+    background: rgba(244, 63, 94, 0.06);
+    transform: scale(1.02);
   }
 
   .prompt-icon {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border-radius: 20px;
     background: rgba(244, 63, 94, 0.15);
     border: 1px solid rgba(244, 63, 94, 0.35);
@@ -138,8 +132,8 @@
     align-items: center;
     justify-content: center;
     color: #f43f5e;
-    font-size: 28px;
-    box-shadow: 0 0 24px rgba(244, 63, 94, 0.25);
+    font-size: 30px;
+    box-shadow: 0 0 25px rgba(244, 63, 94, 0.25);
   }
 
   .prompt-title {
@@ -153,6 +147,7 @@
     font-size: 13px;
     color: #94a3b8;
     line-height: 1.5;
+    max-width: 380px;
   }
 
   .btn-select-rom {
@@ -160,7 +155,7 @@
     color: #0f172a;
     font-weight: 800;
     font-size: 13px;
-    padding: 13px 30px;
+    padding: 13px 32px;
     border-radius: 999px;
     border: none;
     cursor: pointer;
@@ -177,33 +172,36 @@
     box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
   }
 
-  .drag-hint {
-    font-size: 11px;
-    color: #64748b;
-  }
-
-  /* ── Initial Loading Splash ──────────────────────────────────────── */
-  .init-splash {
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
+  .slot-tags {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
     justify-content: center;
-    background: #050811;
-    color: #94a3b8;
-    gap: 16px;
-    transition: opacity 0.4s ease;
+    margin-top: 6px;
   }
 
-  .init-splash.hidden {
-    display: none !important;
+  .slot-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
   }
 
-  .spinner-icon {
-    font-size: 32px;
+  /* ── Loading Spinner ─────────────────────────────────────────────── */
+  .loader-spinner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
     color: #f43f5e;
+    margin-top: 8px;
+  }
+
+  .loader-spinner.active {
+    display: flex;
   }
 
   /* ── Toast Notification ──────────────────────────────────────────── */
@@ -237,60 +235,201 @@
 </head>
 <body>
 
-<!-- ── Canvas: RetroArch Widescreen Surface ────────────────────────── -->
-<canvas id="canvas" class="webplayer"></canvas>
+<!-- ── Main Emulator Viewport ──────────────────────────────────────── -->
+<div id="game-container"></div>
 
 <!-- ── Top Floating Command Bar ────────────────────────────────────── -->
-<div class="top-command-bar" id="commandBar">
-  <button class="hud-btn primary" id="btnPickFile">
-    <i class="fa fa-folder-open"></i> Cargar Archivo (.gba, .gbc, .nes, .zip)
+<div class="top-command-bar" id="commandBar" style="display:none;">
+  <button class="hud-btn primary" id="btnChangeFile">
+    <i class="fa fa-folder-open"></i> Cargar Otro Archivo
   </button>
-  <button class="hud-btn" id="btnResetGame" title="Reiniciar">
+  <button class="hud-btn" id="btnRestartGame" title="Reiniciar Partida">
     <i class="fa fa-rotate-left"></i> Reiniciar
   </button>
-  <button class="hud-btn" id="btnHudFullscreen" title="Pantalla Completa">
+  <button class="hud-btn" id="btnFullscreen" title="Pantalla Completa">
     <i class="fa fa-expand"></i> Pantalla Completa
-  </button>
-  <button class="hud-btn" id="btnCleanStorage" title="Borrar Partidas Guardadas">
-    <i class="fa fa-trash-can"></i> Limpiar Datos
   </button>
 </div>
 
-<!-- ── Prompt Modal: Overlay asking to pick the ROM file ───────────── -->
+<!-- ── Initial Selection Card Overlay ──────────────────────────────── -->
 <div class="rom-prompt-overlay" id="romPromptOverlay">
   <div class="rom-prompt-card" id="promptCard">
     <div class="prompt-icon">
-      <i class="fa fa-gamepad"></i>
+      <i class="fa fa-microchip"></i>
     </div>
-    <h2 class="prompt-title">Cargar Archivo de Juego</h2>
+    <h2 class="prompt-title">Intérprete WebAssembly</h2>
     <p class="prompt-desc">
-      Haz clic aquí para seleccionar tu juego personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) y comenzar la partida en pantalla completa.
+      Arrastra y suelta tu archivo personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) o haz clic para ejecutarlo en el navegador.
     </p>
+
     <button class="btn-select-rom" id="btnPromptPick" type="button">
       <i class="fa fa-arrow-up-from-bracket"></i> Seleccionar Archivo desde tu PC
     </button>
-    <div class="drag-hint">o arrastra tu archivo directamente a la pantalla</div>
-  </div>
-</div>
 
-<!-- ── Initial Startup Splash ──────────────────────────────────────── -->
-<div class="init-splash" id="initSplash">
-  <i class="fa fa-circle-notch fa-spin spinner-icon"></i>
-  <span style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Iniciando Entorno WebAssembly...</span>
-  <span style="font-size: 11px; color: #64748b;">Preparando sistema de archivos y núcleos en memoria</span>
+    <div class="loader-spinner" id="loaderSpinner">
+      <i class="fa fa-spinner fa-spin"></i>
+      <span id="loaderSpinnerText">Iniciando motor de juego...</span>
+    </div>
+
+    <div class="slot-tags">
+      <span class="slot-tag">Compatible PC y Móvil</span>
+      <span class="slot-tag">100% Local en Navegador</span>
+      <span class="slot-tag">Guardado Automático</span>
+    </div>
+  </div>
 </div>
 
 <!-- ── Toast ───────────────────────────────────────────────────────── -->
 <div class="toast-notify" id="toastNotify">
   <i class="fa fa-circle-check text-emerald-400"></i>
-  <span id="toastMsg">Archivo cargado con éxito</span>
+  <span id="toastMsg">Archivo cargado</span>
 </div>
 
-<input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
+<input style="display:none" type="file" id="fileInput" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="browserfs.min.js"></script>
-<script src="core_list.js"></script>
-<script src="libretro.js"></script>
+<script>
+  let currentGameBlobUrl = null;
+  let isGameRunning = false;
+
+  function showToast(msg) {
+    $('#toastMsg').text(msg);
+    $('#toastNotify').addClass('show');
+    setTimeout(() => $('#toastNotify').removeClass('show'), 3500);
+  }
+
+  function detectCore(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    if (ext === 'gba') return 'gba';
+    if (ext === 'gb' || ext === 'gbc') return 'gbc';
+    if (ext === 'nes') return 'nes';
+    if (ext === 'sfc' || ext === 'smc') return 'snes';
+    if (ext === 'md' || ext === 'bin') return 'segaMD';
+    return 'gba';
+  }
+
+  function launchGame(file) {
+    if (!file) return;
+    const core = detectCore(file.name);
+    console.log("AP-Deck: Launching game", file.name, "with core:", core, "size:", file.size);
+
+    $('#loaderSpinner').addClass('active');
+    $('#loaderSpinnerText').text(`Iniciando ${file.name}...`);
+    showToast(`Cargando ${file.name}...`);
+
+    if (currentGameBlobUrl) {
+      URL.revokeObjectURL(currentGameBlobUrl);
+    }
+    currentGameBlobUrl = URL.createObjectURL(file);
+
+    // Hide prompt overlay and show game container & HUD
+    $('#romPromptOverlay').addClass('hidden');
+    $('#game-container').show().empty();
+    $('#commandBar').show();
+    isGameRunning = true;
+
+    // Configure Universal WebAssembly Player
+    window.EJS_player = '#game-container';
+    window.EJS_core = core;
+    window.EJS_gameUrl = currentGameBlobUrl;
+    window.EJS_gameName = file.name;
+    window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+    window.EJS_startOnLoaded = true;
+    window.EJS_color = '#F43F5E';
+    window.EJS_backgroundColor = '#000000';
+    window.EJS_volume = 1.0;
+    window.EJS_alignStartButton = 'center';
+    window.EJS_language = 'es';
+    window.EJS_fullscreenOnLoad = false;
+    window.EJS_hideControlBar = false;
+
+    // Load emulator loader script dynamically
+    const existingLoader = document.getElementById('ejs-loader');
+    if (existingLoader) {
+      existingLoader.remove();
+    }
+
+    const script = document.createElement('script');
+    script.id = 'ejs-loader';
+    script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+    script.onload = () => {
+      console.log("AP-Deck: Emulator loader initialized successfully.");
+      $('#loaderSpinner').removeClass('active');
+    };
+    script.onerror = (err) => {
+      console.error("AP-Deck: Error loading emulator runtime:", err);
+      $('#loaderSpinner').removeClass('active');
+      showToast("Error al inicializar el motor.");
+    };
+    document.body.appendChild(script);
+  }
+
+  $(function() {
+    // File input handlers
+    $('#btnPromptPick, #promptCard, #btnChangeFile').click(function(e) {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+        e.stopPropagation();
+      }
+      $('#fileInput').click();
+    });
+
+    $('#fileInput').change(function(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        launchGame(e.target.files[0]);
+      }
+    });
+
+    // Drag and Drop anywhere on the window
+    const dropCard = $('#promptCard');
+    $(window).on('dragover dragenter', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropCard.addClass('dragover');
+    });
+
+    $(window).on('dragleave dragend drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropCard.removeClass('dragover');
+      if (e.type === 'drop') {
+        const dt = e.originalEvent ? e.originalEvent.dataTransfer : e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          launchGame(dt.files[0]);
+        }
+      }
+    });
+
+    // In-Game HUD buttons
+    $('#btnRestartGame').click(function() {
+      if (window.EJS_emulator && typeof window.EJS_emulator.restart === 'function') {
+        window.EJS_emulator.restart();
+        showToast("Partida reiniciada");
+      } else if (currentGameBlobUrl) {
+        window.location.reload();
+      }
+    });
+
+    $('#btnFullscreen').click(function() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // Parent communication (from ConsoleDashboard.tsx)
+    window.addEventListener('message', function(e) {
+      if (!e.data) return;
+      if (e.data.type === 'PICK_ROM') {
+        $('#fileInput').click();
+      }
+      if (e.data.type === 'LOAD_ROM_DATA' && e.data.data && e.data.name) {
+        const blob = new Blob([e.data.data], { type: 'application/octet-stream' });
+        const file = new File([blob], e.data.name);
+        launchGame(file);
+      }
+    });
+  });
+</script>
 </body>
 </html>
