@@ -26,7 +26,7 @@ export const LabPage: React.FC = () => {
             <span>Laboratorio &amp; Consola Virtual</span>
           </h1>
           <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2 max-w-2xl">
-            Simulador interactivo de consola estilo Switch / PS5. Juega mini-games nativos, usa RetroArch en WebAssembly o sube tu propio juego en formato <code>.zip</code>.
+            Consola virtual interactiva y sandbox de motores gráficos. Ejecuta proyectos web en formato <code>.zip</code>, binarios locales en WebAssembly o mini-games nativos en TypeScript.
           </p>
         </div>
       </motion.div>
@@ -98,7 +98,7 @@ export const LabPage: React.FC = () => {
                 AP-Deck
               </h2>
               <p className="text-slate-400 mt-3 text-base max-w-lg leading-relaxed">
-                Dashboard estilo Switch / PS5. Carga juegos desde <strong className="text-slate-200">.zip</strong>, juega con RetroArch en WebAssembly, o disfruta los mini-games integrados.
+                Consola virtual interactiva de alto rendimiento. Carga proyectos desde <strong className="text-slate-200">.zip</strong> en memoria RAM, ejecuta binarios locales con el Intérprete WebAssembly, o disfruta los mini-games integrados.
               </p>
             </div>
 
@@ -106,7 +106,7 @@ export const LabPage: React.FC = () => {
             <div className="flex flex-wrap gap-2">
               {[
                 { icon: <FiUpload className="w-3.5 h-3.5" />, label: 'Carga .zip sin descomprimir' },
-                { icon: <Gamepad2 className="w-3.5 h-3.5" />, label: 'RetroArch WebAssembly' },
+                { icon: <Gamepad2 className="w-3.5 h-3.5" />, label: 'Intérprete WebAssembly' },
                 { icon: <FiMonitor className="w-3.5 h-3.5" />, label: 'Pantalla completa' },
                 { icon: <FiCpu className="w-3.5 h-3.5" />, label: 'Compatible con móvil' },
               ].map(f => (
@@ -136,7 +136,7 @@ export const LabPage: React.FC = () => {
                 Abrir AP-Deck
               </button>
               <span className="text-[12px] text-slate-500">
-                5 juegos disponibles
+                5 modos disponibles
               </span>
             </div>
           </div>
@@ -148,7 +148,7 @@ export const LabPage: React.FC = () => {
           >
             {[
               { color: '#6366F1', label: 'ZIP' },
-              { color: '#F43F5E', label: 'RetroArch' },
+              { color: '#F43F5E', label: 'WASM' },
               { color: '#06B6D4', label: 'Cyber' },
               { color: '#10B981', label: 'Snake' },
               { color: '#F59E0B', label: '2048' },

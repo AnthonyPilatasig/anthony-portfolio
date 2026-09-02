@@ -13,7 +13,7 @@ import { GameBoyBattle } from './GameBoyBattle';
 import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
 
-// ─── Modern Console Audio Synthesizer (Nintendo Switch / SteamOS soft clicks) ──
+// ─── Modern Console Audio Synthesizer (AP-Deck OS audio feedback) ──────────────
 class ModernConsoleAudio {
   private ctx: AudioContext | null = null;
 
@@ -131,18 +131,18 @@ const CONSOLE_GAMES: ConsoleGame[] = [
   {
     id: 'cartridge-slot',
     title: 'Intérprete WebAssembly',
-    badge: 'OPEN SOURCE WASM',
+    badge: 'UNIVERSAL WASM',
     platform: 'Virtual Bytecode Engine',
-    genre: 'Arquitectura 16-Bit / 32-Bit',
+    genre: 'Multi-Arquitectura 8/16/32/64-Bit',
     playtime: 'Guardado Local',
     trophies: 'WASM Runtimes',
     bgGradient: 'from-rose-950 via-red-950 to-[#050811]',
     accentColor: '#F43F5E',
-    description: 'Entorno de ejecución de microcódigo y binarios compilados a WebAssembly. Diseñado para procesar archivos de prueba (.bin, .rom, .zip) y creaciones homebrew locales en tu navegador.',
+    description: 'Entorno de ejecución universal WebAssembly con auto-detección de formato. Carga y ejecuta instantáneamente binarios (.gba, .gbc, .nds, .iso, .z64, .sfc, .md, .nes, .zip) con aceleración WebGL y controles táctiles o mando.',
     type: 'cartridge',
     coverArt: GAME_COVERS.retroArch,
     src: './games/cartridge/index.html',
-    tags: ['WebAssembly', 'Bytecode Runner', '100% Local', 'Homebrew Sandbox'],
+    tags: ['Auto-Detect', 'GBA / NDS / PS1 / N64', 'SNES / MD / NES', '100% Local'],
   },
   {
     id: 'cyber-encounter',
@@ -188,86 +188,6 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     type: '2048',
     coverArt: GAME_COVERS.matrix2048,
     tags: ['Touch Gestures', 'Matriz 4x4', 'Algoritmo', 'Minimalista'],
-  },
-  {
-    id: 'psx-slot',
-    title: 'PlayStation 1 (PSX)',
-    badge: '32-BIT 3D CD-ROM',
-    platform: 'PS1 WebAssembly Engine',
-    genre: '3D Polygon Classic',
-    playtime: 'Guardado en RAM',
-    trophies: '32-Bit Cores',
-    bgGradient: 'from-blue-950 via-sky-950 to-[#050811]',
-    accentColor: '#0284C7',
-    description: 'Motor 32-bit de polígonos texturizados y sonido CD-ROM. Ejecuta imágenes .iso, .chd, .cue y .pbp con aceleración gráfica WebGL y compatibilidad con mandos.',
-    type: 'cartridge',
-    coverArt: GAME_COVERS.psxCover,
-    src: './games/cartridge/index.html',
-    tags: ['32-Bit 3D', 'ISO/CHD', 'Audio CD-ROM', 'WebGL'],
-  },
-  {
-    id: 'n64-slot',
-    title: 'Nintendo 64 (N64)',
-    badge: '64-BIT ULTRA 3D',
-    platform: 'N64 High-Level WASM',
-    genre: '3D Action / Adventure',
-    playtime: 'Guardado en RAM',
-    trophies: '64-Bit Cores',
-    bgGradient: 'from-yellow-950 via-emerald-950 to-[#050811]',
-    accentColor: '#EAB308',
-    description: 'Motor de renderizado 64-bit con filtrado trilineal, mipmapping y sombreado Gouraud. Ejecuta cartuchos .z64 y .n64 con alto rendimiento.',
-    type: 'cartridge',
-    coverArt: GAME_COVERS.n64Cover,
-    src: './games/cartridge/index.html',
-    tags: ['64-Bit', 'Z64/N64', 'Antialiasing', 'Analog Stick'],
-  },
-  {
-    id: 'nds-slot',
-    title: 'Nintendo DS (NDS)',
-    badge: 'DUAL-SCREEN & TOUCH',
-    platform: 'NDS Touch WebAssembly',
-    genre: 'Dual-Display Touch',
-    playtime: 'Guardado en RAM',
-    trophies: 'Touch Runtimes',
-    bgGradient: 'from-pink-950 via-purple-950 to-[#050811]',
-    accentColor: '#EC4899',
-    description: 'Arquitectura de doble pantalla interactiva con digitalizador táctil. Ejecuta binarios .nds con soporte de lápiz óptico virtual y sonido estereofónico.',
-    type: 'cartridge',
-    coverArt: GAME_COVERS.ndsCover,
-    src: './games/cartridge/index.html',
-    tags: ['Dual Screen', 'Touchscreen', 'NDS Core', 'Estéreo'],
-  },
-  {
-    id: 'snes-slot',
-    title: 'Super Nintendo (SNES)',
-    badge: '16-BIT MODO 7',
-    platform: 'Super 16-Bit Engine',
-    genre: '16-Bit Classic',
-    playtime: 'Guardado en RAM',
-    trophies: '16-Bit Cores',
-    bgGradient: 'from-purple-950 via-violet-950 to-[#050811]',
-    accentColor: '#A855F7',
-    description: 'Motor 16-bit con soporte para rotación/escalado Modo 7 y chips DSP/Super FX. Ejecuta cartuchos .sfc y .smc con paleta de 32,768 colores.',
-    type: 'cartridge',
-    coverArt: GAME_COVERS.snesCover,
-    src: './games/cartridge/index.html',
-    tags: ['Modo 7', 'Super FX', 'SFC/SMC', '16-Bit'],
-  },
-  {
-    id: 'sega-slot',
-    title: 'Sega Mega Drive / Genesis',
-    badge: 'BLAST PROCESSING',
-    platform: 'Sega 16-Bit Engine',
-    genre: 'High-Speed Arcade',
-    playtime: 'Guardado en RAM',
-    trophies: 'Blast Runtimes',
-    bgGradient: 'from-sky-950 via-blue-950 to-[#050811]',
-    accentColor: '#38BDF8',
-    description: 'Motor de velocidad arcade de 16-bit con síntesis de sonido FM Yamaha. Ejecuta títulos .md y .gen a 60 FPS estables.',
-    type: 'cartridge',
-    coverArt: GAME_COVERS.segaCover,
-    src: './games/cartridge/index.html',
-    tags: ['Blast Speed', 'FM Synth', 'MD/GEN', '60 FPS'],
   },
 ];
 
@@ -549,7 +469,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         <div className="absolute inset-0 bg-[#050811]/60" />
       </div>
 
-      {/* ─── TOP NINTENDO SWITCH / STEAM DECK STATUS BAR ────────────────────── */}
+      {/* ─── TOP AP-DECK OS STATUS BAR ─────────────────────────────────────── */}
       <div
         className="relative z-30 flex items-center justify-between px-4 sm:px-6 py-3"
         style={{
@@ -817,7 +737,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             </div>
           </div>
         ) : (
-          /* ── STATE B: NINTENDO SWITCH / STEAM DECK HOME DASHBOARD ──────────── */
+          /* ── STATE B: AP-DECK HOME DASHBOARD ──────────────────────────────── */
           <div className="flex flex-1 min-h-0">
 
             {/* Ozone Left Sidebar Navigation Rail */}
@@ -1056,7 +976,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                   </motion.div>
                 </AnimatePresence>
 
-                {/* ── Cartridge Shelf Row (Nintendo Switch & Steam Deck Style) ─ */}
+                {/* ── Cartridge Shelf Row (AP-Deck OS Style) ───────────────────────── */}
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
