@@ -254,3 +254,20 @@ html.dark .editorial-card:hover {
   25% { transform: translateX(-3px) rotate(-2deg); }
   75% { transform: translateX(3px) rotate(2deg); }
 }
+
+/* ─── Optimizaciones para dispositivos móviles de bajos recursos ─── */
+.editorial-card,
+.project-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 240px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (pointer: coarse) {
+  /* Eliminar efectos de hover pegajosos en pantallas táctiles */
+  .editorial-card:hover {
+    transform: none;
+  }
+}
+
