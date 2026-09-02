@@ -2,114 +2,261 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<title>Ranura de Cartuchos — AP-Deck</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<!--
-  This page runs real, official RetroArch (libretro) emulator cores compiled to
-  WebAssembly, self-hosted from the same files served by the official
-  buildbot.libretro.com/.web/ web player. No ROMs are bundled or hosted here —
-  visitors upload their own legally-dumped cartridge file via "Agregar juego".
--->
+<title>Ranura de Emulación Virtual — AP-Deck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <link rel="shortcut icon" href="media/retroarch.ico" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root { color-scheme: dark; }
-  html, body { height: 100%; margin: 0; background: #0A0D14; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-  body { display: flex; flex-direction: column; color: #cbd5e1; }
-  nav.navbar { background: #0A0D14 !important; border-bottom: none; padding: .9rem 1.25rem; }
-  .navbar .btn-primary, .navbar .dropdown-toggle {
-    background: rgba(255,255,255,.06); border: none; color: #e2e8f0; font-weight: 600;
-    border-radius: 999px; padding: .5rem 1.1rem; margin-right: .4rem;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000000;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #e2e8f0;
+    user-select: none;
   }
-  .navbar .btn-primary:hover, .navbar .dropdown-toggle:hover { background: rgba(255,255,255,.12); }
-  .navbar .btn-primary.disabled { opacity: .35; }
-  #dropdownMenu1 { background: var(--accent, #1B4FE8) !important; }
-  .dropdown-menu { background: #12161f; border: none; border-radius: 14px; padding: .5rem; box-shadow: 0 20px 40px -12px rgba(0,0,0,.6); }
-  .dropdown-item { color: #cbd5e1; border-radius: 8px; padding: .5rem .9rem; font-size: .85rem; }
-  .dropdown-item:hover, .dropdown-item.active { background: rgba(255,255,255,.08); color: #fff; }
-  .webplayer-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #05070B; min-height: 0; }
-  .webplayer-preview { max-width: 640px; text-align: center; padding: 2rem; color: #94a3b8; }
-  .webplayer-preview img { max-width: 100%; opacity: .5; margin-bottom: 1rem; }
-  .webplayer { display: none; }
-  /* The core's canvas is a small native buffer (e.g. GBA's 240x160) — scale it up to fill
-     the available viewport instead of rendering at 1:1 native pixel size. */
-  canvas.webplayer { image-rendering: pixelated; width: 100%; height: 100%; max-width: 96vw; max-height: 90vh; aspect-ratio: 3 / 2; object-fit: contain; box-shadow: 0 30px 60px -20px rgba(0,0,0,.7); border-radius: 12px; }
-  .rah-banner {
-    display: flex; align-items: center; gap: .6rem; padding: .5rem 1.25rem;
-    background: rgba(27,79,232,.12); color: #93b4ff; font-size: .8rem; font-weight: 500;
+
+  /* ── Canvas: Edge-to-Edge Widescreen Display ─────────────────────── */
+  #canvas {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    image-rendering: pixelated;
+    background: #000000;
+    display: none;
+    z-index: 10;
   }
-  .rah-banner a { color: #cddcff; text-decoration: underline; }
-  .rah-credits { padding: .6rem 1.25rem; font-size: .72rem; color: #64748b; text-align: center; }
-  .modal-content { background: #12161f; color: #cbd5e1; border-radius: 20px; border: none; }
-  .modal-header { border-bottom: 1px solid rgba(255,255,255,.08); }
-  .tooltip-enable[disabled] { pointer-events: none; }
+
+  /* ── Floating Minimal In-Game Control HUD (Appears on hover) ──────── */
+  .ingame-hud {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-60px);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(10, 14, 26, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body:hover .ingame-hud, .ingame-hud:hover, .ingame-hud.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .hud-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .hud-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+
+  /* ── Fullscreen Drag & Drop Slot Loader Overlay ─────────────────── */
+  .slot-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 40%, #111827 0%, #050811 100%);
+    padding: 24px;
+    text-align: center;
+    transition: opacity 0.4s ease;
+  }
+
+  .slot-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .slot-box {
+    max-width: 520px;
+    width: 100%;
+    background: rgba(17, 24, 39, 0.75);
+    border: 2px dashed rgba(244, 63, 94, 0.4);
+    border-radius: 28px;
+    padding: 40px 30px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px -15px rgba(244, 63, 94, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+
+  .slot-box:hover, .slot-box.dragover {
+    border-color: #f43f5e;
+    background: rgba(244, 63, 94, 0.08);
+    transform: scale(1.02);
+  }
+
+  .slot-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    background: rgba(244, 63, 94, 0.15);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f43f5e;
+    font-size: 28px;
+    box-shadow: 0 0 30px rgba(244, 63, 94, 0.25);
+  }
+
+  .slot-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+
+  .slot-subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+    max-width: 380px;
+  }
+
+  .btn-upload {
+    margin-top: 8px;
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 12px 28px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-upload:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.35);
+  }
+
+  .slot-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .slot-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
+  }
+
+  /* Status spinner */
+  .loader-spinner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f43f5e;
+    margin-top: 10px;
+  }
+
+  .loader-spinner.active {
+    display: flex;
+  }
 </style>
 </head>
 <body>
 
-<div class="rah-banner">
-  <i class="fa fa-info-circle"></i>
-  <span>
-    Entorno de <strong>Emulación Virtual WebAssembly</strong> (núcleos libretro de código abierto).
-    Ejecución 100% en local para desarrollo homebrew y copias de seguridad personales.
-  </span>
+<!-- ── Canvas Fullscreen Element ────────────────────────────────────── -->
+<canvas id="canvas" class="webplayer"></canvas>
+
+<!-- ── In-Game Floating HUD (Shows on hover during gameplay) ────────── -->
+<div class="ingame-hud" id="ingameHud">
+  <button class="hud-btn" id="btnChangeGame">
+    <i class="fa fa-folder-open"></i> Cargar otro archivo
+  </button>
+  <button class="hud-btn" id="btnResetGame">
+    <i class="fa fa-rotate-left"></i> Reiniciar
+  </button>
+  <button class="hud-btn" id="btnHudFullscreen">
+    <i class="fa fa-expand"></i> Pantalla completa
+  </button>
+  <button class="hud-btn" id="btnCleanStorage" title="Borrar datos guardados">
+    <i class="fa fa-trash-can"></i> Limpiar datos
+  </button>
 </div>
 
-<nav class="navbar navbar-dark">
-  <div class="container-fluid" style="max-width:100%">
-    <div class="d-flex flex-wrap align-items-center">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">Núcleo de Emulación</button>
-        <div class="dropdown-menu" id="core-selector"></div>
-      </div>
-      <button class="btn btn-primary disabled" id="btnRun" disabled><span class="fa fa-spinner fa-spin" id="icnRun"></span> Iniciar</button>
-      <button class="btn btn-primary disabled" id="btnAdd" disabled><span class="fa fa-plus" id="icnAdd"></span> Cargar Archivo</button>
-      <input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
-      <button class="btn btn-primary tooltip-enable" id="btnClean" title="Borrar datos guardados"><span class="fa fa-trash-o" id="icnClean"></span></button>
-      <button class="btn btn-primary disabled tooltip-enable" id="btnMenu" title="Menú del Sistema" disabled><span class="fa fa-bars" id="icnMenu"></span></button>
-      <button class="btn btn-primary disabled tooltip-enable" id="btnFullscreen" title="Pantalla completa" disabled><span class="fa fa-desktop" id="icnFullscreen"></span></button>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal"><span class="fa fa-question-circle"></span> Info & Ayuda</button>
+<!-- ── Fullscreen Slot Loader Overlay (Initial Screen) ──────────────── -->
+<div class="slot-loader" id="slotLoader">
+  <div class="slot-box" id="dropBox">
+    <div class="slot-icon">
+      <i class="fa fa-microchip"></i>
+    </div>
+    <h2 class="slot-title">Ranura de Emulación Virtual</h2>
+    <p class="slot-subtitle">
+      Arrastra y suelta tu archivo personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) o haz clic para cargarlo en memoria.
+    </p>
+
+    <button class="btn-upload" id="btnPickFile" type="button">
+      <i class="fa fa-arrow-up-from-bracket"></i> Seleccionar Archivo
+    </button>
+
+    <div class="loader-spinner" id="loaderSpinner">
+      <i class="fa fa-spinner fa-spin"></i>
+      <span id="loaderSpinnerText">Iniciando núcleo de emulación...</span>
+    </div>
+
+    <div class="slot-tags">
+      <span class="slot-tag">Núcleos Libretro WASM</span>
+      <span class="slot-tag">100% Local en Navegador</span>
+      <span class="slot-tag">Guardado Automático</span>
     </div>
   </div>
-</nav>
-
-<div class="modal fade" id="helpModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Motor de Emulación Virtual — Información Legal & Técnica</h5>
-        <button type="button" class="close" data-dismiss="modal" style="color:#cbd5e1"><span>&times;</span></button>
-      </div>
-      <div class="modal-body">
-        <p>Este simulador corre núcleos de emulación de código abierto compilados a <strong>WebAssembly</strong>, autoalojados para pruebas técnicas de rendimiento en el navegador.</p>
-        <ol>
-          <li>Presiona <strong>Cargar Archivo</strong> o arrastra tu archivo personal (ej. <code>.gba</code>, <code>.gbc</code>, <code>.nes</code> o <code>.zip</code>).</li>
-          <li>El sistema detecta automáticamente la arquitectura de emulación adecuada y arranca de inmediato.</li>
-          <li>Controles estándar: Teclas de flecha, Z, X, A, S, Enter y Shift.</li>
-        </ol>
-        <p class="text-muted" style="font-size:.85rem">Aviso de Privacidad & Propiedad Intelectual: Ningún archivo o dato es transferido a servidores externos; toda la ejecución ocurre en la memoria local de tu navegador. Este proyecto no aloja ni distribuye software comercial propietario.</p>
-      </div>
-    </div>
-  </div>
 </div>
 
-<div class="webplayer-container">
-  <div class="webplayer-preview">
-    <img src="https://cdn.jsdelivr.net/npm/game-icons@1.0.0/icons/game-console.svg" onerror="this.style.display='none'" alt="" />
-    <h4 style="color:#e2e8f0">Ranura de Emulación Virtual</h4>
-    <p>Haz clic en <strong>Cargar Archivo</strong> o arrastra tu archivo personal (<code>.gba</code>, <code>.gbc</code>, <code>.nes</code>, <code>.zip</code>) aquí.</p>
-  </div>
-  <canvas class="webplayer" id="canvas"></canvas>
-</div>
-
-<div class="rah-credits">
-  Arquitectura: <strong>WebAssembly Libretro Runtime</strong> · Ejecución 100% en el cliente sin backend externo.
-</div>
+<input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script src="browserfs.min.js"></script>
 <script src="core_list.js"></script>
 <script src="libretro.js"></script>

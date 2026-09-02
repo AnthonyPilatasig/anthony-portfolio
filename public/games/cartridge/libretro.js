@@ -1,7 +1,5 @@
 /**
- * RetroArch Web Player
- *
- * This provides the basic JavaScript for the RetroArch web player.
+ * RetroArch / Libretro Virtual Web Player — Edge-to-Edge Widescreen Driver
  */
 
 const defaultCore = "mgba";
@@ -25,10 +23,15 @@ function modulePreRun(module) {
 var ModuleBase = {
    noInitialRun: true,
    retroArchSend: function(msg) {
-      this.EmscriptenSendCommand(msg);
+      if (this.EmscriptenSendCommand) {
+         this.EmscriptenSendCommand(msg);
+      }
    },
    retroArchRecv: function() {
-      return this.EmscriptenReceiveCommandReply();
+      if (this.EmscriptenReceiveCommandReply) {
+         return this.EmscriptenReceiveCommandReply();
+      }
+      return "";
    },
    retroArchExit: function(core, content) {
       relaunch(core, content);
@@ -48,16 +51,12 @@ function cleanupStorage() {
       var req = indexedDB.deleteDatabase("RetroArch");
       req.onsuccess = function() {
          console.log("Deleted database successfully");
+         alert("Datos guardados eliminados con éxito.");
       };
       req.onerror = function() {
          console.error("Couldn't delete database");
       };
-      req.onblocked = function() {
-         console.error("Couldn't delete database due to the operation being blocked");
-      };
    }
-
-   document.getElementById("btnClean").disabled = true;
 }
 
 function idbfsInit() {
@@ -65,12 +64,10 @@ function idbfsInit() {
    if (BrowserFS.FileSystem.IndexedDB.isAvailable()) {
       BrowserFS.FileSystem.IndexedDB.Create({storeName: "RetroArch"}, function(e, idbfs) {
          if (e) {
-            // fallback to imfs
             afs = new BrowserFS.FileSystem.InMemory();
             console.error("WEBPLAYER: error (idbfs): " + e + " falling back to in-memory filesystem");
             appInitialized();
          } else {
-            // initialize afs by copying files from async storage to sync storage.
             BrowserFS.FileSystem.AsyncMirror.Create({sync: imfs, async: idbfs}, function(e, fs) {
                if (e) {
                   afs = new BrowserFS.FileSystem.InMemory();
@@ -92,12 +89,11 @@ function idbfsInit() {
 }
 
 function zipfsInit() {
-   // 256 MB max bundle size
    let buffer = new ArrayBuffer(256 * 1024 * 1024);
    let bufferView = new Uint8Array(buffer);
    let idx = 0;
-   // bundle should be in five parts (this can be changed later)
-   Promise.all([fetch("assets/frontend/bundle.zip.aa"),
+   Promise.all([
+      fetch("assets/frontend/bundle.zip.aa"),
       fetch("assets/frontend/bundle.zip.ab"),
       fetch("assets/frontend/bundle.zip.ac"),
       fetch("assets/frontend/bundle.zip.ad"),
@@ -111,7 +107,6 @@ function zipfsInit() {
             bufferView.set(new Uint8Array(buf), idx, buf.byteLength);
             idx += buf.byteLength;
          }
-         // create a ZipFS filesystem for the bundled data
          BrowserFS.FileSystem.ZipFS.Create({zipData: BrowserFS.BFSRequire('buffer').Buffer(new Uint8Array(buffer, 0, idx))}, function(e, fs) {
             if (e) {
                zipfs = new BrowserFS.FileSystem.InMemory();
@@ -123,73 +118,24 @@ function zipfsInit() {
                appInitialized();
             }
          });
-      })
+      });
+   }).catch(function(err) {
+      console.error("WEBPLAYER: bundle fetch error:", err);
+      zipfs = new BrowserFS.FileSystem.InMemory();
+      appInitialized();
    });
 }
 
 function xhrfsInit() {
-   // This portfolio's cartridge slot only ships mGBA/Gambatte/FCEUmm, self-hosted directly
-   // (no downloadable core catalog), so skip the official player's optional XHR-backed core
-   // asset filesystem entirely instead of pointing it at an index file we don't publish —
-   // BrowserFS.FileSystem.XmlHttpRequest.Create throws synchronously on a missing index,
-   // which would otherwise stall appInitialized() and leave the "Iniciar" button disabled.
    xhrfs = new BrowserFS.FileSystem.InMemory();
    appInitialized();
 }
 
 function appInitialized() {
-   /* Need to wait for the file system, the wasm runtime, and the zip download
-      to complete before enabling the Run button. */
    initializationCount++;
    if (initializationCount == 4) {
       finishFileSystemSetup();
       preLoadingComplete();
-   }
-}
-
-function preLoadingComplete() {
-   $('#icnRun').removeClass('fa-spinner').removeClass('fa-spin');
-   $('#icnRun').addClass('fa-play');
-
-   // Allow picking ROM directly
-   $('#btnAdd').removeClass('disabled').removeAttr("disabled").off('click').click(function() {
-      $('#btnRom').click();
-   });
-   $('#btnRom').removeAttr("disabled").off('change').change(function(e) {
-      if (e.target.files && e.target.files.length > 0) {
-         selectFiles(e.target.files);
-      }
-   });
-
-   // Drag and drop ROM directly into container
-   var container = $('.webplayer-container');
-   container.on('dragover dragenter', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      container.css('outline', '2px dashed #1B4FE8');
-   });
-   container.on('dragleave dragend drop', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      container.css('outline', 'none');
-      if (e.type === 'drop') {
-         var dt = e.originalEvent ? e.originalEvent.dataTransfer : e.dataTransfer;
-         if (dt && dt.files && dt.files.length > 0) {
-            selectFiles(dt.files);
-         }
-      }
-   });
-
-   if (autoStart) {
-      startRetroArch();
-   } else {
-      // Click preview to upload ROM or start
-      $('.webplayer-preview').addClass('loaded').click(function() {
-         $('#btnRom').click();
-      });
-      $('#btnRun').removeClass('disabled').removeAttr("disabled").click(function() {
-         startRetroArch();
-      });
    }
 }
 
@@ -199,7 +145,6 @@ function mountBrowserFS() {
       root: '/home'
    }, '/home');
 
-   // create fake core files for RetroArch
    Module.FS.writeFile("/home/web_user/retroarch/cores/" + currentCore + "_libretro.core", new Uint8Array());
    for (let core of Object.keys(libretroCores)) {
       Module.FS.writeFile("/home/web_user/retroarch/cores/" + core + "_libretro.core", new Uint8Array());
@@ -207,9 +152,7 @@ function mountBrowserFS() {
 }
 
 function finishFileSystemSetup() {
-   // create a mountable filesystem that will server as a root mountpoint for browserfs
    var mfs = new BrowserFS.FileSystem.MountableFileSystem();
-
    mfs.mount('/home/web_user/retroarch', zipfs);
    mfs.mount('/home/web_user/retroarch/cores', new BrowserFS.FileSystem.InMemory());
    mfs.mount('/home/web_user/retroarch/userdata', afs);
@@ -218,6 +161,10 @@ function finishFileSystemSetup() {
    mountBrowserFS();
 
    console.log("WEBPLAYER: filesystem initialization successful");
+}
+
+function preLoadingComplete() {
+   console.log("WEBPLAYER: Ready for ROM selection");
 }
 
 function detectCoreForFile(filename) {
@@ -229,26 +176,8 @@ function detectCoreForFile(filename) {
 }
 
 function startRetroArch(contentPath) {
-   $('.webplayer').show();
-   $('.webplayer-preview').hide();
-   document.getElementById("btnRun").disabled = true;
-
-   $('#btnAdd').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
-      $('#btnRom').click();
-   });
-   $('#btnRom').removeAttr("disabled").off('change').change(function(e) {
-      if (e.target.files && e.target.files.length > 0) {
-         selectFiles(e.target.files);
-      }
-   });
-   $('#btnMenu').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
-      Module.retroArchSend("MENU_TOGGLE");
-      Module.canvas.focus();
-   });
-   $('#btnFullscreen').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
-      Module.retroArchSend("FULLSCREEN_TOGGLE");
-      Module.canvas.focus();
-   });
+   $('#canvas').show();
+   $('#slotLoader').addClass('hidden');
 
    retroArchRunning = true;
    if (contentPath) {
@@ -256,14 +185,15 @@ function startRetroArch(contentPath) {
       Module.arguments = ModuleBase.arguments;
    }
    Module.callMain(Module.arguments);
+   if (canvas) canvas.focus();
 }
 
 function selectFiles(files) {
    if (!files || files.length === 0) return;
-   $('#btnAdd').addClass('disabled');
-   $('#icnAdd').removeClass('fa-plus').addClass('fa-spinner spinning');
-   var count = files.length;
+   $('#loaderSpinner').addClass('active');
+   $('#loaderSpinnerText').text('Cargando archivo: ' + files[0].name + '...');
 
+   var count = files.length;
    for (var i = 0; i < count; i++) {
       var filereader = new FileReader();
       filereader.file_name = files[i].name;
@@ -271,12 +201,8 @@ function selectFiles(files) {
       filereader.onload = function() {
          uploadDataAndRun(this.result, this.file_name);
       };
-      filereader.onloadend = function(evt) {
-         console.log("WEBPLAYER: file: " + this.file_name + " upload complete");
-         if (evt.target.readyState == FileReader.DONE) {
-            $('#btnAdd').removeClass('disabled');
-            $('#icnAdd').removeClass('fa-spinner spinning').addClass('fa-plus');
-         }
+      filereader.onloadend = function() {
+         $('#loaderSpinner').removeClass('active');
       };
    }
 }
@@ -288,6 +214,11 @@ async function uploadDataAndRun(data, name) {
    var binData = Module.FS.readFile(name, {
       encoding: 'binary'
    });
+
+   try {
+      Module.FS.mkdirTree('/home/web_user/retroarch/userdata/content');
+   } catch(e) {}
+
    var targetPath = '/home/web_user/retroarch/userdata/content/' + name;
    Module.FS.writeFile(targetPath, binData, {
       encoding: 'binary'
@@ -297,6 +228,9 @@ async function uploadDataAndRun(data, name) {
    // Auto-detect core
    var targetCore = detectCoreForFile(name);
    console.log("WEBPLAYER: Auto-launching content:", targetPath, "with core:", targetCore);
+
+   $('#slotLoader').addClass('hidden');
+   $('#canvas').show();
 
    if (retroArchRunning) {
       await relaunch(targetCore, targetPath);
@@ -311,129 +245,20 @@ async function uploadDataAndRun(data, name) {
    }
 }
 
-function uploadData(data, name) {
-   uploadDataAndRun(data, name);
-}
-
-// When the browser has loaded everything.
-$(function() {
-   // create core list
-   var coreArray = Object.entries(libretroCores);
-   var coreNames = Object.values(libretroCores).sort();
-   var coreSelector = document.getElementById("core-selector");
-   for (let name of coreNames) {
-      let a = document.createElement("a");
-      a.href = ".";
-      a.dataset.core = coreArray.find(i => i[1] == name)[0];
-      a.textContent = name;
-      a.classList.add("dropdown-item");
-      coreSelector.appendChild(a);
-   }
-
-   // Enable data clear
-   $('#btnClean').click(function() {
-      cleanupStorage();
-   });
-
-   // Enable all available ToolTips.
-   $('.tooltip-enable').tooltip({
-      placement: 'right'
-   });
-
-   // Allow hiding the top menu.
-   $('.showMenu').hide();
-   $('#btnHideMenu, .showMenu').click(function() {
-      $('nav').slideToggle('slow');
-      $('.showMenu').toggle('slow');
-   });
-
-   // Attempt to disable some default browser keys.
-   var keys = {
-      9: "tab",
-      13: "enter",
-      16: "shift",
-      18: "alt",
-      27: "esc",
-      33: "rePag",
-      34: "avPag",
-      35: "end",
-      36: "home",
-      37: "left",
-      38: "up",
-      39: "right",
-      40: "down",
-      112: "F1",
-      113: "F2",
-      114: "F3",
-      115: "F4",
-      116: "F5",
-      117: "F6",
-      118: "F7",
-      119: "F8",
-      120: "F9",
-      121: "F10",
-      122: "F11",
-      123: "F12"
-   };
-   window.addEventListener('keydown', function(e) {
-      if (keys[e.which]) {
-         e.preventDefault();
-      }
-   });
-
-   // Switch the core when selecting one.
-   $('#core-selector a').click(function(e) {
-      e.preventDefault();
-      var core = $(this).data('core');
-      if (!core) return;
-      localStorage.setItem("core", core);
-      if (Module && retroArchRunning) {
-         Module.retroArchSend("LOAD_CORE /home/web_user/retroarch/cores/" + core + "_libretro.core");
-
-         // maybe RetroArch crashed? reload if RetroArch doesn't exit within a second.
-         if (reloadTimeout) clearTimeout(reloadTimeout);
-         reloadTimeout = setTimeout(function() {
-            location.reload();
-         }, 1000);
-      } else {
-         location.reload();
-      }
-   });
-
-   // Find which core to load.
-   currentCore = localStorage.getItem("core") || defaultCore;
-   loadCore(currentCore).then(function() {
-      console.log("WEBPLAYER: wasm runtime initialized");
-      appInitialized();
-   });
-
-   // Start loading the filesystem
-   idbfsInit();
-   zipfsInit();
-   xhrfsInit();
-});
-
 async function loadCoreFallback(currentCore) {
    if (currentCore == defaultCore) {
       console.error("Error: couldn't load default core!");
-      alert("Error: couldn't load default core!");
       return;
    }
    await loadCore(defaultCore);
 }
 
 async function loadCore(core, args) {
-   // Make the core the selected core in the UI.
-   $('#core-selector a.active').removeClass('active');
-   var coreTitle = $('#core-selector a[data-core="' + core + '"]').addClass('active').text();
-   $('#dropdownMenu1').text(coreTitle || core);
-
    ModuleBase.arguments = args || ["-v", "--menu", "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
    ModuleBase.preRun = [modulePreRun];
    ModuleBase.canvas = canvas;
    ModuleBase.corePath = "/home/web_user/retroarch/cores/" + core + "_libretro.core";
 
-   // Load the Core's related JavaScript.
    try {
       let script = await import("./" + core + "_libretro.js");
       try {
@@ -450,11 +275,8 @@ async function loadCore(core, args) {
    }
 }
 
-// exit/exitspawn hook
 async function relaunch(core, content) {
-   // force restart on exit
    if (!core) core = ModuleBase.corePath || defaultCore;
-
    if (!content) content = "--menu";
 
    Module = null;
@@ -463,7 +285,6 @@ async function relaunch(core, content) {
       reloadTimeout = null;
    }
 
-   // parse core name safely whether given full path or short name (e.g. 'mgba')
    if (core.includes("_libretro.core")) {
       currentCore = core.slice(0, -14).split("/").slice(-1)[0];
    } else if (core.includes("/")) {
@@ -477,8 +298,84 @@ async function relaunch(core, content) {
    localStorage.setItem("core", currentCore);
    await loadCore(currentCore, ["-v", content, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
    mountBrowserFS();
-   $('.webplayer').show();
-   $('.webplayer-preview').hide();
+   $('#canvas').show();
+   $('#slotLoader').addClass('hidden');
    retroArchRunning = true;
    Module.callMain(Module.arguments);
+   if (canvas) canvas.focus();
 }
+
+// ─── Setup Event Handlers on DOM Ready ───────────────────────────────────────
+$(function() {
+   // File input picker
+   $('#btnPickFile, #dropBox, #btnChangeGame').click(function(e) {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+         e.stopPropagation();
+      }
+      $('#btnRom').click();
+   });
+
+   $('#btnRom').change(function(e) {
+      if (e.target.files && e.target.files.length > 0) {
+         selectFiles(e.target.files);
+      }
+   });
+
+   // Drag & Drop on Slot Box & Window
+   var dropBox = $('#dropBox');
+   $(window).on('dragover dragenter', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropBox.addClass('dragover');
+   });
+   $(window).on('dragleave dragend drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropBox.removeClass('dragover');
+      if (e.type === 'drop') {
+         var dt = e.originalEvent ? e.originalEvent.dataTransfer : e.dataTransfer;
+         if (dt && dt.files && dt.files.length > 0) {
+            selectFiles(dt.files);
+         }
+      }
+   });
+
+   // In-Game HUD Actions
+   $('#btnResetGame').click(function() {
+      if (Module) {
+         Module.retroArchSend("RESET");
+      }
+   });
+
+   $('#btnHudFullscreen').click(function() {
+      if (!document.fullscreenElement) {
+         document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+         document.exitFullscreen().catch(() => {});
+      }
+   });
+
+   $('#btnCleanStorage').click(function() {
+      if (confirm("¿Deseas eliminar las partidas y estados guardados en memoria?")) {
+         cleanupStorage();
+      }
+   });
+
+   // Prevent default keyboard browser events when gaming
+   window.addEventListener('keydown', function(e) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+         e.preventDefault();
+      }
+   });
+
+   // Find core and initialize
+   currentCore = localStorage.getItem("core") || defaultCore;
+   loadCore(currentCore).then(function() {
+      console.log("WEBPLAYER: wasm runtime initialized");
+      appInitialized();
+   });
+
+   idbfsInit();
+   zipfsInit();
+   xhrfsInit();
+});
