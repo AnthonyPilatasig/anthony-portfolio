@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <link rel="shortcut icon" href="media/retroarch.ico" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,6 +49,20 @@
     backdrop-filter: blur(20px);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8);
     transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .detected-system-badge {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(244, 63, 94, 0.2);
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    color: #fca5a5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
   }
 
   .hud-btn {
@@ -101,12 +116,12 @@
   }
 
   .rom-prompt-card {
-    max-width: 500px;
+    max-width: 560px;
     width: 100%;
     background: #0f172a;
     border: 2px dashed rgba(244, 63, 94, 0.45);
     border-radius: 28px;
-    padding: 40px 30px;
+    padding: 36px 28px;
     text-align: center;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 50px rgba(244, 63, 94, 0.2);
     display: flex;
@@ -120,12 +135,12 @@
   .rom-prompt-card:hover, .rom-prompt-card.dragover {
     border-color: #f43f5e;
     background: rgba(244, 63, 94, 0.06);
-    transform: scale(1.02);
+    transform: scale(1.01);
   }
 
   .prompt-icon {
-    width: 72px;
-    height: 72px;
+    width: 68px;
+    height: 68px;
     border-radius: 20px;
     background: rgba(244, 63, 94, 0.15);
     border: 1px solid rgba(244, 63, 94, 0.35);
@@ -133,7 +148,7 @@
     align-items: center;
     justify-content: center;
     color: #f43f5e;
-    font-size: 30px;
+    font-size: 28px;
     box-shadow: 0 0 25px rgba(244, 63, 94, 0.25);
   }
 
@@ -148,7 +163,7 @@
     font-size: 13px;
     color: #94a3b8;
     line-height: 1.5;
-    max-width: 380px;
+    max-width: 440px;
   }
 
   .btn-select-rom {
@@ -169,7 +184,7 @@
   }
 
   .btn-select-rom:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
     box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
   }
 
@@ -178,7 +193,8 @@
     flex-wrap: wrap;
     gap: 6px;
     justify-content: center;
-    margin-top: 6px;
+    margin-top: 4px;
+    max-width: 480px;
   }
 
   .slot-tag {
@@ -188,6 +204,12 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.06);
     color: #cbd5e1;
+  }
+
+  .slot-tag.highlight {
+    background: rgba(244, 63, 94, 0.15);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.3);
   }
 
   /* ── Loading Spinner ─────────────────────────────────────────────── */
@@ -215,7 +237,7 @@
     background: rgba(15, 23, 42, 0.96);
     border: 1px solid rgba(244, 63, 94, 0.4);
     color: #ffffff;
-    padding: 8px 22px;
+    padding: 10px 24px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 600;
@@ -241,6 +263,9 @@
 
 <!-- ── Top Floating Command Bar ────────────────────────────────────── -->
 <div class="top-command-bar" id="commandBar" style="display:none;">
+  <span class="detected-system-badge" id="hudSystemBadge">
+    <i class="fa fa-microchip"></i> <span id="hudSystemName">Consola Virtual</span>
+  </span>
   <button class="hud-btn primary" id="btnChangeFile">
     <i class="fa fa-folder-open"></i> Cargar Otro Archivo
   </button>
@@ -258,9 +283,9 @@
     <div class="prompt-icon">
       <i class="fa fa-microchip"></i>
     </div>
-    <h2 class="prompt-title">Intérprete WebAssembly</h2>
+    <h2 class="prompt-title">Intérprete WebAssembly Universal</h2>
     <p class="prompt-desc">
-      Arrastra y suelta tu archivo personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) o haz clic para ejecutarlo en el navegador.
+      Arrastra o selecciona cualquier archivo de juego con <strong>auto-detección automática de consola</strong>. Compatible con GBA, NDS, PS1, N64, SNES, Genesis, NES y paquetes .ZIP.
     </p>
 
     <button class="btn-select-rom" id="btnPromptPick" type="button">
@@ -273,9 +298,16 @@
     </div>
 
     <div class="slot-tags">
-      <span class="slot-tag">Compatible PC y Móvil</span>
-      <span class="slot-tag">100% Local en Navegador</span>
-      <span class="slot-tag">Guardado Automático</span>
+      <span class="slot-tag highlight">Auto-Detección</span>
+      <span class="slot-tag">GBA (.gba)</span>
+      <span class="slot-tag">NDS (.nds)</span>
+      <span class="slot-tag">PS1 (.iso/.chd/.cue)</span>
+      <span class="slot-tag">N64 (.z64/.n64)</span>
+      <span class="slot-tag">SNES (.sfc/.smc)</span>
+      <span class="slot-tag">Mega Drive (.md)</span>
+      <span class="slot-tag">NES (.nes)</span>
+      <span class="slot-tag">GBC (.gb/.gbc)</span>
+      <span class="slot-tag">ZIP (.zip)</span>
     </div>
   </div>
 </div>
@@ -286,12 +318,105 @@
   <span id="toastMsg">Archivo cargado</span>
 </div>
 
-<input style="display:none" type="file" id="fileInput" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
+<input style="display:none" type="file" id="fileInput" name="upload" accept=".gba,.gb,.gbc,.sgb,.nds,.dsi,.nes,.fds,.unf,.sfc,.smc,.fig,.swc,.snes,.z64,.n64,.v64,.iso,.cue,.bin,.chd,.pbp,.img,.md,.gen,.smd,.sms,.gg,.32x,.pce,.sgx,.ws,.wsc,.ngp,.ngc,.a26,.a78,.lnx,.vb,.vboy,.zip,.7z,.rom,*" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   let currentGameBlobUrl = null;
   let currentFile = null;
+
+  const CORE_PRESETS = {
+    gba: { core: 'gba', name: 'Game Boy Advance (GBA)', icon: 'fa-gamepad' },
+    gbc: { core: 'gbc', name: 'Game Boy Color / GB', icon: 'fa-gamepad' },
+    nds: { core: 'nds', name: 'Nintendo DS (NDS)', icon: 'fa-tablets' },
+    nes: { core: 'nes', name: 'Nintendo NES (8-Bit)', icon: 'fa-tv' },
+    snes: { core: 'snes', name: 'Super Nintendo (SNES)', icon: 'fa-tv' },
+    n64: { core: 'n64', name: 'Nintendo 64 (N64)', icon: 'fa-cubes' },
+    psx: { core: 'psx', name: 'PlayStation 1 (PSX)', icon: 'fa-compact-disc' },
+    segaMD: { core: 'segaMD', name: 'Sega Genesis / Mega Drive', icon: 'fa-bolt' },
+    segaMS: { core: 'segaMS', name: 'Sega Master System', icon: 'fa-tv' },
+    segaGG: { core: 'segaGG', name: 'Sega Game Gear', icon: 'fa-gamepad' },
+    segaCD: { core: 'segaCD', name: 'Sega CD', icon: 'fa-compact-disc' },
+    sega32x: { core: 'sega32x', name: 'Sega 32X', icon: 'fa-bolt' },
+    pce: { core: 'pce', name: 'PC Engine / TurboGrafx-16', icon: 'fa-microchip' },
+    wswan: { core: 'wswan', name: 'WonderSwan / Color', icon: 'fa-mobile-screen' },
+    ngp: { core: 'ngp', name: 'Neo Geo Pocket', icon: 'fa-mobile-screen' },
+    atari2600: { core: 'atari2600', name: 'Atari 2600', icon: 'fa-gamepad' },
+    atari7800: { core: 'atari7800', name: 'Atari 7800', icon: 'fa-gamepad' },
+    lynx: { core: 'lynx', name: 'Atari Lynx', icon: 'fa-mobile-screen' },
+    vb: { core: 'vb', name: 'Virtual Boy', icon: 'fa-vr-cardboard' },
+    arcade: { core: 'arcade', name: 'Arcade / Multi-WASM', icon: 'fa-coins' }
+  };
+
+  function getCoreFromExtension(ext) {
+    if (!ext) return null;
+    ext = ext.toLowerCase().replace(/^\./, '');
+    if (ext === 'gba') return 'gba';
+    if (ext === 'gb' || ext === 'gbc' || ext === 'sgb') return 'gbc';
+    if (ext === 'nds' || ext === 'dsi') return 'nds';
+    if (ext === 'nes' || ext === 'fds' || ext === 'unf') return 'nes';
+    if (ext === 'sfc' || ext === 'smc' || ext === 'fig' || ext === 'swc' || ext === 'snes') return 'snes';
+    if (ext === 'z64' || ext === 'n64' || ext === 'v64') return 'n64';
+    if (ext === 'iso' || ext === 'cue' || ext === 'chd' || ext === 'pbp' || ext === 'img') return 'psx';
+    if (ext === 'md' || ext === 'gen' || ext === 'smd') return 'segaMD';
+    if (ext === 'sms') return 'segaMS';
+    if (ext === 'gg') return 'segaGG';
+    if (ext === '32x') return 'sega32x';
+    if (ext === 'pce' || ext === 'sgx') return 'pce';
+    if (ext === 'ws' || ext === 'wsc') return 'wswan';
+    if (ext === 'ngp' || ext === 'ngc') return 'ngp';
+    if (ext === 'a26') return 'atari2600';
+    if (ext === 'a78') return 'atari7800';
+    if (ext === 'lnx') return 'lynx';
+    if (ext === 'vb' || ext === 'vboy') return 'vb';
+    return null;
+  }
+
+  async function detectCoreInfo(file) {
+    const filename = file.name || '';
+    const ext = filename.split('.').pop().toLowerCase();
+
+    // 1. Direct extension match
+    const directCoreKey = getCoreFromExtension(ext);
+    if (directCoreKey && CORE_PRESETS[directCoreKey]) {
+      return CORE_PRESETS[directCoreKey];
+    }
+
+    // 2. If it's a ZIP archive, inspect inside to find the ROM
+    if (ext === 'zip' && typeof JSZip !== 'undefined') {
+      try {
+        const zip = new JSZip();
+        const zipContent = await zip.loadAsync(file);
+        const fileNames = Object.keys(zipContent.files);
+        for (const name of fileNames) {
+          const subExt = name.split('.').pop().toLowerCase();
+          const subCoreKey = getCoreFromExtension(subExt);
+          if (subCoreKey && CORE_PRESETS[subCoreKey]) {
+            console.log(`AP-Deck: Detected internal ROM "${name}" -> core ${subCoreKey}`);
+            return CORE_PRESETS[subCoreKey];
+          }
+        }
+        // If arcade or contains bin/dat
+        if (fileNames.some(n => n.endsWith('.bin') || n.endsWith('.rom') || n.endsWith('.dat'))) {
+          return CORE_PRESETS.arcade;
+        }
+      } catch (e) {
+        console.warn("Could not inspect zip content:", e);
+      }
+    }
+
+    // 3. Fallback filename keyword detection
+    const lower = filename.toLowerCase();
+    if (lower.includes('nds') || lower.includes('ds')) return CORE_PRESETS.nds;
+    if (lower.includes('ps1') || lower.includes('psx') || lower.includes('playstation')) return CORE_PRESETS.psx;
+    if (lower.includes('n64') || lower.includes('64')) return CORE_PRESETS.n64;
+    if (lower.includes('snes') || lower.includes('super')) return CORE_PRESETS.snes;
+    if (lower.includes('nes')) return CORE_PRESETS.nes;
+    if (lower.includes('genesis') || lower.includes('megadrive') || lower.includes('sega')) return CORE_PRESETS.segaMD;
+    if (lower.includes('gbc') || lower.includes('gameboy color')) return CORE_PRESETS.gbc;
+
+    return CORE_PRESETS.gba;
+  }
 
   function showToast(msg) {
     $('#toastMsg').text(msg);
@@ -299,41 +424,20 @@
     setTimeout(() => $('#toastNotify').removeClass('show'), 3500);
   }
 
-  function detectCore(filename) {
-    const ext = filename.split('.').pop().toLowerCase();
-    // Consolas Portátiles
-    if (ext === 'gba') return 'gba';
-    if (ext === 'gb' || ext === 'gbc') return 'gbc';
-    if (ext === 'nds') return 'nds';
-    if (ext === 'gg') return 'segaGG';
-    if (ext === 'ngp' || ext === 'ngc') return 'ngp';
-    if (ext === 'ws' || ext === 'wsc') return 'wswan';
-
-    // Consolas de Sobremesa 8-Bit / 16-Bit
-    if (ext === 'nes') return 'nes';
-    if (ext === 'sfc' || ext === 'smc') return 'snes';
-    if (ext === 'md' || ext === 'gen') return 'segaMD';
-    if (ext === 'sms') return 'segaMS';
-    if (ext === 'pce') return 'pce';
-
-    // Consolas 32-Bit / 64-Bit
-    if (ext === 'z64' || ext === 'n64' || ext === 'v64') return 'n64';
-    if (ext === 'iso' || ext === 'cue' || ext === 'chd' || ext === 'pbp') return 'psx';
-
-    // Arcade & Binarios
-    if (ext === 'zip') return 'gba'; // or arcade/multi
-    return 'gba';
-  }
-
-  function launchGame(file) {
+  async function launchGame(file) {
     if (!file) return;
     currentFile = file;
-    const core = detectCore(file.name);
-    console.log("AP-Deck: Booting game", file.name, "with core:", core, "size:", file.size);
 
     $('#loaderSpinner').addClass('active');
-    $('#loaderSpinnerText').text(`Iniciando ${file.name}...`);
-    showToast(`Cargando ${file.name}...`);
+    $('#loaderSpinnerText').text(`Detectando formato de ${file.name}...`);
+
+    const preset = await detectCoreInfo(file);
+    const core = preset.core;
+    console.log("AP-Deck: Booting game", file.name, "with detected system:", preset.name, `(${core})`, "size:", file.size);
+
+    $('#hudSystemName').text(preset.name);
+    $('#loaderSpinnerText').text(`Iniciando ${preset.name}...`);
+    showToast(`Consola: ${preset.name}`);
 
     if (currentGameBlobUrl) {
       URL.revokeObjectURL(currentGameBlobUrl);

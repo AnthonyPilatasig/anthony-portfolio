@@ -133,16 +133,16 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     title: 'Intérprete WebAssembly',
     badge: 'UNIVERSAL WASM',
     platform: 'Virtual Bytecode Engine',
-    genre: 'Multi-Arquitectura 8/16/32/64-Bit',
+    genre: 'Multi-Consola Retro (8/16/32/64-Bit)',
     playtime: 'Guardado Local',
     trophies: 'WASM Runtimes',
     bgGradient: 'from-rose-950 via-red-950 to-[#050811]',
     accentColor: '#F43F5E',
-    description: 'Entorno de ejecución universal WebAssembly con auto-detección de formato. Carga y ejecuta instantáneamente binarios (.gba, .gbc, .nds, .iso, .z64, .sfc, .md, .nes, .zip) con aceleración WebGL y controles táctiles o mando.',
+    description: 'Entorno de ejecución universal WebAssembly con auto-detección automática de consola. Carga binarios de Nintendo DS (.nds), PlayStation 1 (.iso/.chd), Nintendo 64 (.z64), Game Boy Advance (.gba), Super Nintendo (.sfc), Mega Drive (.md), NES (.nes) y archivos .zip comprimidos con renderizado WebGL acelerado.',
     type: 'cartridge',
     coverArt: GAME_COVERS.retroArch,
     src: './games/cartridge/index.html',
-    tags: ['Auto-Detect', 'GBA / NDS / PS1 / N64', 'SNES / MD / NES', '100% Local'],
+    tags: ['Auto-Detección', 'GBA / NDS / PS1 / N64', 'SNES / Genesis / NES', '100% Local'],
   },
   {
     id: 'cyber-encounter',
@@ -693,7 +693,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                           </div>
                           <h3 className="text-xl font-bold text-white">Cargar Archivo de Juego</h3>
                           <p className="text-xs text-slate-300 leading-relaxed max-w-sm">
-                            Selecciona tu archivo de prueba personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) para arrancar la partida a pantalla completa.
+                            Selecciona tu ROM o juego personal (<strong>.gba</strong>, <strong>.nds</strong>, <strong>.iso (PS1)</strong>, <strong>.z64</strong>, <strong>.sfc (SNES)</strong>, <strong>.md</strong>, <strong>.nes</strong>, <strong>.zip</strong>) con <strong>auto-detección automática de consola</strong>.
                           </p>
                           <button
                             onClick={() => cartridgeFileInputRef.current?.click()}
@@ -702,6 +702,13 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                             <FiUpload className="w-4 h-4" />
                             <span>Seleccionar Archivo desde tu PC</span>
                           </button>
+                          <div className="flex flex-wrap gap-1 justify-center max-w-xs pt-1">
+                            {['GBA', 'NDS', 'PS1', 'N64', 'SNES', 'Mega Drive', 'NES', 'ZIP'].map(c => (
+                              <span key={c} className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-slate-300">
+                                {c}
+                              </span>
+                            ))}
+                          </div>
                           <span className="text-[11px] text-slate-500">o arrastra tu archivo directamente a esta ventana</span>
 
                           <button
@@ -1279,7 +1286,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         ref={cartridgeFileInputRef}
         onChange={handleCartridgeFile}
         style={{ display: 'none' }}
-        accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom"
+        accept=".gba,.gb,.gbc,.sgb,.nds,.dsi,.nes,.fds,.unf,.sfc,.smc,.fig,.swc,.snes,.z64,.n64,.v64,.iso,.cue,.bin,.chd,.pbp,.img,.md,.gen,.smd,.sms,.gg,.32x,.pce,.sgx,.ws,.wsc,.ngp,.ngc,.a26,.a78,.lnx,.vb,.vboy,.zip,.7z,.rom,*"
       />
     </div>
   );
