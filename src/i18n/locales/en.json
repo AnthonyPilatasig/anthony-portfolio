@@ -5,6 +5,7 @@
     "experience": "Experience",
     "about": "About Me",
     "terminal": "Terminal",
+    "lab": "Lab",
     "contact": "Contact"
   },
   "home": {
@@ -26,6 +27,11 @@
     "statExperience": "Lead Developer",
     "statEducation": "UPS Semester",
     "statArchitecture": "Clean & CQRS"
+  },
+  "lab": {
+    "badge": "05 / The Lab",
+    "title": "Things I built just for fun.",
+    "subtitle": "A tour of the easter eggs and technical experiments hidden inside this portfolio."
   },
   "techShowcase": {
     "badge": "How I build it",

@@ -17,7 +17,7 @@ export const ProjectReel: React.FC<ProjectReelProps> = ({ projects }) => {
         {track.map((p, idx) => (
           <div
             key={`${p.id}-${idx}`}
-            className="relative w-56 h-32 shrink-0 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-800 bg-slate-200 dark:bg-slate-900 group"
+            className="relative w-56 h-32 shrink-0 rounded-xl overflow-hidden border border-[var(--theme-border)] bg-[var(--theme-surface)] group"
           >
             <img
               src={p.image}
@@ -25,8 +25,8 @@ export const ProjectReel: React.FC<ProjectReelProps> = ({ projects }) => {
               className="w-full h-full object-cover opacity-80 dark:opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] dark:from-[#080c14] via-transparent to-transparent opacity-90" />
-            <span className="absolute bottom-2 left-3 right-3 text-[10px] font-mono text-slate-700 dark:text-slate-300 truncate">
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-transparent to-transparent opacity-90" />
+            <span className="absolute bottom-2 left-3 right-3 text-[10px] font-mono text-[var(--theme-ink)] truncate">
               {p.title}
             </span>
           </div>

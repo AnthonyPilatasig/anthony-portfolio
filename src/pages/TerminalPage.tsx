@@ -1,20 +1,42 @@
 import React from 'react';
 import { TerminalConsole } from '../components/common/TerminalConsole';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiTerminal } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 export const TerminalPage: React.FC = () => {
-  return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-16 min-h-0 sm:min-h-[85vh] flex flex-col justify-between">
-      <div className="mb-4 flex flex-wrap gap-x-4 gap-y-2 justify-between items-center text-[10px] sm:text-xs font-mono text-slate-400">
-        <span className="text-yellow-400 font-bold uppercase tracking-wider">[ CLI FULLSCREEN ]</span>
-        <Link to="/" className="text-cyan-400 hover:underline flex items-center gap-1 shrink-0">
-          <FiArrowLeft className="w-3.5 h-3.5" />
-          <span>Volver al Inicio</span>
-        </Link>
-      </div>
+  const { t } = useTranslation();
 
-      <TerminalConsole fullHeight />
+  return (
+    <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20 min-h-[85vh] flex flex-col">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8 border-b border-[var(--theme-border)] pb-6"
+      >
+        <div>
+          <span className="section-index">06 / CLI</span>
+          <h1 className="text-3xl md:text-5xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight flex items-center gap-3">
+            <FiTerminal className="w-8 h-8 text-[var(--theme-accent)]" />
+            <span>Terminal Interactiva</span>
+          </h1>
+          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-2">
+            Emulador UNIX con comandos CLI, neofetch, easter eggs y juegos retro.
+          </p>
+        </div>
+
+        <Link to="/" className="btn-secondary text-xs flex items-center gap-1.5 shrink-0">
+          <FiArrowLeft className="w-3.5 h-3.5" />
+          <span>{t('nav.home')}</span>
+        </Link>
+      </motion.div>
+
+      <div className="flex-1">
+        <TerminalConsole fullHeight />
+      </div>
     </div>
   );
 };

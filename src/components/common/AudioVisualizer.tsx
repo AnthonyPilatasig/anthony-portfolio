@@ -81,7 +81,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(234, 179, 8, 0.25)';
+    ctx.fillStyle = 'rgba(27, 79, 232, 0.25)';
     const bars = 32;
     const barWidth = canvas.width / bars;
     for (let i = 0; i < bars; i++) {
@@ -102,7 +102,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
     const barWidth = canvas.width / data.length;
     data.forEach((value, i) => {
       const barHeight = Math.max(3, (value / 255) * canvas.height);
-      ctx.fillStyle = `rgba(234, 179, 8, ${0.45 + (value / 255) * 0.55})`;
+      ctx.fillStyle = `rgba(27, 79, 232, ${0.45 + (value / 255) * 0.55})`;
       ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 2, barHeight);
     });
 
@@ -162,24 +162,24 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
   };
 
   return (
-    <div className="luxury-card p-5 rounded-2xl flex flex-col gap-4">
-      <div className="flex items-center gap-2.5 text-yellow-700 dark:text-yellow-300 border-b border-slate-300 dark:border-slate-800 pb-3">
-        <FiMusic className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-        <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+    <div className="editorial-card p-5 rounded-lg flex flex-col gap-4">
+      <div className="flex items-center gap-2.5 text-[var(--theme-accent)] border-b border-[var(--theme-border)] pb-3">
+        <FiMusic className="w-4 h-4" />
+        <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-[var(--theme-ink)]">
           Fuera del código
         </h3>
-        <span className="ml-auto text-[9px] font-mono text-slate-500 normal-case tracking-normal">iTunes Search API</span>
+        <span className="ml-auto text-[9px] font-mono text-[var(--theme-ink-muted)] normal-case tracking-normal">iTunes Search API</span>
       </div>
 
       {loading && (
-        <div className="flex items-center justify-center gap-2 py-6 text-slate-500">
+        <div className="flex items-center justify-center gap-2 py-6 text-[var(--theme-ink-muted)]">
           <FiLoader className="w-4 h-4 animate-spin" />
           <span className="text-xs font-mono">Cargando pistas…</span>
         </div>
       )}
 
       {!loading && loadFailed && (
-        <p className="text-[11px] font-mono text-slate-500 text-center py-6">
+        <p className="text-[11px] font-mono text-[var(--theme-ink-muted)] text-center py-6">
           No se pudo conectar con la API pública de iTunes en este momento.
         </p>
       )}
@@ -199,7 +199,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={() => changeTrack(-1)}
-              className="p-2 rounded-full border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-yellow-500 transition-colors"
+              className="p-2 rounded-full border border-[var(--theme-border)] text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] hover:border-[var(--theme-accent)] transition-colors"
               aria-label="Pista anterior"
             >
               <FiSkipBack className="w-3.5 h-3.5" />
@@ -208,7 +208,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
             <button
               onClick={togglePlay}
               disabled={playbackErrored}
-              className="p-3 rounded-full bg-yellow-500 hover:bg-yellow-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 transition-colors"
+              className="p-3 rounded-full bg-[var(--theme-accent)] hover:bg-[var(--theme-accent-hover)] disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
               aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
             >
               {isPlaying ? <FiPause className="w-4 h-4" /> : <FiPlay className="w-4 h-4" />}
@@ -216,7 +216,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
 
             <button
               onClick={() => changeTrack(1)}
-              className="p-2 rounded-full border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-yellow-500 transition-colors"
+              className="p-2 rounded-full border border-[var(--theme-border)] text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] hover:border-[var(--theme-accent)] transition-colors"
               aria-label="Siguiente pista"
             >
               <FiSkipForward className="w-3.5 h-3.5" />
@@ -225,13 +225,13 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
 
           <div className="flex items-center justify-center gap-2 text-center">
             {track.artwork && (
-              <img src={track.artwork} alt="" className="w-6 h-6 rounded" />
+              <img src={track.artwork} alt="" className="w-6 h-6 rounded border border-[var(--theme-border)]" />
             )}
             {playbackErrored ? (
-              <p className="text-[11px] font-mono text-slate-500">Vista previa no disponible para esta pista.</p>
+              <p className="text-[11px] font-mono text-[var(--theme-ink-muted)]">Vista previa no disponible para esta pista.</p>
             ) : (
-              <p className="text-xs font-mono text-slate-700 dark:text-slate-300">
-                {track.title}<span className="text-slate-500"> — {track.artist}</span>
+              <p className="text-xs font-mono text-[var(--theme-ink)]">
+                {track.title}<span className="text-[var(--theme-ink-muted)]"> — {track.artist}</span>
               </p>
             )}
           </div>

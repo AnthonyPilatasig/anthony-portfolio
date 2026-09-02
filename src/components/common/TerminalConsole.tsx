@@ -28,7 +28,7 @@ const OS_BODY_CLASS: Record<OSTheme, string> = {
   linux: 'bg-[#2c0e37]/90',
 };
 const OS_BORDER_CLASS: Record<OSTheme, string> = {
-  macos: 'border-yellow-500/20',
+  macos: 'border-[var(--theme-border-strong)]',
   windows: 'border-slate-700',
   linux: 'border-[#5c2a54]',
 };

@@ -1,14 +1,38 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vitest/config'
+import { defineConfig, type Plugin } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+const BASE = '/anthony-portfolio/';
+
+// Visiting the base URL without its trailing slash (e.g. from an old bookmark, or typed
+// from muscle memory) makes Vite's dev server show a raw "did you mean X instead?" 404
+// instead of the app. This 302-redirects that one specific case to the correct URL.
+const redirectBaseWithoutSlash = (): Plugin => ({
+  name: 'redirect-base-without-slash',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      if (req.url === BASE.slice(0, -1)) {
+        res.statusCode = 302;
+        res.setHeader('Location', BASE);
+        res.end();
+        return;
+      }
+      next();
+    });
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/anthony-portfolio/', // Necesario para GitHub Pages
+  base: BASE, // Necesario para GitHub Pages
+  server: {
+    open: BASE,
+  },
   plugins: [
     react(),
     tailwindcss(),
+    redirectBaseWithoutSlash(),
   ],
   build: {
     chunkSizeWarningLimit: 600,

@@ -12,7 +12,7 @@ describe('GlassCard Component', () => {
     const { container } = render(<GlassCard className="mi-clase-personalizada">Hola</GlassCard>);
     const element = container.firstChild as HTMLElement;
     
-    expect(element.className).toContain('glass-panel');
+    expect(element.className).toContain('editorial-card');
     expect(element.className).toContain('mi-clase-personalizada');
   });
 });

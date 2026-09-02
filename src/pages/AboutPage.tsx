@@ -81,6 +81,31 @@ export const AboutPage: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Passions: Anime, Gaming, AI, Game Dev & Music */}
+          <div className="editorial-card p-5 rounded-lg space-y-3 mt-4 border border-[var(--theme-border-strong)]">
+            <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-2">
+              <h4 className="text-xs font-mono font-bold text-[var(--theme-ink)] uppercase tracking-wider">
+                🎮 Intereses Creativos & Game Dev
+              </h4>
+              <a 
+                href={`${import.meta.env.BASE_URL}laboratorio`}
+                className="text-[10px] font-mono text-[var(--theme-accent)] hover:underline"
+              >
+                Abrir Laboratorio RPG →
+              </a>
+            </div>
+            <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">
+              Apasionado por la creación de videojuegos independientes, emulación de RPG Maker (MV/MZ), narrativa y combate por turnos; integración de Inteligencia Artificial en flujos de desarrollo; y afición por el anime y bandas sonoras orquestales (NieR, Persona, Ghibli).
+            </p>
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              <span className="badge-accent">RPG Maker Web</span>
+              <span className="badge-accent">Game Dev (C# / Unity)</span>
+              <span className="badge-accent">Anime Soundtracks</span>
+              <span className="badge-accent">Inteligencia Artificial</span>
+              <span className="badge-accent">Pixel Art & Sprites</span>
+            </div>
+          </div>
         </motion.div>
 
         {vulnGameOpen && <VulnHunterGame onClose={() => setVulnGameOpen(false)} />}

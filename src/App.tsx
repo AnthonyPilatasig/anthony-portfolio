@@ -5,6 +5,7 @@ import { SEO } from './components/common/SEO';
 import { MouseSpotlight } from './components/common/MouseSpotlight';
 import { CustomCursor } from './components/common/CustomCursor';
 import { ScrollToTop } from './components/common/ScrollToTop';
+import { GlobalAudioPlayer } from './components/common/GlobalAudioPlayer';
 import { AppRouter } from './routes/AppRouter';
 
 function App() {
@@ -51,6 +52,9 @@ function App() {
         <main>
           <AppRouter />
         </main>
+
+        {/* Global Persistent Audio Player (Anime Radio, VGM, Lofi) */}
+        <GlobalAudioPlayer />
 
         {/* Global Footer */}
         <Footer />

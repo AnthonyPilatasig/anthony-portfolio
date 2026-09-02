@@ -5,6 +5,7 @@
     "experience": "Trayectoria",
     "about": "Sobre Mí",
     "terminal": "Terminal",
+    "lab": "Laboratorio",
     "contact": "Contacto"
   },
   "home": {
@@ -26,6 +27,11 @@
     "statExperience": "Lead Developer",
     "statEducation": "Semestre UPS",
     "statArchitecture": "Clean & CQRS"
+  },
+  "lab": {
+    "badge": "05 / El Laboratorio",
+    "title": "Cosas que construí solo por diversión.",
+    "subtitle": "Un recorrido por los easter eggs y experimentos técnicos escondidos en este portafolio."
   },
   "techShowcase": {
     "badge": "Cómo lo construyo",

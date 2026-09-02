@@ -7,7 +7,9 @@ const ProjectsPage = React.lazy(() => import('../pages/ProjectsPage').then(m => 
 const ExperiencePage = React.lazy(() => import('../pages/ExperiencePage').then(m => ({ default: m.ExperiencePage })));
 const AboutPage = React.lazy(() => import('../pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const TerminalPage = React.lazy(() => import('../pages/TerminalPage').then(m => ({ default: m.TerminalPage })));
+const LabPage = React.lazy(() => import('../pages/LabPage').then(m => ({ default: m.LabPage })));
 const ContactPage = React.lazy(() => import('../pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const ConsolePage = React.lazy(() => import('../pages/ConsolePage').then(m => ({ default: m.ConsolePage })));
 
 export const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -16,7 +18,7 @@ export const AppRouter: React.FC = () => {
     <AnimatePresence mode="wait">
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-yellow-500 border-t-transparent animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-[var(--theme-accent)] border-t-transparent animate-spin" />
         </div>
       }>
         <Routes location={location} key={location.pathname}>
@@ -61,12 +63,32 @@ export const AppRouter: React.FC = () => {
           }
         />
         <Route
+          path="/laboratorio"
+          element={
+            <PageWrapper>
+              <LabPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/lab"
+          element={
+            <PageWrapper>
+              <LabPage />
+            </PageWrapper>
+          }
+        />
+        <Route
           path="/contacto"
           element={
             <PageWrapper>
               <ContactPage />
             </PageWrapper>
           }
+        />
+        <Route
+          path="/console"
+          element={<ConsolePage />}
         />
         <Route
           path="*"

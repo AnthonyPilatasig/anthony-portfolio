@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const HOVER_SELECTOR = 'a, button, input, textarea, [role="button"], .luxury-card, .cursor-hover';
+const HOVER_SELECTOR = 'a, button, input, textarea, [role="button"], .editorial-card, .btn-primary, .btn-secondary, .badge, .cursor-hover';
 
 export const CustomCursor = () => {
   const dotRef = useRef<HTMLDivElement>(null);
