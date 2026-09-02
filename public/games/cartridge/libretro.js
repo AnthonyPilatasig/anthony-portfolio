@@ -3,7 +3,7 @@
  */
 
 const defaultCore = "mgba";
-var autoStart = false;
+var autoStart = true;
 
 var BrowserFS = BrowserFS;
 var afs;
@@ -15,6 +15,14 @@ var currentCore;
 var reloadTimeout;
 var retroArchRunning = false;
 var canvas = document.getElementById("canvas");
+
+function showToast(msg) {
+   $('#toastMsg').text(msg);
+   $('#toastNotify').addClass('show');
+   setTimeout(function() {
+      $('#toastNotify').removeClass('show');
+   }, 3500);
+}
 
 function modulePreRun(module) {
    module.ENV["LIBRARY_PATH"] = module.corePath;
@@ -51,7 +59,7 @@ function cleanupStorage() {
       var req = indexedDB.deleteDatabase("RetroArch");
       req.onsuccess = function() {
          console.log("Deleted database successfully");
-         alert("Datos guardados eliminados con éxito.");
+         showToast("Datos y partidas guardadas eliminados con éxito.");
       };
       req.onerror = function() {
          console.error("Couldn't delete database");
@@ -164,7 +172,11 @@ function finishFileSystemSetup() {
 }
 
 function preLoadingComplete() {
-   console.log("WEBPLAYER: Ready for ROM selection");
+   console.log("WEBPLAYER: Preload complete. Auto-starting RetroArch...");
+   $('#initSplash').addClass('hidden');
+   if (autoStart && !retroArchRunning) {
+      startRetroArch();
+   }
 }
 
 function detectCoreForFile(filename) {
@@ -177,34 +189,30 @@ function detectCoreForFile(filename) {
 
 function startRetroArch(contentPath) {
    $('#canvas').show();
-   $('#slotLoader').addClass('hidden');
+   $('#initSplash').addClass('hidden');
 
    retroArchRunning = true;
    if (contentPath) {
       ModuleBase.arguments = ["-v", contentPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
-      Module.arguments = ModuleBase.arguments;
+   } else {
+      ModuleBase.arguments = ["-v", "--menu", "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
    }
+   Module.arguments = ModuleBase.arguments;
    Module.callMain(Module.arguments);
    if (canvas) canvas.focus();
 }
 
 function selectFiles(files) {
    if (!files || files.length === 0) return;
-   $('#loaderSpinner').addClass('active');
-   $('#loaderSpinnerText').text('Cargando archivo: ' + files[0].name + '...');
+   var file = files[0];
+   showToast("Cargando: " + file.name + "...");
 
-   var count = files.length;
-   for (var i = 0; i < count; i++) {
-      var filereader = new FileReader();
-      filereader.file_name = files[i].name;
-      filereader.readAsArrayBuffer(files[i]);
-      filereader.onload = function() {
-         uploadDataAndRun(this.result, this.file_name);
-      };
-      filereader.onloadend = function() {
-         $('#loaderSpinner').removeClass('active');
-      };
-   }
+   var filereader = new FileReader();
+   filereader.file_name = file.name;
+   filereader.readAsArrayBuffer(file);
+   filereader.onload = function() {
+      uploadDataAndRun(this.result, this.file_name);
+   };
 }
 
 async function uploadDataAndRun(data, name) {
@@ -227,22 +235,10 @@ async function uploadDataAndRun(data, name) {
 
    // Auto-detect core
    var targetCore = detectCoreForFile(name);
-   console.log("WEBPLAYER: Auto-launching content:", targetPath, "with core:", targetCore);
+   console.log("WEBPLAYER: Launching game:", targetPath, "with core:", targetCore);
+   showToast("Iniciando " + name + "...");
 
-   $('#slotLoader').addClass('hidden');
-   $('#canvas').show();
-
-   if (retroArchRunning) {
-      await relaunch(targetCore, targetPath);
-   } else {
-      if (targetCore !== currentCore) {
-         currentCore = targetCore;
-         localStorage.setItem("core", currentCore);
-         await loadCore(currentCore, ["-v", targetPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
-         mountBrowserFS();
-      }
-      startRetroArch(targetPath);
-   }
+   await relaunch(targetCore, targetPath);
 }
 
 async function loadCoreFallback(currentCore) {
@@ -299,19 +295,17 @@ async function relaunch(core, content) {
    await loadCore(currentCore, ["-v", content, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
    mountBrowserFS();
    $('#canvas').show();
-   $('#slotLoader').addClass('hidden');
+   $('#initSplash').addClass('hidden');
    retroArchRunning = true;
    Module.callMain(Module.arguments);
    if (canvas) canvas.focus();
 }
 
-// ─── Setup Event Handlers on DOM Ready ───────────────────────────────────────
+// ─── DOM Events ─────────────────────────────────────────────────────────────
 $(function() {
    // File input picker
-   $('#btnPickFile, #dropBox, #btnChangeGame').click(function(e) {
-      if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-         e.stopPropagation();
-      }
+   $('#btnPickFile').click(function(e) {
+      e.stopPropagation();
       $('#btnRom').click();
    });
 
@@ -321,17 +315,14 @@ $(function() {
       }
    });
 
-   // Drag & Drop on Slot Box & Window
-   var dropBox = $('#dropBox');
+   // Drag & Drop anywhere on screen
    $(window).on('dragover dragenter', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      dropBox.addClass('dragover');
    });
    $(window).on('dragleave dragend drop', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      dropBox.removeClass('dragover');
       if (e.type === 'drop') {
          var dt = e.originalEvent ? e.originalEvent.dataTransfer : e.dataTransfer;
          if (dt && dt.files && dt.files.length > 0) {
@@ -344,6 +335,7 @@ $(function() {
    $('#btnResetGame').click(function() {
       if (Module) {
          Module.retroArchSend("RESET");
+         showToast("Partida reiniciada");
       }
    });
 

@@ -19,7 +19,7 @@
     user-select: none;
   }
 
-  /* ── Canvas: Edge-to-Edge Display ────────────────────────────────── */
+  /* ── Canvas: Fullscreen Edge-to-Edge ─────────────────────────────── */
   #canvas {
     position: absolute;
     inset: 0;
@@ -28,226 +28,148 @@
     object-fit: contain;
     image-rendering: pixelated;
     background: #000000;
-    display: none;
+    display: block;
     z-index: 10;
   }
 
-  /* ── In-Game Floating Action HUD ─────────────────────────────────── */
-  .ingame-hud {
+  /* ── Sleek Top Floating Command Bar ──────────────────────────────── */
+  .top-command-bar {
     position: absolute;
     top: 14px;
     left: 50%;
-    transform: translateX(-50%) translateY(-60px);
+    transform: translateX(-50%);
     z-index: 30;
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 14px;
     background: rgba(10, 14, 26, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 999px;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  body:hover .ingame-hud, .ingame-hud:hover, .ingame-hud.visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    pointer-events: auto;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   .hud-btn {
     background: rgba(255, 255, 255, 0.08);
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #cbd5e1;
-    padding: 6px 12px;
+    padding: 7px 14px;
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.2s ease;
   }
 
-  .hud-btn:hover {
+  .hud-btn.primary {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+  }
+
+  .hud-btn.primary:hover {
+    background: #f8fafc;
+    transform: scale(1.04);
+    box-shadow: 0 0 28px rgba(255, 255, 255, 0.4);
+  }
+
+  .hud-btn:hover:not(.primary) {
     background: rgba(255, 255, 255, 0.18);
     color: #ffffff;
   }
 
-  /* ── Fullscreen Drag & Drop Slot Loader Overlay ─────────────────── */
-  .slot-loader {
+  /* ── Initial Loading Splash ──────────────────────────────────────── */
+  .init-splash {
     position: absolute;
     inset: 0;
-    z-index: 20;
+    z-index: 25;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 50% 40%, #111827 0%, #050811 100%);
-    padding: 24px;
-    text-align: center;
+    background: #050811;
+    color: #94a3b8;
+    gap: 16px;
     transition: opacity 0.4s ease;
   }
 
-  .slot-loader.hidden {
+  .init-splash.hidden {
     opacity: 0;
     pointer-events: none;
   }
 
-  .slot-box {
-    max-width: 520px;
-    width: 100%;
-    background: rgba(17, 24, 39, 0.75);
-    border: 2px dashed rgba(244, 63, 94, 0.4);
-    border-radius: 28px;
-    padding: 40px 30px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 25px 60px -15px rgba(244, 63, 94, 0.15);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    transition: border-color 0.2s, transform 0.2s, background 0.2s;
-    cursor: pointer;
-  }
-
-  .slot-box:hover, .slot-box.dragover {
-    border-color: #f43f5e;
-    background: rgba(244, 63, 94, 0.08);
-    transform: scale(1.02);
-  }
-
-  .slot-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
-    background: rgba(244, 63, 94, 0.15);
-    border: 1px solid rgba(244, 63, 94, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .spinner-icon {
+    font-size: 32px;
     color: #f43f5e;
-    font-size: 28px;
-    box-shadow: 0 0 30px rgba(244, 63, 94, 0.25);
   }
 
-  .slot-title {
-    font-size: 22px;
-    font-weight: 800;
+  /* ── Toast Notification ──────────────────────────────────────────── */
+  .toast-notify {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50px);
+    opacity: 0;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(244, 63, 94, 0.4);
     color: #ffffff;
-    letter-spacing: -0.02em;
-  }
-
-  .slot-subtitle {
-    font-size: 13px;
-    color: #94a3b8;
-    line-height: 1.5;
-    max-width: 380px;
-  }
-
-  .btn-upload {
-    margin-top: 8px;
-    background: #ffffff;
-    color: #0f172a;
-    font-weight: 800;
-    font-size: 13px;
-    padding: 12px 28px;
+    padding: 8px 18px;
     border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 40;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
-  .btn-upload:hover {
-    transform: scale(1.04);
-    box-shadow: 0 0 35px rgba(255, 255, 255, 0.35);
-  }
-
-  .slot-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    margin-top: 4px;
-  }
-
-  .slot-tag {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
-    color: #cbd5e1;
-  }
-
-  .loader-spinner {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #f43f5e;
-    margin-top: 10px;
-  }
-
-  .loader-spinner.active {
-    display: flex;
+  .toast-notify.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
   }
 </style>
 </head>
 <body>
 
+<!-- ── Canvas: RetroArch Widescreen Surface ────────────────────────── -->
 <canvas id="canvas" class="webplayer"></canvas>
 
-<div class="ingame-hud" id="ingameHud">
-  <button class="hud-btn" id="btnChangeGame">
-    <i class="fa fa-folder-open"></i> Cargar otro archivo
+<!-- ── Top Floating Command Bar (Always on Top) ────────────────────── -->
+<div class="top-command-bar" id="commandBar">
+  <button class="hud-btn primary" id="btnPickFile">
+    <i class="fa fa-folder-open"></i> Cargar Archivo (.gba, .gbc, .nes, .zip)
   </button>
-  <button class="hud-btn" id="btnResetGame">
+  <button class="hud-btn" id="btnResetGame" title="Reiniciar">
     <i class="fa fa-rotate-left"></i> Reiniciar
   </button>
-  <button class="hud-btn" id="btnHudFullscreen">
-    <i class="fa fa-expand"></i> Pantalla completa
+  <button class="hud-btn" id="btnHudFullscreen" title="Pantalla Completa">
+    <i class="fa fa-expand"></i> Pantalla Completa
   </button>
-  <button class="hud-btn" id="btnCleanStorage" title="Borrar datos guardados">
-    <i class="fa fa-trash-can"></i> Limpiar datos
+  <button class="hud-btn" id="btnCleanStorage" title="Borrar Partidas Guardadas">
+    <i class="fa fa-trash-can"></i> Limpiar Datos
   </button>
 </div>
 
-<div class="slot-loader" id="slotLoader">
-  <div class="slot-box" id="dropBox">
-    <div class="slot-icon">
-      <i class="fa fa-microchip"></i>
-    </div>
-    <h2 class="slot-title">Intérprete WebAssembly</h2>
-    <p class="slot-subtitle">
-      Arrastra y suelta tu archivo (<strong>.bin</strong>, <strong>.rom</strong>, <strong>.zip</strong>) o haz clic para ejecutarlo en el entorno local.
-    </p>
+<!-- ── Initial Startup Splash (Hides when WASM boots) ──────────────── -->
+<div class="init-splash" id="initSplash">
+  <i class="fa fa-circle-notch fa-spin spinner-icon"></i>
+  <span style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Iniciando Entorno WebAssembly...</span>
+  <span style="font-size: 11px; color: #64748b;">Preparando sistema de archivos y núcleos en memoria</span>
+</div>
 
-    <button class="btn-upload" id="btnPickFile" type="button">
-      <i class="fa fa-arrow-up-from-bracket"></i> Seleccionar Archivo
-    </button>
-
-    <div class="loader-spinner" id="loaderSpinner">
-      <i class="fa fa-spinner fa-spin"></i>
-      <span id="loaderSpinnerText">Iniciando entorno WebAssembly...</span>
-    </div>
-
-    <div class="slot-tags">
-      <span class="slot-tag">WebAssembly Runtime</span>
-      <span class="slot-tag">100% Local en Navegador</span>
-      <span class="slot-tag">Sandbox Seguro</span>
-    </div>
-  </div>
+<!-- ── Toast ───────────────────────────────────────────────────────── -->
+<div class="toast-notify" id="toastNotify">
+  <i class="fa fa-circle-check text-emerald-400"></i>
+  <span id="toastMsg">Archivo cargado con éxito</span>
 </div>
 
 <input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
