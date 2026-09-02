@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import {
   FiPlay, FiMaximize2, FiMinimize2, FiTv, FiVolume2, FiVolumeX,
   FiArrowLeft, FiArrowRight, FiGrid, FiSettings,
-  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiHome, FiLogOut
+  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiHome, FiLogOut, FiHelpCircle
 } from 'react-icons/fi';
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, Sparkles, Disc3, ShieldCheck } from 'lucide-react';
 import JSZip from 'jszip';
+import { GAME_COVERS } from '../../assets/gameCovers';
 import { GameBoyShell } from './GameBoyShell';
 import { GameBoyBattle } from './GameBoyBattle';
 import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
 
-// ─── Audio Synthesizer (PS5 / Switch soft ticks and chimes) ─────────────────
+// ─── Modern Console Audio Synthesizer (Nintendo Switch / SteamOS soft clicks) ──
 class ModernConsoleAudio {
   private ctx: AudioContext | null = null;
 
@@ -34,17 +35,17 @@ class ModernConsoleAudio {
       const gain = this.ctx.createGain();
       const filter = this.ctx.createBiquadFilter();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(587.33, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
+      osc.frequency.setValueAtTime(659.25, now); // E5
+      osc.frequency.exponentialRampToValueAtTime(987.77, now + 0.03); // B5
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1400, now);
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+      filter.frequency.setValueAtTime(1800, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
       osc.connect(filter);
       filter.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.05);
+      osc.stop(now + 0.045);
     } catch {}
   }
 
@@ -54,19 +55,19 @@ class ModernConsoleAudio {
       if (!this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume();
       const now = this.ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const notes = [440, 554.37, 659.25, 880]; // A major chord arpeggio
       notes.forEach((freq, idx) => {
         if (!this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.05);
-        gain.gain.setValueAtTime(0.08, now + idx * 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.05 + 0.3);
+        osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+        gain.gain.setValueAtTime(0.1, now + idx * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.28);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        osc.start(now + idx * 0.05);
-        osc.stop(now + idx * 0.05 + 0.32);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + idx * 0.04 + 0.3);
       });
     } catch {}
   }
@@ -94,7 +95,7 @@ class ModernConsoleAudio {
 
 const consoleAudio = new ModernConsoleAudio();
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Game Types & Catalogue ──────────────────────────────────────────────────
 export interface ConsoleGame {
   id: string;
   title: string;
@@ -108,42 +109,41 @@ export interface ConsoleGame {
   description: string;
   type: 'zip-loader' | 'cartridge' | 'cyber-battle' | 'snake' | '2048';
   src?: string;
-  coverArt?: string;
+  coverArt: string;
   tags: string[];
 }
 
-// ─── Game Catalogue (sin RPG Maker) ─────────────────────────────────────────
 const CONSOLE_GAMES: ConsoleGame[] = [
-  // Slot especial: cargador de ZIP (siempre el primero)
   {
     id: 'zip-loader',
     title: 'Cargar desde ZIP',
-    badge: 'TU JUEGO',
-    platform: 'Cualquier plataforma web',
-    genre: 'Importa tu juego',
-    playtime: '—',
-    trophies: '—',
-    bgGradient: 'from-slate-900 via-slate-800 to-[#070b14]',
+    badge: 'TU JUEGO WEB',
+    platform: 'Cualquier Motor HTML5',
+    genre: 'Importador Instantáneo',
+    playtime: 'Ilimitado',
+    trophies: 'Modo Libre',
+    bgGradient: 'from-indigo-950 via-purple-950 to-[#050811]',
     accentColor: '#6366F1',
-    description: 'Sube un archivo .zip con tu juego web (debe contener index.html en la raíz). Se extrae en memoria y se lanza directamente en el navegador — nada se sube a ningún servidor.',
+    description: 'Sube o arrastra cualquier juego web comprimido en formato .zip (con index.html en la raíz). Se extrae en la memoria RAM del navegador y se lanza con rendimiento 100% nativo sin subir nada a servidores.',
     type: 'zip-loader',
-    tags: ['HTML5', 'RetroArch ROM', 'Cualquier motor', '100% local'],
+    coverArt: GAME_COVERS.zipLoader,
+    tags: ['HTML5', 'RPG Maker MV/MZ', 'Godot Web', '100% Local'],
   },
-  // RetroArch real (libretro WebAssembly) — el usuario sube su propia ROM en ZIP
   {
     id: 'cartridge-slot',
     title: 'Ranura RetroArch',
     badge: 'RETROARCH REAL',
     platform: 'libretro · WebAssembly',
-    genre: 'Trae tu propio cartucho',
-    playtime: '—',
-    trophies: 'GBA · GBC · NES',
-    bgGradient: 'from-rose-950 via-slate-900 to-[#070b14]',
+    genre: 'GBA · GBC · NES',
+    playtime: '40h+ Guardado',
+    trophies: 'mGBA · Gambatte',
+    bgGradient: 'from-rose-950 via-red-950 to-[#050811]',
     accentColor: '#F43F5E',
-    description: 'Sube tu propio archivo (un cartucho que hayas volcado tú mismo) y juégalo con RetroArch real compilado a WebAssembly, autoalojado aquí — mGBA, Gambatte o FCEUmm. Nada se sube a un servidor: todo corre en tu navegador.',
+    description: 'Emulador RetroArch real autoalojado con WebAssembly. Sube tu propia ROM (GBA, Game Boy Color, NES) o arrástrala a la ranura para jugar con guardado local en el navegador.',
     type: 'cartridge',
+    coverArt: GAME_COVERS.retroArch,
     src: './games/cartridge/index.html',
-    tags: ['RetroArch / libretro', 'mGBA · Gambatte · FCEUmm', 'Sube tu archivo', '100% local'],
+    tags: ['mGBA Core', 'Gambatte', 'FCEUmm', 'Guardado Local'],
   },
   {
     id: 'cyber-encounter',
@@ -153,10 +153,11 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     genre: 'Turn-Based Battle',
     playtime: '6h 15m',
     trophies: '8/8 Trofeos',
-    bgGradient: 'from-cyan-950 via-slate-900 to-[#070b14]',
+    bgGradient: 'from-cyan-950 via-slate-900 to-[#050811]',
     accentColor: '#06B6D4',
-    description: 'Sistema de combate por turnos estilo Final Fantasy/Pokémon contra el monolito de deuda técnica con mecánicas de refactorización y escudos de arquitectura.',
+    description: 'Sistema de combate táctico por turnos estilo Final Fantasy / Pokémon contra el monolito de deuda técnica con mecánicas de refactorización y escudos de arquitectura.',
     type: 'cyber-battle',
+    coverArt: GAME_COVERS.cyberEncounter,
     tags: ['Battle Arena', 'Debuffs', 'Critical Strikes', 'Pixel Shell'],
   },
   {
@@ -167,10 +168,11 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     genre: 'Arcade Classic',
     playtime: '12h 05m',
     trophies: '5/5 Trofeos',
-    bgGradient: 'from-emerald-950 via-teal-950 to-[#070b14]',
+    bgGradient: 'from-emerald-950 via-teal-950 to-[#050811]',
     accentColor: '#10B981',
-    description: 'Recreación retro de la clásica serpiente con física de rejilla matemática y selector de dificultad.',
+    description: 'Recreación retro de la clásica serpiente con física de rejilla matemática, sintetizador sonoro Chiptune y selector de dificultad.',
     type: 'snake',
+    coverArt: GAME_COVERS.snake8bit,
     tags: ['High Score', 'Física Retro', '8-Bit Synth', 'D-Pad'],
   },
   {
@@ -181,15 +183,16 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     genre: 'Math Puzzle',
     playtime: '9h 30m',
     trophies: '10/10 Trofeos',
-    bgGradient: 'from-amber-950 via-orange-950 to-[#070b14]',
+    bgGradient: 'from-amber-950 via-orange-950 to-[#050811]',
     accentColor: '#F59E0B',
     description: 'Desliza y fusiona potencias de dos hasta alcanzar el bloque 2048 en una matriz algorítmica optimizada.',
     type: '2048',
+    coverArt: GAME_COVERS.matrix2048,
     tags: ['Touch Gestures', 'Matriz 4x4', 'Algoritmo', 'Minimalista'],
   },
 ];
 
-// ─── ZIP Loader helpers ──────────────────────────────────────────────────────
+// ─── ZIP Extraction Helper ───────────────────────────────────────────────────
 interface ZipGameEntry {
   name: string;
   url: string;
@@ -236,13 +239,10 @@ function guessMime(path: string): string {
   return map[ext] ?? 'application/octet-stream';
 }
 
-// ─── Props ───────────────────────────────────────────────────────────────────
 interface ConsoleDashboardProps {
-  /** Cuando es true, el contenedor usa fixed inset-0 (pantalla completa real) */
   embeddedFullscreen?: boolean;
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
 export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFullscreen = false }) => {
   const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -264,7 +264,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
   const [zipIframeSrc, setZipIframeSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const blobsRef = useRef<string[]>([]);
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Time ticker
@@ -278,7 +277,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     return () => clearInterval(interval);
   }, []);
 
-  // Gamepad detection
+  // Gamepad Detection
   useEffect(() => {
     const handleConnect = () => setControllerConnected(true);
     const handleDisconnect = () => setControllerConnected(false);
@@ -306,22 +305,31 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
       }
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         e.preventDefault();
-        setSelectedIndex(prev => { const next = (prev + 1) % CONSOLE_GAMES.length; if (soundEnabled) consoleAudio.playNavigate(); return next; });
+        setSelectedIndex(prev => {
+          const next = (prev + 1) % CONSOLE_GAMES.length;
+          if (soundEnabled) consoleAudio.playNavigate();
+          return next;
+        });
       } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         e.preventDefault();
-        setSelectedIndex(prev => { const next = (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length; if (soundEnabled) consoleAudio.playNavigate(); return next; });
+        setSelectedIndex(prev => {
+          const next = (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length;
+          if (soundEnabled) consoleAudio.playNavigate();
+          return next;
+        });
       } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         const selected = CONSOLE_GAMES[selectedIndex];
-        if (soundEnabled) consoleAudio.playLaunch();
-        setActiveRunningGame(selected);
+        launchGame(selected);
+      } else if (e.key === 'Escape') {
+        navigate('/laboratorio');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, activeRunningGame, soundEnabled]);
+  }, [selectedIndex, activeRunningGame, soundEnabled, navigate]);
 
-  // Portrait detection (mobile rotate hint)
+  // Portrait detector
   useEffect(() => {
     const mq = window.matchMedia('(orientation: portrait) and (max-width: 900px)');
     const update = () => setIsPortrait(mq.matches);
@@ -330,17 +338,17 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Fullscreen change listener (sync state when user presses F11 or Esc)
+  // Fullscreen change listener
   useEffect(() => {
     const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', onFsChange);
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
 
-  // Reset info panel when game changes
-  useEffect(() => { setShowGameInfo(false); }, [selectedIndex]);
+  useEffect(() => {
+    setShowGameInfo(false);
+  }, [selectedIndex]);
 
-  // Cleanup blob URLs when zip changes
   useEffect(() => {
     return () => {
       blobsRef.current.forEach(url => URL.revokeObjectURL(url));
@@ -386,7 +394,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     }
   };
 
-  // ─── ZIP handling ────────────────────────────────────────────────────────
+  // ZIP Handler
   const handleZipFile = async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.zip')) {
       setZipError('El archivo debe ser un .zip');
@@ -398,7 +406,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     setZipIframeSrc(null);
 
     try {
-      // Revoke old blobs
       blobsRef.current.forEach(url => URL.revokeObjectURL(url));
       blobsRef.current = [];
 
@@ -406,7 +413,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
       blobsRef.current = entries.map(e => e.url);
       setZipBlobEntries(entries);
 
-      // Find the root index.html
       const rootIndex =
         entries.find(e => e.name.toLowerCase() === 'index.html') ||
         entries.find(e => e.name.toLowerCase().endsWith('/index.html') && e.name.split('/').length === 2);
@@ -418,7 +424,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
       }
 
       setZipIframeSrc(rootIndex.url);
-      // Launch the zip-loader game card as active
       setActiveRunningGame(CONSOLE_GAMES.find(g => g.id === 'zip-loader') ?? CONSOLE_GAMES[0]);
     } catch (err) {
       setZipError(`Error al extraer el ZIP: ${err instanceof Error ? err.message : String(err)}`);
@@ -427,117 +432,100 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     }
   };
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleZipFile(file);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) handleZipFile(file);
-  };
-
-  // Container root classes
   const rootClasses = embeddedFullscreen
-    ? 'fixed inset-0 w-screen h-screen z-[9999] bg-[#050811] flex flex-col overflow-hidden'
-    : `relative w-full bg-[#050811] flex flex-col overflow-hidden ${isFullscreen ? 'fixed inset-0 z-50 rounded-none w-screen h-screen' : 'min-h-[90vh] rounded-[28px] shadow-2xl'}`;
+    ? 'fixed inset-0 w-screen h-screen z-[9999] bg-[#050811] flex flex-col overflow-hidden select-none'
+    : `relative w-full bg-[#050811] flex flex-col overflow-hidden select-none ${isFullscreen ? 'fixed inset-0 z-50 rounded-none w-screen h-screen' : 'min-h-[90vh] rounded-[28px] shadow-2xl'}`;
 
   return (
     <div ref={containerRef} className={rootClasses} style={{ fontFamily: "'Inter', 'SF Pro Display', system-ui, sans-serif" }}>
 
-      {/* ─── Gradient ambient background ───────────────────────────────────── */}
+      {/* ─── Ambient Glow Background ───────────────────────────────────────── */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
         <div
           className="absolute inset-0 transition-all duration-700"
           style={{
-            background: `radial-gradient(ellipse 80% 60% at 50% -10%, ${selectedGame.accentColor}22 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse 90% 70% at 50% -10%, ${selectedGame.accentColor}28 0%, transparent 75%)`,
           }}
         />
-        <div className="absolute inset-0 bg-[#050811]/70" />
-        {/* Fine noise texture overlay for depth */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
-          }}
-        />
+        <div className="absolute inset-0 bg-[#050811]/60" />
       </div>
 
-      {/* ─── TOP SYSTEM BAR ───────────────────────────────────────────────── */}
+      {/* ─── TOP NINTENDO SWITCH / STEAM DECK STATUS BAR ────────────────────── */}
       <div
         className="relative z-30 flex items-center justify-between px-4 sm:px-6 py-3"
         style={{
-          background: 'rgba(5,8,17,0.85)',
-          backdropFilter: 'blur(24px)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          background: 'rgba(5, 8, 17, 0.88)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
         }}
       >
-        {/* Left: User Profile */}
+        {/* Left: User Profile & Status */}
         <div className="flex items-center gap-3">
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[13px] text-white shadow-lg"
+            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-lg ring-2 ring-blue-500/40"
             style={{
               background: `linear-gradient(135deg, #3B82F6, #1D4ED8)`,
-              boxShadow: '0 0 16px rgba(59,130,246,0.4)',
             }}
           >
             AP
           </div>
-          <div className="hidden sm:block">
+          <div>
             <div className="flex items-center gap-2">
               <span className="font-semibold text-white text-sm">Anthony</span>
               <span
-                className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(59,130,246,0.15)', color: '#93C5FD' }}
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                style={{ background: 'rgba(59,130,246,0.18)', color: '#93C5FD' }}
               >
-                Nivel 99 · Architect
+                Nivel 99
               </span>
             </div>
-            <div className="flex items-center gap-2 text-[11px] mt-0.5">
-              <span className="text-amber-400 flex items-center gap-1">
-                <FiAward className="w-3 h-3" /> 65
+            <div className="flex items-center gap-2 text-[11px] text-slate-400">
+              <span className="text-amber-400 flex items-center gap-1 font-semibold">
+                <FiAward className="w-3 h-3" /> 65 Trofeos
               </span>
               <span className="w-1 h-1 rounded-full bg-emerald-400" />
-              <span className="text-slate-400">En línea</span>
+              <span className="text-emerald-400 font-medium">En línea</span>
             </div>
           </div>
         </div>
 
-        {/* Center: Console Brand */}
-        <div className="flex items-center gap-2">
-          <Gamepad2 className="w-4 h-4" style={{ color: selectedGame.accentColor }} />
-          <span className="font-bold text-sm text-white tracking-tight">AP-Deck</span>
+        {/* Center: System Console Brand */}
+        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]">
+          <Gamepad2 className="w-4 h-4 text-[var(--theme-accent, #38BDF8)]" />
+          <span className="font-bold text-sm text-white tracking-wider">AP-DECK OS</span>
+          <span className="text-[10px] text-slate-400 font-mono">v2.5</span>
         </div>
 
-        {/* Right: Status + Time */}
+        {/* Right: Controller, Sound, Time & Exit */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div
-            className="hidden sm:flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full"
+            className="hidden md:flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full"
             style={{ background: 'rgba(255,255,255,0.05)', color: '#94A3B8' }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full"
+              className="w-2 h-2 rounded-full"
               style={{
                 background: controllerConnected ? '#34D399' : '#60A5FA',
-                boxShadow: controllerConnected ? '0 0 6px #34D399' : 'none',
-                animation: controllerConnected ? 'pulse 2s infinite' : 'none',
+                boxShadow: controllerConnected ? '0 0 8px #34D399' : 'none',
               }}
             />
-            <span>{controllerConnected ? 'Mando conectado' : 'Teclado / mando'}</span>
+            <span>{controllerConnected ? 'Mando conectado' : 'Teclado / Mando'}</span>
           </div>
 
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="p-2 rounded-full transition-colors"
-            style={{ background: soundEnabled ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)', color: soundEnabled ? '#818CF8' : '#475569' }}
-            title="Sonido de la consola"
+            style={{
+              background: soundEnabled ? 'rgba(99,102,241,0.18)' : 'rgba(255,255,255,0.05)',
+              color: soundEnabled ? '#818CF8' : '#475569'
+            }}
+            title="Efectos de sonido de la consola"
           >
             {soundEnabled ? <FiVolume2 className="w-4 h-4" /> : <FiVolumeX className="w-4 h-4" />}
           </button>
 
           <span
-            className="font-semibold text-white text-sm px-3 py-1.5 rounded-full"
+            className="font-bold text-white text-xs px-3 py-1.5 rounded-full tracking-wider"
             style={{ background: 'rgba(255,255,255,0.06)' }}
           >
             {currentTime}
@@ -545,20 +533,20 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
           <button
             onClick={() => navigate('/laboratorio')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-white hover:text-white transition-all hover:bg-white/15 active:scale-95 ml-1"
-            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
-            title="Salir de la consola y volver al portfolio"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md"
+            style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.35)', color: '#FCA5A5' }}
+            title="Salir de la consola y volver al portafolio"
           >
-            <FiHome className="w-3.5 h-3.5 text-blue-400" />
+            <FiLogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Salir</span>
           </button>
         </div>
       </div>
 
-      {/* ─── MAIN STAGE ──────────────────────────────────────────────────── */}
+      {/* ─── MAIN CONSOLE STAGE ─────────────────────────────────────────────── */}
       <div className="relative z-10 flex flex-1 min-h-0 overflow-hidden">
 
-        {/* CRT Scanlines overlay */}
+        {/* CRT Scanline Filter */}
         {crtEnabled && (
           <div
             className="pointer-events-none absolute inset-0 z-20 opacity-20"
@@ -569,7 +557,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           />
         )}
 
-        {/* Portrait rotate hint (mobile) */}
+        {/* Mobile rotate reminder */}
         {activeRunningGame && isPortrait && (
           <div className="absolute inset-0 z-50 bg-[#050811]/95 backdrop-blur-sm flex flex-col items-center justify-center gap-4 text-center px-8">
             <motion.div
@@ -580,29 +568,29 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               <FiTv className="w-12 h-12" />
             </motion.div>
             <p className="text-white font-semibold">Gira tu dispositivo</p>
-            <p className="text-slate-400 text-sm max-w-xs">Esta experiencia se juega mejor en horizontal.</p>
+            <p className="text-slate-400 text-sm max-w-xs">Gira a modo horizontal para disfrutar la pantalla completa.</p>
           </div>
         )}
 
-        {/* ── STATE A: ACTIVE GAME ─────────────────────────────────────────── */}
+        {/* ── STATE A: ACTIVE RUNNING GAME ──────────────────────────────────── */}
         {activeRunningGame ? (
-          <div className="flex-1 flex flex-col min-h-0">
-            {/* In-game top bar */}
+          <div className="flex-1 flex flex-col min-h-0 bg-black">
+            {/* In-game Quick Menu Bar */}
             <div
               className="flex items-center justify-between px-4 sm:px-6 py-2.5"
-              style={{ background: 'rgba(5,8,17,0.9)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ background: 'rgba(5,8,17,0.95)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
             >
               <button
                 onClick={closeGame}
-                className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm text-white transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs text-white transition-all hover:bg-white/15 active:scale-95"
                 style={{ background: 'rgba(255,255,255,0.08)' }}
               >
                 <FiChevronLeft className="w-4 h-4" />
-                <span>Menú</span>
+                <span>Menú Principal</span>
               </button>
 
-              <div className="flex items-center gap-2 text-white font-semibold text-sm truncate max-w-[40vw]">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <div className="flex items-center gap-2.5 text-white font-bold text-sm truncate max-w-[50vw]">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 <span className="truncate">{activeRunningGame.title}</span>
               </div>
 
@@ -610,8 +598,8 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 <button
                   onClick={() => setCrtEnabled(!crtEnabled)}
                   className="p-2 rounded-full transition-colors"
-                  style={{ background: crtEnabled ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)', color: crtEnabled ? '#818CF8' : '#475569' }}
-                  title="Filtro CRT"
+                  style={{ background: crtEnabled ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.05)', color: crtEnabled ? '#818CF8' : '#94A3B8' }}
+                  title="Filtro CRT Scanlines"
                 >
                   <FiTv className="w-4 h-4" />
                 </button>
@@ -626,10 +614,8 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </div>
             </div>
 
-            {/* Game frame */}
-            <div className="flex-1 min-h-0 flex items-stretch">
-
-              {/* ZIP game loaded from blob URL */}
+            {/* Game Screen Frame */}
+            <div className="flex-1 min-h-0 flex items-stretch bg-black">
               {activeRunningGame.type === 'zip-loader' && zipIframeSrc && (
                 <iframe
                   src={zipIframeSrc}
@@ -640,18 +626,22 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 />
               )}
 
-              {/* ZIP loader UI (no file yet) */}
               {activeRunningGame.type === 'zip-loader' && !zipIframeSrc && (
-                <div className="flex-1 flex items-center justify-center p-6">
-                  <div className="text-slate-400 text-center">
-                    <FiUpload className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">Sube un ZIP para comenzar</p>
-                    <button onClick={() => setActiveRunningGame(null)} className="mt-4 px-4 py-2 rounded-full bg-white/8 text-white text-sm hover:bg-white/12 transition-colors">Volver</button>
+                <div className="flex-1 flex items-center justify-center p-6 bg-[#050811]">
+                  <div className="text-slate-400 text-center max-w-sm">
+                    <FiUpload className="w-12 h-12 mx-auto mb-3 text-indigo-400 animate-bounce" />
+                    <h3 className="text-lg font-bold text-white">Cargar juego ZIP</h3>
+                    <p className="text-xs text-slate-400 mt-1 mb-4">Sube un archivo .zip que contenga index.html en la raíz.</p>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-6 py-2.5 rounded-full font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-transform active:scale-95"
+                    >
+                      Seleccionar Archivo .ZIP
+                    </button>
                   </div>
                 </div>
               )}
 
-              {/* RetroArch cartridge iframe */}
               {activeRunningGame.type === 'cartridge' && (
                 <iframe
                   src={activeRunningGame.src}
@@ -661,7 +651,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 />
               )}
 
-              {/* TypeScript mini-games */}
               {activeRunningGame.type === 'cyber-battle' && (
                 <div className="flex-1 flex items-center justify-center p-4">
                   <GameBoyShell title="Cyber-Encounter: Clean Arch Battle">
@@ -687,15 +676,14 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               )}
             </div>
           </div>
-
         ) : (
-          /* ── STATE B: DASHBOARD (Switch/PS5 home) ─────────────────────── */
+          /* ── STATE B: NINTENDO SWITCH / STEAM DECK HOME DASHBOARD ──────────── */
           <div className="flex flex-1 min-h-0">
 
-            {/* Left Ozone-style icon rail */}
+            {/* Ozone Left Sidebar Navigation Rail */}
             <div
-              className="hidden sm:flex flex-col items-center gap-3 py-6 px-3"
-              style={{ background: 'rgba(255,255,255,0.01)', borderRight: '1px solid rgba(255,255,255,0.04)' }}
+              className="hidden sm:flex flex-col items-center gap-3.5 py-6 px-3"
+              style={{ background: 'rgba(255,255,255,0.015)', borderRight: '1px solid rgba(255,255,255,0.05)' }}
             >
               {[
                 { icon: <FiGrid className="w-5 h-5" />, label: 'Biblioteca', action: () => setSelectedIndex(0), active: true },
@@ -707,11 +695,12 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                   key={i}
                   onClick={btn.action}
                   title={btn.label}
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center transition-all"
+                  className="w-11 h-11 rounded-[16px] flex items-center justify-center transition-all hover:scale-105"
                   style={{
-                    background: btn.active ? `${selectedGame.accentColor}22` : 'rgba(255,255,255,0.03)',
-                    color: btn.active ? selectedGame.accentColor : '#475569',
-                    boxShadow: btn.active ? `0 0 12px ${selectedGame.accentColor}33` : 'none',
+                    background: btn.active ? `${selectedGame.accentColor}25` : 'rgba(255,255,255,0.03)',
+                    color: btn.active ? selectedGame.accentColor : '#64748B',
+                    boxShadow: btn.active ? `0 0 16px ${selectedGame.accentColor}40` : 'none',
+                    border: btn.active ? `1px solid ${selectedGame.accentColor}50` : '1px solid transparent',
                   }}
                 >
                   {btn.icon}
@@ -720,215 +709,253 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               <div className="flex-1" />
               <button
                 onClick={() => setShowSettings(true)}
-                title="Ajustes"
-                className="w-11 h-11 rounded-[14px] flex items-center justify-center transition-all"
-                style={{ background: 'rgba(255,255,255,0.03)', color: '#475569' }}
+                title="Ajustes de la Consola"
+                className="w-11 h-11 rounded-[16px] flex items-center justify-center transition-all hover:bg-white/10"
+                style={{ background: 'rgba(255,255,255,0.03)', color: '#64748B' }}
               >
                 <FiSettings className="w-5 h-5" />
               </button>
               <button
                 onClick={() => navigate('/laboratorio')}
-                title="Volver al Portfolio"
-                className="w-11 h-11 rounded-[14px] flex items-center justify-center transition-all hover:bg-red-500/10 hover:text-red-400"
+                title="Salir al Portafolio"
+                className="w-11 h-11 rounded-[16px] flex items-center justify-center transition-all hover:bg-red-500/20 hover:text-red-400"
                 style={{ background: 'rgba(255,255,255,0.03)', color: '#64748B' }}
               >
                 <FiLogOut className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Main content area */}
+            {/* Main Stage: Hero Showcase + Cartridge Shelf */}
             <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
-
-              {/* ── Hero Card ─────────────────────────────────────────────── */}
               <div className="flex-1 flex flex-col justify-between p-4 sm:p-6 lg:p-8 gap-4 sm:gap-6">
+
+                {/* ── Panoramic Hero Showcase Banner ───────────────────────── */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={selectedGame.id}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                    className="relative rounded-[20px] sm:rounded-[24px] overflow-hidden"
+                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -15, scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                    className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-2xl"
                     style={{
-                      background: `linear-gradient(135deg, ${selectedGame.accentColor}18 0%, rgba(5,8,17,0.95) 100%)`,
-                      border: `1px solid ${selectedGame.accentColor}30`,
-                      minHeight: 220,
+                      background: `linear-gradient(135deg, ${selectedGame.accentColor}22 0%, #0A0E1A 100%)`,
+                      border: `1px solid ${selectedGame.accentColor}40`,
+                      boxShadow: `0 20px 50px -15px ${selectedGame.accentColor}33`,
+                      minHeight: 240,
                     }}
                   >
-                    {/* Cover art blurred background */}
-                    {selectedGame.coverArt && (
-                      <>
-                        <div
-                          className="absolute inset-0 bg-cover bg-center opacity-30"
-                          style={{ backgroundImage: `url(${selectedGame.coverArt})`, filter: 'blur(16px) saturate(120%)' }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-                      </>
-                    )}
-
-                    {/* Hero gradient wash */}
+                    {/* Background Backdrop Glow */}
                     <div
-                      className="absolute inset-0"
+                      className="absolute inset-0 pointer-events-none"
                       style={{
-                        background: `linear-gradient(135deg, ${selectedGame.accentColor}25 0%, transparent 60%)`,
+                        background: `radial-gradient(circle at 80% 50%, ${selectedGame.accentColor}30 0%, transparent 60%)`,
                       }}
                     />
 
-                    {/* Gamepad watermark */}
-                    <div className="hidden sm:block absolute -right-6 -bottom-6 opacity-[0.06] pointer-events-none">
-                      <Gamepad2 className="w-64 h-64 text-white" />
-                    </div>
+                    {/* Main Showcase Layout (2-Column: Details Left + Big Capsule Right) */}
+                    <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
 
-                    {/* Hero content */}
-                    <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col gap-4 max-w-2xl">
-                      {/* Badge row */}
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-                          style={{ background: `${selectedGame.accentColor}CC`, color: '#fff' }}
-                        >
-                          {selectedGame.badge}
-                        </span>
-                        <span className="text-[12px] text-slate-400 font-medium">{selectedGame.platform}</span>
-                      </div>
+                      {/* Left: Info & Launch Buttons */}
+                      <div className="space-y-4 max-w-xl">
+                        {/* Badges */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className="text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider text-white shadow-md"
+                            style={{ background: selectedGame.accentColor }}
+                          >
+                            {selectedGame.badge}
+                          </span>
+                          <span className="text-xs text-slate-300 font-medium px-2.5 py-1 rounded-full bg-white/10">
+                            {selectedGame.platform}
+                          </span>
+                          <span className="text-xs text-slate-400 font-medium">
+                            {selectedGame.genre}
+                          </span>
+                        </div>
 
-                      {/* Title */}
-                      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.05] tracking-tight">
-                        {selectedGame.title}
-                      </h2>
+                        {/* Title */}
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.05]">
+                          {selectedGame.title}
+                        </h2>
 
-                      {/* Stats */}
-                      {selectedGame.trophies !== '—' && (
-                        <div className="flex items-center gap-5 text-[13px]">
-                          <span className="flex items-center gap-1.5 text-amber-300 font-medium">
+                        {/* Stats Row */}
+                        <div className="flex items-center gap-5 text-xs text-slate-300 pt-1">
+                          <span className="flex items-center gap-1.5 text-amber-300 font-bold">
                             <FiAward className="w-4 h-4" /> {selectedGame.trophies}
                           </span>
-                          <span className="flex items-center gap-1.5 text-blue-300 font-medium">
+                          <span className="flex items-center gap-1.5 text-blue-300 font-bold">
                             <FiClock className="w-4 h-4" /> {selectedGame.playtime}
                           </span>
                         </div>
-                      )}
 
-                      {/* Actions */}
-                      <div className="flex flex-wrap items-center gap-3 pt-1">
-                        {selectedGame.type === 'zip-loader' ? (
-                          // ZIP slot: show file picker button
-                          <div
-                            className="relative"
-                            onDrop={handleDrop}
-                            onDragOver={e => e.preventDefault()}
-                          >
-                            <input
-                              ref={fileInputRef}
-                              type="file"
-                              accept=".zip"
-                              className="hidden"
-                              onChange={handleFileInputChange}
-                            />
-                            <button
-                              onClick={() => fileInputRef.current?.click()}
-                              disabled={zipLoading}
-                              className="px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2.5 transition-transform active:scale-95 shadow-xl"
-                              style={{ background: '#fff', color: '#0F172A' }}
-                            >
-                              <FiUpload className="w-4 h-4" />
-                              <span>{zipLoading ? 'Extrayendo...' : 'Subir .zip'}</span>
-                            </button>
-                            {zipError && (
-                              <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
-                                <FiX className="w-3 h-3" /> {zipError}
-                              </p>
-                            )}
-                            {zipBlobEntries.length > 0 && !zipError && (
+                        {/* Primary Launch Action Buttons */}
+                        <div className="pt-2 flex flex-wrap items-center gap-3">
+                          {selectedGame.type === 'zip-loader' ? (
+                            <div className="flex items-center gap-3">
+                              <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept=".zip"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) handleZipFile(file);
+                                }}
+                              />
                               <button
-                                onClick={() => launchGame(selectedGame)}
-                                className="mt-2 px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2.5 transition-transform active:scale-95"
-                                style={{ background: selectedGame.accentColor, color: '#fff' }}
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={zipLoading}
+                                className="px-7 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                                style={{
+                                  background: '#FFFFFF',
+                                  color: '#0F172A',
+                                  boxShadow: '0 0 25px rgba(255,255,255,0.3)',
+                                }}
                               >
-                                <FiPlay className="w-4 h-4 fill-current" /> Jugar ahora
+                                <FiUpload className="w-4 h-4 text-indigo-600" />
+                                <span>{zipLoading ? 'Extrayendo ZIP...' : 'Subir Archivo .ZIP'}</span>
                               </button>
-                            )}
-                          </div>
-                        ) : (
+
+                              {zipBlobEntries.length > 0 && !zipError && (
+                                <button
+                                  onClick={() => launchGame(selectedGame)}
+                                  className="px-7 py-3.5 rounded-full font-black text-sm flex items-center gap-2 text-white shadow-xl transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+                                  style={{ background: selectedGame.accentColor }}
+                                >
+                                  <FiPlay className="w-4 h-4 fill-current" /> Jugar
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => launchGame(selectedGame)}
+                              className="px-8 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                              style={{
+                                background: '#FFFFFF',
+                                color: '#0F172A',
+                                boxShadow: `0 0 30px ${selectedGame.accentColor}66`,
+                              }}
+                            >
+                              <FiPlay className="w-4 h-4 fill-current text-slate-900" />
+                              <span>JUGAR AHORA</span>
+                            </button>
+                          )}
+
                           <button
-                            onClick={() => launchGame(selectedGame)}
-                            className="px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2.5 transition-transform active:scale-95 shadow-xl"
-                            style={{ background: '#fff', color: '#0F172A' }}
+                            onClick={() => setShowGameInfo(v => !v)}
+                            className="px-5 py-3.5 rounded-full font-semibold text-xs text-white transition-colors hover:bg-white/15"
+                            style={{ background: 'rgba(255,255,255,0.08)' }}
                           >
-                            <FiPlay className="w-4 h-4 fill-current" />
-                            <span>Jugar ahora</span>
+                            {showGameInfo ? 'Ocultar Detalles' : 'Detalles & Info'}
                           </button>
+                        </div>
+
+                        {/* Error info if zip fails */}
+                        {selectedGame.type === 'zip-loader' && zipError && (
+                          <p className="text-xs text-red-400 flex items-center gap-1.5 pt-1">
+                            <FiX className="w-3.5 h-3.5" /> {zipError}
+                          </p>
                         )}
 
-                        <button
-                          onClick={() => setShowGameInfo(v => !v)}
-                          className="px-5 py-3 rounded-full font-semibold text-sm text-white transition-colors"
-                          style={{ background: 'rgba(255,255,255,0.1)' }}
-                        >
-                          {showGameInfo ? 'Ocultar info' : 'Info'}
-                        </button>
+                        {/* Expandable info */}
+                        <AnimatePresence>
+                          {showGameInfo && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.22 }}
+                              className="overflow-hidden pt-2"
+                            >
+                              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-lg">
+                                {selectedGame.description}
+                              </p>
+                              <div className="flex flex-wrap gap-2 pt-3">
+                                {selectedGame.tags.map(t => (
+                                  <span
+                                    key={t}
+                                    className="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                                    style={{ background: 'rgba(255,255,255,0.08)', color: '#CBD5E1' }}
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
 
-                      {/* Expandable description */}
-                      <AnimatePresence>
-                        {showGameInfo && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.22 }}
-                            className="overflow-hidden"
-                          >
-                            <p className="text-sm text-slate-300 leading-relaxed max-w-lg">
-                              {selectedGame.description}
-                            </p>
-                            <div className="flex flex-wrap gap-2 pt-3">
-                              {selectedGame.tags.map(t => (
-                                <span
-                                  key={t}
-                                  className="text-[11px] font-medium px-2.5 py-1 rounded-full"
-                                  style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.75)' }}
-                                >
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {/* Right: Big Stylized Box Art Showcase Capsule */}
+                      <div className="hidden md:flex flex-col items-center justify-center shrink-0">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 1 }}
+                          transition={{ type: 'spring', stiffness: 300 }}
+                          onClick={() => launchGame(selectedGame)}
+                          className="w-48 lg:w-56 h-48 lg:h-56 rounded-[22px] overflow-hidden shadow-2xl cursor-pointer relative ring-2 ring-white/20"
+                          style={{
+                            boxShadow: `0 20px 40px -10px ${selectedGame.accentColor}88`,
+                          }}
+                        >
+                          <img
+                            src={selectedGame.coverArt}
+                            alt={selectedGame.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                          <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[10px] font-bold text-white">
+                            <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md">Doble Clic</span>
+                            <span className="flex items-center gap-1 text-emerald-400">
+                              <FiPlay className="w-3 h-3 fill-current" /> Jugar
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
-                {/* ── Cartridge Shelf ─────────────────────────────────────── */}
-                <div className="space-y-3">
+                {/* ── Cartridge Shelf Row (Nintendo Switch & Steam Deck Style) ─ */}
+                <div className="space-y-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                      Tu biblioteca
-                      <span className="text-slate-500 font-normal text-xs">{selectedIndex + 1}/{CONSOLE_GAMES.length}</span>
-                    </span>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-extrabold text-white tracking-wide uppercase">
+                        Tu Biblioteca de Cartuchos
+                      </span>
+                      <span className="text-xs text-slate-400 px-2.5 py-0.5 rounded-full bg-white/[0.05]">
+                        {selectedIndex + 1} de {CONSOLE_GAMES.length}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => { setSelectedIndex(prev => (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length); if (soundEnabled) consoleAudio.playNavigate(); }}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                        style={{ background: 'rgba(255,255,255,0.06)', color: '#94A3B8' }}
-                        aria-label="Anterior"
+                        onClick={() => {
+                          setSelectedIndex(prev => (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length);
+                          if (soundEnabled) consoleAudio.playNavigate();
+                        }}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
+                        style={{ background: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }}
+                        aria-label="Juego Anterior"
                       >
-                        <FiArrowLeft className="w-3.5 h-3.5" />
+                        <FiArrowLeft className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => { setSelectedIndex(prev => (prev + 1) % CONSOLE_GAMES.length); if (soundEnabled) consoleAudio.playNavigate(); }}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                        style={{ background: 'rgba(255,255,255,0.06)', color: '#94A3B8' }}
-                        aria-label="Siguiente"
+                        onClick={() => {
+                          setSelectedIndex(prev => (prev + 1) % CONSOLE_GAMES.length);
+                          if (soundEnabled) consoleAudio.playNavigate();
+                        }}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
+                        style={{ background: 'rgba(255,255,255,0.06)', color: '#CBD5E1' }}
+                        aria-label="Siguiente Juego"
                       >
-                        <FiArrowRight className="w-3.5 h-3.5" />
+                        <FiArrowRight className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
 
-                  {/* Tiles — Switch-style icon grid */}
-                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 pb-1">
+                  {/* 3D Physical Cartridges Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 pb-2">
                     {CONSOLE_GAMES.map((game, idx) => {
                       const isSel = idx === selectedIndex;
                       return (
@@ -936,142 +963,129 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                           key={game.id}
                           layout
                           initial={false}
-                          animate={{ scale: isSel ? 1.05 : 1, y: isSel ? -4 : 0 }}
-                          whileHover={{ scale: isSel ? 1.07 : 1.03, y: -5 }}
+                          animate={{
+                            scale: isSel ? 1.06 : 1,
+                            y: isSel ? -6 : 0,
+                          }}
+                          whileHover={{ scale: isSel ? 1.08 : 1.04, y: -8 }}
                           whileTap={{ scale: 0.96 }}
-                          transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-                          onClick={() => { setSelectedIndex(idx); if (soundEnabled) consoleAudio.playNavigate(); }}
+                          transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                          onClick={() => {
+                            setSelectedIndex(idx);
+                            if (soundEnabled) consoleAudio.playNavigate();
+                          }}
                           onDoubleClick={() => launchGame(game)}
-                          className="cursor-pointer rounded-[18px] relative overflow-hidden aspect-square"
+                          className="cursor-pointer rounded-[20px] relative overflow-hidden aspect-square group shadow-xl"
                           style={{
+                            border: isSel ? `3px solid ${game.accentColor}` : '2px solid rgba(255,255,255,0.08)',
                             boxShadow: isSel
-                              ? `0 0 0 2.5px ${game.accentColor}, 0 16px 32px -8px ${game.accentColor}66`
-                              : '0 4px 16px rgba(0,0,0,0.4)',
+                              ? `0 0 0 1px ${game.accentColor}, 0 20px 40px -10px ${game.accentColor}99`
+                              : '0 8px 24px rgba(0,0,0,0.5)',
                           }}
                         >
-                          {/* Tile background */}
-                          {game.coverArt ? (
-                            <div
-                              className="absolute inset-0 bg-cover bg-center transition-all duration-300"
-                              style={{
-                                backgroundImage: `url(${game.coverArt})`,
-                                filter: isSel ? 'none' : 'saturate(0.5) brightness(0.6)',
-                              }}
-                            />
-                          ) : (
-                            <div
-                              className="absolute inset-0"
-                              style={{
-                                background: `linear-gradient(135deg, ${game.accentColor}33 0%, #0A0D1A 100%)`,
-                              }}
-                            >
-                              {/* Game icon hint */}
-                              <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                <Gamepad2 className="w-10 h-10 text-white" />
-                              </div>
-                            </div>
-                          )}
+                          {/* Cartridge Cover Image */}
+                          <img
+                            src={game.coverArt}
+                            alt={game.title}
+                            className="w-full h-full object-cover transition-all duration-300"
+                            style={{
+                              filter: isSel ? 'none' : 'saturate(0.7) brightness(0.75)',
+                            }}
+                          />
 
-                          {/* ZIP upload icon for zip-loader tile */}
-                          {game.type === 'zip-loader' && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div
-                                className="w-10 h-10 rounded-full flex items-center justify-center"
-                                style={{ background: `${game.accentColor}44`, border: `1px solid ${game.accentColor}66` }}
-                              >
-                                <FiUpload className="w-5 h-5 text-white" />
-                              </div>
-                            </div>
-                          )}
+                          {/* Top Cartridge Notch & Gold Contact Hint */}
+                          <div className="absolute top-0 inset-x-0 h-2 bg-black/40 backdrop-blur-sm pointer-events-none" />
 
-                          {/* Accent dot (selected) */}
+                          {/* Selection Glowing Indicator Pill */}
                           {isSel && (
                             <motion.span
-                              layoutId="shelf-active-dot"
-                              className="absolute top-2 right-2 w-2 h-2 rounded-full"
-                              style={{ background: game.accentColor, boxShadow: `0 0 8px ${game.accentColor}` }}
-                            />
+                              layoutId="shelf-active-badge"
+                              className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-black text-white shadow-lg tracking-wider"
+                              style={{ background: game.accentColor }}
+                            >
+                              EN FOCO
+                            </motion.span>
                           )}
 
-                          {/* Title label (selected only) */}
-                          <AnimatePresence>
-                            {isSel && (
-                              <motion.div
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 5 }}
-                                className="absolute inset-x-0 bottom-0 p-2.5 pt-6"
-                                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)' }}
-                              >
-                                <p className="text-white text-[10px] font-semibold leading-snug line-clamp-2 drop-shadow">
-                                  {game.title}
-                                </p>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                          {/* Bottom Card Title Overlay on Selection */}
+                          <div
+                            className="absolute inset-x-0 bottom-0 p-3 pt-6 flex flex-col justify-end transition-opacity"
+                            style={{
+                              background: isSel
+                                ? 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)'
+                                : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
+                            }}
+                          >
+                            <p className="text-white text-xs font-bold leading-tight line-clamp-1 drop-shadow-md">
+                              {game.title}
+                            </p>
+                            <span className="text-[10px] text-slate-300 font-medium line-clamp-1">
+                              {game.badge}
+                            </span>
+                          </div>
                         </motion.div>
                       );
                     })}
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* ─── BOTTOM FOOTER BAR ────────────────────────────────────────────── */}
+      {/* ─── BOTTOM CONTROLLER FOOTER BAR ─────────────────────────────────── */}
       <div
-        className="relative z-30 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between text-[11px]"
+        className="relative z-30 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between text-xs"
         style={{
-          background: 'rgba(5,8,17,0.9)',
+          background: 'rgba(5, 8, 17, 0.92)',
           backdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
         }}
       >
-        <div className="hidden sm:flex items-center gap-4 text-slate-500">
-          {[
-            { key: 'Enter', label: 'Iniciar' },
-            { key: '◀ ▶', label: 'Moverse' },
-            { key: 'Esc', label: 'Volver' },
-          ].map(({ key, label }) => (
-            <span key={key} className="flex items-center gap-1.5">
-              <kbd
-                className="px-2 py-0.5 rounded-md font-mono text-[10px]"
-                style={{ background: 'rgba(255,255,255,0.08)', color: '#CBD5E1' }}
-              >
-                {key}
-              </kbd>
-              <span>{label}</span>
+        <div className="hidden sm:flex items-center gap-5 text-slate-400 font-medium">
+          <span className="flex items-center gap-1.5">
+            <kbd className="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">Enter / Doble Clic</kbd>
+            <span>Jugar</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <kbd className="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">◀ ▶</kbd>
+            <span>Moverse</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <kbd className="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">Esc</kbd>
+            <span>Salir al Portafolio</span>
+          </span>
+
+          {/* Switch / Steam Deck Controller Button Hints */}
+          <span className="hidden lg:flex items-center gap-3 ml-4 pl-4 border-l border-white/10">
+            <span className="flex items-center gap-1 text-emerald-400">
+              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-[9px] font-bold">A</span>
+              <span>Iniciar</span>
             </span>
-          ))}
-          {/* PS5-style colored button hints */}
-          <span className="hidden lg:flex items-center gap-1.5 ml-2">
-            {[
-              { color: '#3B82F6', label: 'Info' },
-              { color: '#22C55E', label: 'Jugar' },
-              { color: '#EF4444', label: 'Volver' },
-            ].map(({ color, label }) => (
-              <span key={label} className="flex items-center gap-1">
-                <span className="w-3 h-3 rounded-full" style={{ background: color, boxShadow: `0 0 6px ${color}88` }} />
-                <span className="text-slate-600">{label}</span>
-              </span>
-            ))}
+            <span className="flex items-center gap-1 text-rose-400">
+              <span className="w-3.5 h-3.5 rounded-full bg-rose-500/20 border border-rose-400 flex items-center justify-center text-[9px] font-bold">B</span>
+              <span>Volver</span>
+            </span>
+            <span className="flex items-center gap-1 text-sky-400">
+              <span className="w-3.5 h-3.5 rounded-full bg-sky-500/20 border border-sky-400 flex items-center justify-center text-[9px] font-bold">X</span>
+              <span>Info</span>
+            </span>
           </span>
         </div>
 
-        {/* Mobile: touch hint */}
-        <div className="flex sm:hidden items-center gap-1.5 text-slate-500">
-          <FiGrid className="w-3 h-3" />
-          <span>Toca · doble toque para jugar</span>
+        <div className="flex sm:hidden items-center gap-2 text-slate-400 text-xs">
+          <FiGrid className="w-3.5 h-3.5" />
+          <span>Toca una tarjeta · Doble toque para jugar</span>
         </div>
 
-        <div className="text-slate-600 text-[10px]">
-          Anthony Pilatasig · Virtual Gaming Lab
+        <div className="text-slate-500 text-[11px] font-mono">
+          Anthony Pilatasig · AP-Deck Virtual Gaming Lab
         </div>
       </div>
 
-      {/* ─── Trophies Overlay ─────────────────────────────────────────────── */}
+      {/* ─── Trophies Overlay Modal ────────────────────────────────────────── */}
       <AnimatePresence>
         {showTrophies && (
           <motion.div
@@ -1079,43 +1093,46 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-40 flex items-center justify-center p-6"
-            style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)' }}
+            style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(16px)' }}
             onClick={() => setShowTrophies(false)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              initial={{ opacity: 0, scale: 0.94, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
               onClick={e => e.stopPropagation()}
-              className="w-full max-w-md rounded-[24px] p-6 space-y-4 shadow-2xl"
-              style={{ background: '#0D1117', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="w-full max-w-md rounded-[28px] p-6 space-y-4 shadow-2xl"
+              style={{ background: '#0D111A', border: '1px solid rgba(255,255,255,0.1)' }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.15)' }}>
-                  <FiAward className="w-5 h-5 text-amber-400" />
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-amber-500/15">
+                  <FiAward className="w-6 h-6 text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">Trofeos</h3>
-                  <p className="text-xs text-slate-400">Progreso por título</p>
+                  <h3 className="text-white font-bold text-lg">Trofeos & Logros</h3>
+                  <p className="text-xs text-slate-400">Progreso desbloqueado en AP-Deck</p>
                 </div>
               </div>
-              <div className="space-y-2">
-                {CONSOLE_GAMES.filter(g => g.trophies !== '—').map(game => (
+              <div className="space-y-2.5 pt-2">
+                {CONSOLE_GAMES.map(game => (
                   <div
                     key={game.id}
-                    className="flex items-center justify-between px-4 py-3 rounded-2xl"
-                    style={{ background: 'rgba(255,255,255,0.03)' }}
+                    className="flex items-center justify-between px-4 py-3 rounded-2xl bg-white/[0.04]"
                   >
-                    <span className="text-sm text-slate-200 truncate pr-3">{game.title}</span>
-                    <span className="text-xs font-semibold shrink-0" style={{ color: game.accentColor }}>{game.trophies}</span>
+                    <div className="flex items-center gap-2.5">
+                      <img src={game.coverArt} alt="" className="w-7 h-7 rounded-lg object-cover" />
+                      <span className="text-xs font-semibold text-slate-200 truncate">{game.title}</span>
+                    </div>
+                    <span className="text-xs font-bold shrink-0" style={{ color: game.accentColor }}>
+                      {game.trophies}
+                    </span>
                   </div>
                 ))}
               </div>
               <button
                 onClick={() => setShowTrophies(false)}
-                className="w-full py-2.5 rounded-full text-white text-sm font-semibold transition-colors"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
+                className="w-full py-3 rounded-full text-white text-xs font-bold transition-colors bg-white/10 hover:bg-white/15 cursor-pointer"
               >
                 Cerrar
               </button>
@@ -1124,7 +1141,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         )}
       </AnimatePresence>
 
-      {/* ─── Settings Overlay ─────────────────────────────────────────────── */}
+      {/* ─── Settings Modal ────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showSettings && (
           <motion.div
@@ -1132,65 +1149,65 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-40 flex items-end justify-center"
-            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)' }}
             onClick={() => setShowSettings(false)}
           >
             <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
-              transition={{ type: 'spring', stiffness: 360, damping: 34 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 32 }}
               onClick={e => e.stopPropagation()}
-              className="w-full max-w-xl rounded-t-[28px] p-6 pb-8 space-y-4 shadow-2xl"
-              style={{ background: '#0D1117', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="w-full max-w-xl rounded-t-[32px] p-6 pb-8 space-y-4 shadow-2xl"
+              style={{ background: '#0D111A', border: '1px solid rgba(255,255,255,0.1)' }}
             >
-              <div className="w-10 h-1 rounded-full mx-auto mb-2" style={{ background: 'rgba(255,255,255,0.15)' }} />
+              <div className="w-12 h-1.5 rounded-full bg-white/20 mx-auto mb-2" />
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                  <FiSettings className="w-5 h-5 text-slate-300" />
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/10">
+                  <FiSettings className="w-6 h-6 text-slate-200" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">Ajustes</h3>
-                  <p className="text-xs text-slate-400">Acerca de AP-Deck</p>
+                  <h3 className="text-white font-bold text-lg">Ajustes del Sistema</h3>
+                  <p className="text-xs text-slate-400">Configuración de AP-Deck OS</p>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                {[
-                  { label: 'Filtro CRT', icon: <FiTv className="w-4 h-4" />, val: crtEnabled, set: setCrtEnabled },
-                  { label: 'Sonido de la consola', icon: soundEnabled ? <FiVolume2 className="w-4 h-4" /> : <FiVolumeX className="w-4 h-4" />, val: soundEnabled, set: setSoundEnabled },
-                ].map(row => (
-                  <button
-                    key={row.label}
-                    onClick={() => row.set(!row.val)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-colors"
-                    style={{ background: 'rgba(255,255,255,0.03)' }}
-                  >
-                    <span className="flex items-center gap-2 text-sm text-slate-200">{row.icon} {row.label}</span>
-                    <span
-                      className="text-xs font-semibold"
-                      style={{ color: row.val ? selectedGame.accentColor : '#475569' }}
-                    >
-                      {row.val ? 'Activado' : 'Desactivado'}
-                    </span>
-                  </button>
-                ))}
+              <div className="space-y-2 pt-2">
+                <button
+                  onClick={() => setCrtEnabled(!crtEnabled)}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
+                >
+                  <span className="flex items-center gap-2.5 text-sm text-slate-200">
+                    <FiTv className="w-4 h-4 text-indigo-400" /> Filtro CRT Scanlines
+                  </span>
+                  <span className={`text-xs font-bold ${crtEnabled ? 'text-emerald-400' : 'text-slate-500'}`}>
+                    {crtEnabled ? 'ACTIVADO' : 'DESACTIVADO'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setSoundEnabled(!soundEnabled)}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
+                >
+                  <span className="flex items-center gap-2.5 text-sm text-slate-200">
+                    {soundEnabled ? <FiVolume2 className="w-4 h-4 text-emerald-400" /> : <FiVolumeX className="w-4 h-4 text-slate-500" />}
+                    Efectos Sonoros
+                  </span>
+                  <span className={`text-xs font-bold ${soundEnabled ? 'text-emerald-400' : 'text-slate-500'}`}>
+                    {soundEnabled ? 'ACTIVADO' : 'DESACTIVADO'}
+                  </span>
+                </button>
               </div>
 
               <p className="text-xs text-slate-400 leading-relaxed px-1">
-                AP-Deck es un dashboard de consola construido con React, TypeScript y Framer Motion.
-                La Ranura RetroArch corre{' '}
-                <strong className="text-slate-300">libretro compilado a WebAssembly</strong>,
-                autoalojado en este repositorio — sin depender de ningún servicio externo.
-                Los JUEGOs en ZIP se extraen con JSZip directamente en tu navegador.
+                AP-Deck es una consola virtual inspirada en la arquitectura y estética de <strong className="text-white">Nintendo Switch</strong> y <strong className="text-white">SteamOS</strong>. Soporta emulación RetroArch WebAssembly, carga de paquetes ZIP en memoria RAM local y mini-juegos en TypeScript.
               </p>
 
               <button
                 onClick={() => setShowSettings(false)}
-                className="w-full py-2.5 rounded-full text-white text-sm font-semibold transition-colors"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
+                className="w-full py-3 rounded-full text-white text-xs font-bold bg-white/10 hover:bg-white/15 transition-colors cursor-pointer"
               >
-                Cerrar
+                Cerrar Ajustes
               </button>
             </motion.div>
           </motion.div>

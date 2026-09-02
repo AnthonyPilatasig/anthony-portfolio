@@ -453,7 +453,7 @@ async function loadCore(core, args) {
 // exit/exitspawn hook
 async function relaunch(core, content) {
    // force restart on exit
-   if (!core) core = ModuleBase.corePath;
+   if (!core) core = ModuleBase.corePath || defaultCore;
 
    if (!content) content = "--menu";
 
@@ -463,11 +463,22 @@ async function relaunch(core, content) {
       reloadTimeout = null;
    }
 
-   // parse core name from full path ("/home/web_user/retroarch/cores/NAME_libretro.core")
-   currentCore = core.slice(0, -14).split("/").slice(-1)[0];
+   // parse core name safely whether given full path or short name (e.g. 'mgba')
+   if (core.includes("_libretro.core")) {
+      currentCore = core.slice(0, -14).split("/").slice(-1)[0];
+   } else if (core.includes("/")) {
+      currentCore = core.split("/").slice(-1)[0].replace("_libretro.js", "").replace("_libretro.core", "");
+   } else {
+      currentCore = core;
+   }
+
+   if (!currentCore) currentCore = defaultCore;
 
    localStorage.setItem("core", currentCore);
    await loadCore(currentCore, ["-v", content, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
    mountBrowserFS();
+   $('.webplayer').show();
+   $('.webplayer-preview').hide();
+   retroArchRunning = true;
    Module.callMain(Module.arguments);
 }
