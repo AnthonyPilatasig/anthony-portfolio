@@ -265,6 +265,25 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
   const blobsRef = useRef<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Cartridge loader state
+  const [cartridgeRomLoaded, setCartridgeRomLoaded] = useState(false);
+  const cartridgeFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCartridgeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const arrayBuffer = await file.arrayBuffer();
+    const iframe = document.getElementById('cartridgeIframe') as HTMLIFrameElement;
+    if (iframe?.contentWindow) {
+      iframe.contentWindow.postMessage({
+        type: 'LOAD_ROM_DATA',
+        name: file.name,
+        data: arrayBuffer,
+      }, '*');
+    }
+    setCartridgeRomLoaded(true);
+  };
+
   // Time ticker
   useEffect(() => {
     const updateTime = () => {
@@ -378,6 +397,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     setActiveRunningGame(null);
     setZipIframeSrc(null);
     setZipError(null);
+    setCartridgeRomLoaded(false);
     const orientation = screen.orientation as ScreenOrientation & { unlock?: () => void };
     orientation?.unlock?.();
     if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
@@ -594,9 +614,18 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </div>
 
               <div className="flex items-center gap-2">
+                {activeRunningGame.type === 'cartridge' && (
+                  <button
+                    onClick={() => cartridgeFileInputRef.current?.click()}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-bold text-xs bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition-transform active:scale-95 cursor-pointer"
+                  >
+                    <FiUpload className="w-3.5 h-3.5" />
+                    <span>Cargar Archivo</span>
+                  </button>
+                )}
                 <button
                   onClick={() => setCrtEnabled(!crtEnabled)}
-                  className="p-2 rounded-full transition-colors"
+                  className="p-2 rounded-full transition-colors cursor-pointer"
                   style={{ background: crtEnabled ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.05)', color: crtEnabled ? '#818CF8' : '#94A3B8' }}
                   title="Filtro CRT Scanlines"
                 >
@@ -604,7 +633,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 </button>
                 <button
                   onClick={toggleFullscreen}
-                  className="p-2 rounded-full transition-colors"
+                  className="p-2 rounded-full transition-colors cursor-pointer"
                   style={{ background: 'rgba(255,255,255,0.05)', color: '#94A3B8' }}
                   title="Pantalla Completa"
                 >
@@ -614,7 +643,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             </div>
 
             {/* Game Screen Frame */}
-            <div className="flex-1 min-h-0 flex items-stretch bg-black">
+            <div className="flex-1 min-h-0 flex items-stretch bg-black relative">
               {activeRunningGame.type === 'zip-loader' && zipIframeSrc && (
                 <iframe
                   src={zipIframeSrc}
@@ -633,7 +662,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     <p className="text-xs text-slate-400 mt-1 mb-4">Sube un archivo .zip que contenga index.html en la raíz.</p>
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-6 py-2.5 rounded-full font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-transform active:scale-95"
+                      className="px-6 py-2.5 rounded-full font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-transform active:scale-95 cursor-pointer"
                     >
                       Seleccionar Archivo .ZIP
                     </button>
@@ -642,12 +671,50 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               )}
 
               {activeRunningGame.type === 'cartridge' && (
-                <iframe
-                  src={activeRunningGame.src}
-                  title={activeRunningGame.title}
-                  className="w-full h-full border-0 bg-black"
-                  allow="autoplay; fullscreen; gamepad"
-                />
+                <div className="relative w-full h-full flex-1 flex items-stretch">
+                  <iframe
+                    id="cartridgeIframe"
+                    src={activeRunningGame.src}
+                    title={activeRunningGame.title}
+                    className="w-full h-full border-0 bg-black flex-1"
+                    allow="autoplay; fullscreen; gamepad"
+                  />
+                  <AnimatePresence>
+                    {!cartridgeRomLoaded && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 z-40 flex items-center justify-center p-6 bg-black/85 backdrop-blur-md"
+                      >
+                        <div className="max-w-md w-full bg-[#0F172A] border-2 border-rose-500/40 rounded-3xl p-8 text-center shadow-2xl shadow-rose-500/20 flex flex-col items-center gap-4">
+                          <div className="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl shadow-lg">
+                            <Gamepad2 className="w-8 h-8" />
+                          </div>
+                          <h3 className="text-xl font-bold text-white">Cargar Archivo de Juego</h3>
+                          <p className="text-xs text-slate-300 leading-relaxed max-w-sm">
+                            Selecciona tu archivo de prueba personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) para arrancar la partida a pantalla completa.
+                          </p>
+                          <button
+                            onClick={() => cartridgeFileInputRef.current?.click()}
+                            className="px-7 py-3 rounded-full font-bold text-xs bg-white hover:bg-slate-100 text-slate-950 shadow-xl transition-transform active:scale-95 flex items-center gap-2 cursor-pointer mt-2"
+                          >
+                            <FiUpload className="w-4 h-4" />
+                            <span>Seleccionar Archivo desde tu PC</span>
+                          </button>
+                          <span className="text-[11px] text-slate-500">o arrastra tu archivo directamente a esta ventana</span>
+
+                          <button
+                            onClick={() => setCartridgeRomLoaded(true)}
+                            className="text-[11px] text-slate-400 underline hover:text-white pt-2 cursor-pointer"
+                          >
+                            Continuar al Menú del Sistema sin archivo
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               )}
 
               {activeRunningGame.type === 'cyber-battle' && (
@@ -1193,7 +1260,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </div>
 
               <p className="text-xs text-slate-400 leading-relaxed px-1">
-                AP-Deck es una consola virtual inspirada en la arquitectura y estética de <strong className="text-white">Nintendo Switch</strong> y <strong className="text-white">SteamOS</strong>. Soporta emulación RetroArch WebAssembly, carga de paquetes ZIP en memoria RAM local y mini-juegos en TypeScript.
+                AP-Deck es una consola virtual interactiva con interfaz widescreen. Soporta motores WebAssembly en el navegador, carga de paquetes ZIP en memoria RAM local y mini-juegos en TypeScript.
               </p>
 
               <button
@@ -1206,6 +1273,14 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           </motion.div>
         )}
       </AnimatePresence>
+
+      <input
+        type="file"
+        ref={cartridgeFileInputRef}
+        onChange={handleCartridgeFile}
+        style={{ display: 'none' }}
+        accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom"
+      />
     </div>
   );
 };

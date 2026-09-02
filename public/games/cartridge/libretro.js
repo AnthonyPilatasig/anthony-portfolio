@@ -172,7 +172,7 @@ function finishFileSystemSetup() {
 }
 
 function preLoadingComplete() {
-   console.log("WEBPLAYER: Preload complete. Auto-starting RetroArch...");
+   console.log("WEBPLAYER: Preload complete.");
    $('#initSplash').addClass('hidden');
    if (autoStart && !retroArchRunning) {
       startRetroArch();
@@ -193,6 +193,7 @@ function startRetroArch(contentPath) {
 
    retroArchRunning = true;
    if (contentPath) {
+      $('#romPromptOverlay').addClass('hidden');
       ModuleBase.arguments = ["-v", contentPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
    } else {
       ModuleBase.arguments = ["-v", "--menu", "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
@@ -205,7 +206,8 @@ function startRetroArch(contentPath) {
 function selectFiles(files) {
    if (!files || files.length === 0) return;
    var file = files[0];
-   showToast("Cargando: " + file.name + "...");
+   showToast("Cargando archivo: " + file.name + "...");
+   $('#romPromptOverlay').addClass('hidden');
 
    var filereader = new FileReader();
    filereader.file_name = file.name;
@@ -237,6 +239,7 @@ async function uploadDataAndRun(data, name) {
    var targetCore = detectCoreForFile(name);
    console.log("WEBPLAYER: Launching game:", targetPath, "with core:", targetCore);
    showToast("Iniciando " + name + "...");
+   $('#romPromptOverlay').addClass('hidden');
 
    await relaunch(targetCore, targetPath);
 }
@@ -296,6 +299,7 @@ async function relaunch(core, content) {
    mountBrowserFS();
    $('#canvas').show();
    $('#initSplash').addClass('hidden');
+   $('#romPromptOverlay').addClass('hidden');
    retroArchRunning = true;
    Module.callMain(Module.arguments);
    if (canvas) canvas.focus();
@@ -303,8 +307,8 @@ async function relaunch(core, content) {
 
 // ─── DOM Events ─────────────────────────────────────────────────────────────
 $(function() {
-   // File input picker
-   $('#btnPickFile').click(function(e) {
+   // File input picker trigger on button or prompt card
+   $('#btnPickFile, #btnPromptPick, #promptCard').click(function(e) {
       e.stopPropagation();
       $('#btnRom').click();
    });
@@ -365,6 +369,18 @@ $(function() {
    loadCore(currentCore).then(function() {
       console.log("WEBPLAYER: wasm runtime initialized");
       appInitialized();
+   });
+
+   // Listen for message from parent container
+   window.addEventListener('message', function(e) {
+      if (!e.data) return;
+      if (e.data.type === 'PICK_ROM') {
+         $('#btnRom').click();
+      }
+      if (e.data.type === 'LOAD_ROM_DATA' && e.data.data && e.data.name) {
+         console.log("WEBPLAYER: Received ROM data from parent:", e.data.name);
+         uploadDataAndRun(e.data.data, e.data.name);
+      }
    });
 
    idbfsInit();

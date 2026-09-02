@@ -29,26 +29,25 @@
     image-rendering: pixelated;
     background: #000000;
     display: block;
-    z-index: 10;
+    z-index: 1;
   }
 
-  /* ── Sleek Top Floating Command Bar ──────────────────────────────── */
+  /* ── Top Floating Command Bar ────────────────────────────────────── */
   .top-command-bar {
-    position: absolute;
+    position: fixed;
     top: 14px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 30;
+    z-index: 99999;
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 14px;
-    background: rgba(10, 14, 26, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(10, 14, 26, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 999px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85);
   }
 
   .hud-btn {
@@ -67,16 +66,16 @@
   }
 
   .hud-btn.primary {
-    background: #ffffff;
-    color: #0f172a;
-    border-color: #ffffff;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+    background: #f43f5e;
+    color: #ffffff;
+    border-color: #f43f5e;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5);
   }
 
   .hud-btn.primary:hover {
-    background: #f8fafc;
+    background: #e11d48;
     transform: scale(1.04);
-    box-shadow: 0 0 28px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 28px rgba(244, 63, 94, 0.7);
   }
 
   .hud-btn:hover:not(.primary) {
@@ -84,11 +83,110 @@
     color: #ffffff;
   }
 
+  /* ── Startup Modal / File Picker Prompt ──────────────────────────── */
+  .rom-prompt-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 8, 17, 0.82);
+    backdrop-filter: blur(14px);
+    padding: 20px;
+    transition: opacity 0.3s ease;
+  }
+
+  .rom-prompt-overlay.hidden {
+    display: none !important;
+  }
+
+  .rom-prompt-card {
+    max-width: 480px;
+    width: 100%;
+    background: #0f172a;
+    border: 2px solid rgba(244, 63, 94, 0.4);
+    border-radius: 24px;
+    padding: 34px 26px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 50px rgba(244, 63, 94, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .rom-prompt-card:hover {
+    border-color: #f43f5e;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 60px rgba(244, 63, 94, 0.3);
+  }
+
+  .prompt-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    background: rgba(244, 63, 94, 0.15);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f43f5e;
+    font-size: 28px;
+    box-shadow: 0 0 24px rgba(244, 63, 94, 0.25);
+  }
+
+  .prompt-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+
+  .prompt-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .btn-select-rom {
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 13px 30px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-top: 4px;
+  }
+
+  .btn-select-rom:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
+  }
+
+  .drag-hint {
+    font-size: 11px;
+    color: #64748b;
+  }
+
   /* ── Initial Loading Splash ──────────────────────────────────────── */
   .init-splash {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    z-index: 25;
+    z-index: 999999;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -100,8 +198,7 @@
   }
 
   .init-splash.hidden {
-    opacity: 0;
-    pointer-events: none;
+    display: none !important;
   }
 
   .spinner-icon {
@@ -111,22 +208,22 @@
 
   /* ── Toast Notification ──────────────────────────────────────────── */
   .toast-notify {
-    position: absolute;
+    position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(50px);
     opacity: 0;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(15, 23, 42, 0.96);
     border: 1px solid rgba(244, 63, 94, 0.4);
     color: #ffffff;
-    padding: 8px 18px;
+    padding: 8px 22px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 600;
     backdrop-filter: blur(16px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 40;
+    z-index: 9999999;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -143,7 +240,7 @@
 <!-- ── Canvas: RetroArch Widescreen Surface ────────────────────────── -->
 <canvas id="canvas" class="webplayer"></canvas>
 
-<!-- ── Top Floating Command Bar (Always on Top) ────────────────────── -->
+<!-- ── Top Floating Command Bar ────────────────────────────────────── -->
 <div class="top-command-bar" id="commandBar">
   <button class="hud-btn primary" id="btnPickFile">
     <i class="fa fa-folder-open"></i> Cargar Archivo (.gba, .gbc, .nes, .zip)
@@ -159,7 +256,24 @@
   </button>
 </div>
 
-<!-- ── Initial Startup Splash (Hides when WASM boots) ──────────────── -->
+<!-- ── Prompt Modal: Overlay asking to pick the ROM file ───────────── -->
+<div class="rom-prompt-overlay" id="romPromptOverlay">
+  <div class="rom-prompt-card" id="promptCard">
+    <div class="prompt-icon">
+      <i class="fa fa-gamepad"></i>
+    </div>
+    <h2 class="prompt-title">Cargar Archivo de Juego</h2>
+    <p class="prompt-desc">
+      Haz clic aquí para seleccionar tu juego personal (<strong>.gba</strong>, <strong>.gbc</strong>, <strong>.nes</strong>, <strong>.zip</strong>) y comenzar la partida en pantalla completa.
+    </p>
+    <button class="btn-select-rom" id="btnPromptPick" type="button">
+      <i class="fa fa-arrow-up-from-bracket"></i> Seleccionar Archivo desde tu PC
+    </button>
+    <div class="drag-hint">o arrastra tu archivo directamente a la pantalla</div>
+  </div>
+</div>
+
+<!-- ── Initial Startup Splash ──────────────────────────────────────── -->
 <div class="init-splash" id="initSplash">
   <i class="fa fa-circle-notch fa-spin spinner-icon"></i>
   <span style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Iniciando Entorno WebAssembly...</span>
