@@ -176,18 +176,14 @@ function preLoadingComplete() {
    console.log("WEBPLAYER: Filesystem ready.");
    $('#initSplash').addClass('hidden');
 
-   // Check if parent or session queued a ROM to auto-boot
-   var pendingName = sessionStorage.getItem('pending_rom_name');
-   var pendingData = sessionStorage.getItem('pending_rom_data');
-   if (pendingName && pendingData) {
-      sessionStorage.removeItem('pending_rom_name');
-      sessionStorage.removeItem('pending_rom_data');
-      var binaryStr = atob(pendingData);
-      var bytes = new Uint8Array(binaryStr.length);
-      for (var i = 0; i < binaryStr.length; i++) {
-         bytes[i] = binaryStr.charCodeAt(i);
-      }
-      uploadDataAndRun(bytes.buffer, pendingName);
+   // Check if URL has ?boot=filename
+   var urlParams = new URLSearchParams(window.location.search);
+   var bootFile = urlParams.get('boot');
+   if (bootFile) {
+      var targetPath = '/home/web_user/retroarch/userdata/content/' + bootFile;
+      var targetCore = detectCoreForFile(bootFile);
+      currentCore = targetCore;
+      startRetroArch(targetPath);
    } else if (autoStart) {
       startRetroArch();
    }
@@ -201,7 +197,7 @@ function detectCoreForFile(filename) {
    return currentCore || defaultCore;
 }
 
-async function startRetroArch(contentPath) {
+function startRetroArch(contentPath) {
    $('#canvas').show();
    $('#initSplash').addClass('hidden');
    $('#romPromptOverlay').addClass('hidden');
@@ -232,36 +228,20 @@ function selectFiles(files) {
 }
 
 async function uploadDataAndRun(data, name) {
-   // If RetroArch is already active, reload cleanly with the new ROM in session
-   if (retroArchRunning) {
-      showToast("Cambiando juego a " + name + "...");
-      var bytes = new Uint8Array(data);
-      var binary = '';
-      for (var i = 0; i < bytes.byteLength; i++) {
-         binary += String.fromCharCode(bytes[i]);
-      }
-      sessionStorage.setItem('pending_rom_name', name);
-      sessionStorage.setItem('pending_rom_data', btoa(binary));
-      window.location.reload();
-      return;
-   }
-
    var dataView = new Uint8Array(data);
-   Module.FS.createDataFile('/', name, dataView, true, false);
-
-   var binData = Module.FS.readFile(name, {
-      encoding: 'binary'
-   });
 
    try {
       Module.FS.mkdirTree('/home/web_user/retroarch/userdata/content');
    } catch(e) {}
 
    var targetPath = '/home/web_user/retroarch/userdata/content/' + name;
-   Module.FS.writeFile(targetPath, binData, {
-      encoding: 'binary'
-   });
-   Module.FS.unlink(name);
+   Module.FS.writeFile(targetPath, dataView);
+
+   if (retroArchRunning) {
+      showToast("Cambiando juego a " + name + "...");
+      window.location.href = window.location.pathname + '?boot=' + encodeURIComponent(name);
+      return;
+   }
 
    // Auto-detect core
    var targetCore = detectCoreForFile(name);
