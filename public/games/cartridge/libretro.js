@@ -1,9 +1,9 @@
 /**
- * RetroArch / Libretro Virtual Web Player — Edge-to-Edge Widescreen Driver
+ * RetroArch / Libretro Virtual Web Player — Direct Boot & Widescreen Engine
  */
 
 const defaultCore = "mgba";
-var autoStart = true;
+var autoStart = false;
 
 var BrowserFS = BrowserFS;
 var afs;
@@ -55,6 +55,7 @@ var ModuleBase = {
 
 function cleanupStorage() {
    localStorage.clear();
+   sessionStorage.clear();
    if (BrowserFS.FileSystem.IndexedDB.isAvailable()) {
       var req = indexedDB.deleteDatabase("RetroArch");
       req.onsuccess = function() {
@@ -172,9 +173,22 @@ function finishFileSystemSetup() {
 }
 
 function preLoadingComplete() {
-   console.log("WEBPLAYER: Preload complete.");
+   console.log("WEBPLAYER: Filesystem ready.");
    $('#initSplash').addClass('hidden');
-   if (autoStart && !retroArchRunning) {
+
+   // Check if parent or session queued a ROM to auto-boot
+   var pendingName = sessionStorage.getItem('pending_rom_name');
+   var pendingData = sessionStorage.getItem('pending_rom_data');
+   if (pendingName && pendingData) {
+      sessionStorage.removeItem('pending_rom_name');
+      sessionStorage.removeItem('pending_rom_data');
+      var binaryStr = atob(pendingData);
+      var bytes = new Uint8Array(binaryStr.length);
+      for (var i = 0; i < binaryStr.length; i++) {
+         bytes[i] = binaryStr.charCodeAt(i);
+      }
+      uploadDataAndRun(bytes.buffer, pendingName);
+   } else if (autoStart) {
       startRetroArch();
    }
 }
@@ -187,13 +201,13 @@ function detectCoreForFile(filename) {
    return currentCore || defaultCore;
 }
 
-function startRetroArch(contentPath) {
+async function startRetroArch(contentPath) {
    $('#canvas').show();
    $('#initSplash').addClass('hidden');
+   $('#romPromptOverlay').addClass('hidden');
 
    retroArchRunning = true;
    if (contentPath) {
-      $('#romPromptOverlay').addClass('hidden');
       ModuleBase.arguments = ["-v", contentPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
    } else {
       ModuleBase.arguments = ["-v", "--menu", "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
@@ -218,6 +232,20 @@ function selectFiles(files) {
 }
 
 async function uploadDataAndRun(data, name) {
+   // If RetroArch is already active, reload cleanly with the new ROM in session
+   if (retroArchRunning) {
+      showToast("Cambiando juego a " + name + "...");
+      var bytes = new Uint8Array(data);
+      var binary = '';
+      for (var i = 0; i < bytes.byteLength; i++) {
+         binary += String.fromCharCode(bytes[i]);
+      }
+      sessionStorage.setItem('pending_rom_name', name);
+      sessionStorage.setItem('pending_rom_data', btoa(binary));
+      window.location.reload();
+      return;
+   }
+
    var dataView = new Uint8Array(data);
    Module.FS.createDataFile('/', name, dataView, true, false);
 
@@ -237,11 +265,18 @@ async function uploadDataAndRun(data, name) {
 
    // Auto-detect core
    var targetCore = detectCoreForFile(name);
-   console.log("WEBPLAYER: Launching game:", targetPath, "with core:", targetCore);
+   console.log("WEBPLAYER: Starting clean game run:", targetPath, "with core:", targetCore);
    showToast("Iniciando " + name + "...");
    $('#romPromptOverlay').addClass('hidden');
 
-   await relaunch(targetCore, targetPath);
+   if (targetCore !== currentCore) {
+      currentCore = targetCore;
+      localStorage.setItem("core", currentCore);
+      await loadCore(currentCore, ["-v", targetPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
+      mountBrowserFS();
+   }
+
+   startRetroArch(targetPath);
 }
 
 async function loadCoreFallback(currentCore) {
@@ -364,14 +399,7 @@ $(function() {
       }
    });
 
-   // Find core and initialize
-   currentCore = localStorage.getItem("core") || defaultCore;
-   loadCore(currentCore).then(function() {
-      console.log("WEBPLAYER: wasm runtime initialized");
-      appInitialized();
-   });
-
-   // Listen for message from parent container
+   // Listen for message from parent container (ConsoleDashboard)
    window.addEventListener('message', function(e) {
       if (!e.data) return;
       if (e.data.type === 'PICK_ROM') {
@@ -381,6 +409,13 @@ $(function() {
          console.log("WEBPLAYER: Received ROM data from parent:", e.data.name);
          uploadDataAndRun(e.data.data, e.data.name);
       }
+   });
+
+   // Find core and initialize
+   currentCore = localStorage.getItem("core") || defaultCore;
+   loadCore(currentCore).then(function() {
+      console.log("WEBPLAYER: wasm runtime initialized");
+      appInitialized();
    });
 
    idbfsInit();
