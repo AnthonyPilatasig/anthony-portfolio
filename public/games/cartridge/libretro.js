@@ -160,6 +160,48 @@ function mountBrowserFS() {
    }
 }
 
+function createVirtualDirectories() {
+   var dirs = [
+      '/home/web_user/retroarch/userdata',
+      '/home/web_user/retroarch/userdata/content',
+      '/home/web_user/retroarch/userdata/saves',
+      '/home/web_user/retroarch/userdata/saves/mGBA',
+      '/home/web_user/retroarch/userdata/saves/Gambatte',
+      '/home/web_user/retroarch/userdata/saves/FCEUmm',
+      '/home/web_user/retroarch/userdata/states',
+      '/home/web_user/retroarch/userdata/states/mGBA',
+      '/home/web_user/retroarch/userdata/states/Gambatte',
+      '/home/web_user/retroarch/userdata/states/FCEUmm',
+      '/home/web_user/retroarch/userdata/system',
+      '/home/web_user/retroarch/userdata/config'
+   ];
+   dirs.forEach(function(d) {
+      try {
+         Module.FS.mkdirTree(d);
+      } catch(e) {}
+   });
+
+   var defaultCfg = [
+      'audio_enable = "true"',
+      'audio_driver = "rwebaudio"',
+      'video_driver = "gl"',
+      'input_driver = "rwebinput"',
+      'savefile_directory = "/home/web_user/retroarch/userdata/saves"',
+      'savestate_directory = "/home/web_user/retroarch/userdata/states"',
+      'system_directory = "/home/web_user/retroarch/userdata/system"',
+      'content_directory = "/home/web_user/retroarch/userdata/content"',
+      'rgui_browser_directory = "/home/web_user/retroarch/userdata/content"',
+      'video_fullscreen = "true"',
+      'video_scale_integer = "false"',
+      'video_smooth = "false"',
+      'video_vsync = "true"',
+      'video_font_enable = "false"'
+   ].join('\n');
+   try {
+      Module.FS.writeFile('/home/web_user/retroarch/userdata/retroarch.cfg', defaultCfg);
+   } catch(e) {}
+}
+
 function finishFileSystemSetup() {
    var mfs = new BrowserFS.FileSystem.MountableFileSystem();
    mfs.mount('/home/web_user/retroarch', zipfs);
@@ -168,6 +210,7 @@ function finishFileSystemSetup() {
    mfs.mount('/home/web_user/retroarch/userdata/content/downloads', xhrfs);
    BrowserFS.initialize(mfs);
    mountBrowserFS();
+   createVirtualDirectories();
 
    console.log("WEBPLAYER: filesystem initialization successful");
 }
@@ -228,24 +271,36 @@ function selectFiles(files) {
 }
 
 async function uploadDataAndRun(data, name) {
-   var dataView = new Uint8Array(data);
+   var ext = name.split('.').pop().toLowerCase();
+   var safeFileName = 'game.' + ext;
+   var targetPath = '/home/web_user/retroarch/userdata/content/' + safeFileName;
 
    try {
       Module.FS.mkdirTree('/home/web_user/retroarch/userdata/content');
    } catch(e) {}
 
-   var targetPath = '/home/web_user/retroarch/userdata/content/' + name;
-   Module.FS.writeFile(targetPath, dataView);
+   try {
+      Module.FS.unlink('/temp_rom.' + ext);
+   } catch(e) {}
+   try {
+      Module.FS.unlink(targetPath);
+   } catch(e) {}
+
+   var dataView = new Uint8Array(data);
+   Module.FS.createDataFile('/', 'temp_rom.' + ext, dataView, true, true);
+   var binData = Module.FS.readFile('/temp_rom.' + ext, { encoding: 'binary' });
+   Module.FS.writeFile(targetPath, binData, { encoding: 'binary' });
+   Module.FS.unlink('/temp_rom.' + ext);
 
    if (retroArchRunning) {
       showToast("Cambiando juego a " + name + "...");
-      window.location.href = window.location.pathname + '?boot=' + encodeURIComponent(name);
+      window.location.href = window.location.pathname + '?boot=' + encodeURIComponent(safeFileName);
       return;
    }
 
    // Auto-detect core
    var targetCore = detectCoreForFile(name);
-   console.log("WEBPLAYER: Starting clean game run:", targetPath, "with core:", targetCore);
+   console.log("WEBPLAYER: Starting clean game run:", targetPath, "size:", dataView.length, "core:", targetCore);
    showToast("Iniciando " + name + "...");
    $('#romPromptOverlay').addClass('hidden');
 
