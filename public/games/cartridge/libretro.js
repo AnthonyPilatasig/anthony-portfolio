@@ -151,12 +151,41 @@ function preLoadingComplete() {
    $('#icnRun').removeClass('fa-spinner').removeClass('fa-spin');
    $('#icnRun').addClass('fa-play');
 
+   // Allow picking ROM directly
+   $('#btnAdd').removeClass('disabled').removeAttr("disabled").off('click').click(function() {
+      $('#btnRom').click();
+   });
+   $('#btnRom').removeAttr("disabled").off('change').change(function(e) {
+      if (e.target.files && e.target.files.length > 0) {
+         selectFiles(e.target.files);
+      }
+   });
+
+   // Drag and drop ROM directly into container
+   var container = $('.webplayer-container');
+   container.on('dragover dragenter', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      container.css('outline', '2px dashed #1B4FE8');
+   });
+   container.on('dragleave dragend drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      container.css('outline', 'none');
+      if (e.type === 'drop') {
+         var dt = e.originalEvent ? e.originalEvent.dataTransfer : e.dataTransfer;
+         if (dt && dt.files && dt.files.length > 0) {
+            selectFiles(dt.files);
+         }
+      }
+   });
+
    if (autoStart) {
       startRetroArch();
    } else {
-      // Make the Preview image clickable to start RetroArch.
+      // Click preview to upload ROM or start
       $('.webplayer-preview').addClass('loaded').click(function() {
-         startRetroArch();
+         $('#btnRom').click();
       });
       $('#btnRun').removeClass('disabled').removeAttr("disabled").click(function() {
          startRetroArch();
@@ -191,65 +220,99 @@ function finishFileSystemSetup() {
    console.log("WEBPLAYER: filesystem initialization successful");
 }
 
-function startRetroArch() {
+function detectCoreForFile(filename) {
+   var ext = filename.split('.').pop().toLowerCase();
+   if (ext === 'gba') return 'mgba';
+   if (ext === 'gb' || ext === 'gbc') return 'gambatte';
+   if (ext === 'nes') return 'fceumm';
+   return currentCore || defaultCore;
+}
+
+function startRetroArch(contentPath) {
    $('.webplayer').show();
    $('.webplayer-preview').hide();
    document.getElementById("btnRun").disabled = true;
 
-   $('#btnAdd').removeClass("disabled").removeAttr("disabled").click(function() {
+   $('#btnAdd').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
       $('#btnRom').click();
    });
-   $('#btnRom').removeAttr("disabled").change(function(e) {
-      selectFiles(e.target.files);
+   $('#btnRom').removeAttr("disabled").off('change').change(function(e) {
+      if (e.target.files && e.target.files.length > 0) {
+         selectFiles(e.target.files);
+      }
    });
-   $('#btnMenu').removeClass("disabled").removeAttr("disabled").click(function() {
+   $('#btnMenu').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
       Module.retroArchSend("MENU_TOGGLE");
       Module.canvas.focus();
    });
-   $('#btnFullscreen').removeClass("disabled").removeAttr("disabled").click(function() {
+   $('#btnFullscreen').removeClass("disabled").removeAttr("disabled").off('click').click(function() {
       Module.retroArchSend("FULLSCREEN_TOGGLE");
       Module.canvas.focus();
    });
 
    retroArchRunning = true;
+   if (contentPath) {
+      ModuleBase.arguments = ["-v", contentPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"];
+      Module.arguments = ModuleBase.arguments;
+   }
    Module.callMain(Module.arguments);
 }
 
 function selectFiles(files) {
+   if (!files || files.length === 0) return;
    $('#btnAdd').addClass('disabled');
-   $('#icnAdd').removeClass('fa-plus');
-   $('#icnAdd').addClass('fa-spinner spinning');
+   $('#icnAdd').removeClass('fa-plus').addClass('fa-spinner spinning');
    var count = files.length;
 
    for (var i = 0; i < count; i++) {
-      filereader = new FileReader();
+      var filereader = new FileReader();
       filereader.file_name = files[i].name;
       filereader.readAsArrayBuffer(files[i]);
       filereader.onload = function() {
-         uploadData(this.result, this.file_name)
+         uploadDataAndRun(this.result, this.file_name);
       };
       filereader.onloadend = function(evt) {
          console.log("WEBPLAYER: file: " + this.file_name + " upload complete");
          if (evt.target.readyState == FileReader.DONE) {
             $('#btnAdd').removeClass('disabled');
-            $('#icnAdd').removeClass('fa-spinner spinning');
-            $('#icnAdd').addClass('fa-plus');
+            $('#icnAdd').removeClass('fa-spinner spinning').addClass('fa-plus');
          }
+      };
+   }
+}
+
+async function uploadDataAndRun(data, name) {
+   var dataView = new Uint8Array(data);
+   Module.FS.createDataFile('/', name, dataView, true, false);
+
+   var binData = Module.FS.readFile(name, {
+      encoding: 'binary'
+   });
+   var targetPath = '/home/web_user/retroarch/userdata/content/' + name;
+   Module.FS.writeFile(targetPath, binData, {
+      encoding: 'binary'
+   });
+   Module.FS.unlink(name);
+
+   // Auto-detect core
+   var targetCore = detectCoreForFile(name);
+   console.log("WEBPLAYER: Auto-launching content:", targetPath, "with core:", targetCore);
+
+   if (retroArchRunning) {
+      await relaunch(targetCore, targetPath);
+   } else {
+      if (targetCore !== currentCore) {
+         currentCore = targetCore;
+         localStorage.setItem("core", currentCore);
+         await loadCore(currentCore, ["-v", targetPath, "-c", "/home/web_user/retroarch/userdata/retroarch.cfg"]);
+         mountBrowserFS();
       }
+      startRetroArch(targetPath);
    }
 }
 
 function uploadData(data, name) {
-   var dataView = new Uint8Array(data);
-   Module.FS.createDataFile('/', name, dataView, true, false);
-
-   var data = Module.FS.readFile(name, {
-      encoding: 'binary'
-   });
-   Module.FS.writeFile('/home/web_user/retroarch/userdata/content/' + name, data, {
-      encoding: 'binary'
-   });
-   Module.FS.unlink(name);
+   uploadDataAndRun(data, name);
 }
 
 // When the browser has loaded everything.
