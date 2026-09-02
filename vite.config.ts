@@ -28,6 +28,23 @@ export default defineConfig({
   base: BASE, // Necesario para GitHub Pages
   server: {
     open: BASE,
+    headers: {
+      // ─── WebAssembly (mkxp-z) requires these ───────────────────────────
+      'Content-Security-Policy': [
+        "default-src * 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' data: blob:",
+        "script-src * 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' data: blob:",
+        "style-src * 'unsafe-inline'",
+        "img-src * data: blob:",
+        "font-src * data:",
+        "media-src * data: blob:",
+        "connect-src * data: blob:",
+        "worker-src * blob:",
+      ].join('; '),
+      // ─── SharedArrayBuffer + Atomics required by Emscripten ───────────
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+    },
   },
   plugins: [
     react(),

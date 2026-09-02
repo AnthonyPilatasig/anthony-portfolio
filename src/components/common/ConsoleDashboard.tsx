@@ -12,6 +12,7 @@ import { GAME_COVERS } from '../../assets/gameCovers';
 import { GameBoyBattle } from './GameBoyBattle';
 import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
+import { RpgMakerPlayer } from './RpgMakerPlayer';
 
 // ─── Modern Console Audio Synthesizer (AP-Deck OS audio feedback) ──────────────
 class ModernConsoleAudio {
@@ -106,13 +107,28 @@ export interface ConsoleGame {
   bgGradient: string;
   accentColor: string;
   description: string;
-  type: 'zip-loader' | 'cartridge' | 'cyber-battle' | 'snake' | '2048';
+  type: 'zip-loader' | 'cartridge' | 'rpgmaker' | 'cyber-battle' | 'snake' | '2048';
   src?: string;
   coverArt: string;
   tags: string[];
 }
 
 const CONSOLE_GAMES: ConsoleGame[] = [
+  {
+    id: 'rpg-maker',
+    title: 'Motor RPG Maker & Pokémon Essentials',
+    badge: 'UNIVERSAL RGSS',
+    platform: 'Cualquier Juego RPG Maker / Essentials',
+    genre: 'RPG Maker XP / VX / Ace / Essentials',
+    playtime: 'Ilimitado',
+    trophies: 'Modo Aventura',
+    bgGradient: 'from-rose-950 via-pink-950 to-[#050811]',
+    accentColor: '#F43F5E',
+    description: 'Lanza y ejecuta cualquier juego de RPG Maker XP, VX, Ace y proyectos de Pokémon Essentials (.zip) de forma dinámica con extracción en RAM a 60 FPS.',
+    type: 'rpgmaker',
+    coverArt: GAME_COVERS.retroArch,
+    tags: ['Universal RPG Maker', 'Pokémon Essentials', 'Cualquier .ZIP', '100% Local'],
+  },
   {
     id: 'zip-loader',
     title: 'Cargar desde ZIP',
@@ -126,23 +142,23 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     description: 'Sube o arrastra cualquier juego web comprimido en formato .zip (con index.html en la raíz). Se extrae en la memoria RAM del navegador y se lanza con rendimiento 100% nativo sin subir nada a servidores.',
     type: 'zip-loader',
     coverArt: GAME_COVERS.zipLoader,
-    tags: ['HTML5', 'RPG Maker MV/MZ', 'Godot Web', '100% Local'],
+    tags: ['HTML5 / Web', 'RPG Maker MV/MZ', 'Godot Web', '100% Local'],
   },
   {
     id: 'cartridge-slot',
-    title: 'Intérprete WebAssembly',
+    title: 'Intérprete WebAssembly Universal',
     badge: 'UNIVERSAL WASM',
     platform: 'Virtual Bytecode Engine',
-    genre: 'Multi-Consola Retro (8/16/32/64-Bit)',
+    genre: 'Multi-Consola (WASM)',
     playtime: 'Guardado Local',
     trophies: 'WASM Runtimes',
-    bgGradient: 'from-rose-950 via-red-950 to-[#050811]',
-    accentColor: '#F43F5E',
-    description: 'Entorno de ejecución universal WebAssembly con auto-detección automática de consola. Carga binarios de Nintendo DS (.nds), PlayStation 1 (.iso/.chd), Nintendo 64 (.z64), Game Boy Advance (.gba), Super Nintendo (.sfc), Mega Drive (.md), NES (.nes) y archivos .zip comprimidos con renderizado WebGL acelerado.',
+    bgGradient: 'from-red-950 via-slate-900 to-[#050811]',
+    accentColor: '#EF4444',
+    description: 'Entorno universal WebAssembly con auto-detección instantánea. Ejecuta Nintendo DS (.nds), PlayStation 1 (.iso/.chd), Nintendo 64 (.z64), Game Boy Advance (.gba), Super Nintendo (.sfc) y Sega Genesis (.md).',
     type: 'cartridge',
     coverArt: GAME_COVERS.retroArch,
     src: './games/cartridge/index.html',
-    tags: ['Auto-Detección', 'GBA / NDS / PS1 / N64', 'SNES / Genesis / NES', '100% Local'],
+    tags: ['Auto-Detección', 'GBA / NDS / PS1 / N64', 'SNES / Genesis', '100% Local'],
   },
   {
     id: 'cyber-encounter',
@@ -267,11 +283,30 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
   // Cartridge loader state
   const [cartridgeRomLoaded, setCartridgeRomLoaded] = useState(false);
+  const [rpgMakerFile, setRpgMakerFile] = useState<File | null>(null);
   const cartridgeFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCartridgeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (file.name.toLowerCase().endsWith('.zip')) {
+      try {
+        const zip = new JSZip();
+        const zipLoaded = await zip.loadAsync(file);
+        const isRpg = Object.keys(zipLoaded.files).some(p => {
+          const l = p.toLowerCase();
+          return l.endsWith('scripts.rxdata') || l.endsWith('game.ini') || l.includes('data/scripts.rxdata');
+        });
+        if (isRpg) {
+          setRpgMakerFile(file);
+          const rpgGame = CONSOLE_GAMES.find(g => g.id === 'rpg-maker') ?? CONSOLE_GAMES[0];
+          setActiveRunningGame(rpgGame);
+          return;
+        }
+      } catch {}
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const iframe = document.getElementById('cartridgeIframe') as HTMLIFrameElement;
     if (iframe?.contentWindow) {
@@ -437,7 +472,46 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         entries.find(e => e.name.toLowerCase().endsWith('/index.html') && e.name.split('/').length === 2);
 
       if (!rootIndex) {
-        setZipError('No se encontró index.html en la raíz del ZIP.');
+        const isRpgMaker = entries.some(e => {
+          const lower = e.name.toLowerCase();
+          return lower.endsWith('scripts.rxdata') ||
+                 lower.endsWith('game.ini') ||
+                 lower.endsWith('game.rgssad') ||
+                 lower.includes('data/scripts.rxdata');
+        });
+        const hasRom = entries.some(e => {
+          const ext = e.name.split('.').pop()?.toLowerCase();
+          return ['gba', 'nds', 'sfc', 'smc', 'z64', 'n64', 'iso', 'md', 'nes', 'gbc'].includes(ext || '');
+        });
+
+        if (isRpgMaker) {
+          setRpgMakerFile(file);
+          const rpgGame = CONSOLE_GAMES.find(g => g.id === 'rpg-maker') ?? CONSOLE_GAMES[0];
+          setActiveRunningGame(rpgGame);
+          setZipLoading(false);
+          return;
+        }
+
+        if (hasRom) {
+          const cartridgeGame = CONSOLE_GAMES.find(g => g.id === 'cartridge-slot') ?? CONSOLE_GAMES[2];
+          setActiveRunningGame(cartridgeGame);
+          setCartridgeRomLoaded(true);
+          setZipLoading(false);
+          const arrayBuffer = await file.arrayBuffer();
+          setTimeout(() => {
+            const iframe = document.getElementById('cartridgeIframe') as HTMLIFrameElement;
+            if (iframe?.contentWindow) {
+              iframe.contentWindow.postMessage({
+                type: 'LOAD_ROM_DATA',
+                name: file.name,
+                data: arrayBuffer,
+              }, '*');
+            }
+          }, 450);
+          return;
+        }
+
+        setZipError('No se encontró index.html ni una estructura de ROM / RPG Maker reconocida en el ZIP.');
         setZipLoading(false);
         return;
       }
@@ -594,19 +668,20 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         {/* ── STATE A: ACTIVE RUNNING GAME ──────────────────────────────────── */}
         {activeRunningGame ? (
           <div className="flex-1 flex flex-col min-h-0 bg-black">
-            {/* In-game Quick Menu Bar */}
-            <div
-              className="flex items-center justify-between px-4 sm:px-6 py-2.5"
-              style={{ background: 'rgba(5,8,17,0.95)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              <button
-                onClick={closeGame}
-                className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs text-white transition-all hover:bg-white/15 active:scale-95"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
+            {/* In-game Quick Menu Bar (hidden when rpgmaker is active to avoid duplicate headers) */}
+            {activeRunningGame.type !== 'rpgmaker' && (
+              <div
+                className="flex items-center justify-between px-3 sm:px-6 py-1.5 sm:py-2.5 shrink-0"
+                style={{ background: 'rgba(5,8,17,0.95)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                <FiChevronLeft className="w-4 h-4" />
-                <span>Menú Principal</span>
-              </button>
+                <button
+                  onClick={closeGame}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white transition-all hover:bg-white/15 active:scale-95"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}
+                >
+                  <FiChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">Menú Principal</span>
+                </button>
 
               <div className="flex items-center gap-2.5 text-white font-bold text-sm truncate max-w-[50vw]">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
@@ -641,6 +716,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 </button>
               </div>
             </div>
+            )}
 
             {/* Game Screen Frame */}
             <div className="flex-1 min-h-0 flex items-stretch bg-black relative">
@@ -693,7 +769,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                           </div>
                           <h3 className="text-xl font-bold text-white">Cargar Archivo de Juego</h3>
                           <p className="text-xs text-slate-300 leading-relaxed max-w-sm">
-                            Selecciona tu ROM o juego personal (<strong>.gba</strong>, <strong>.nds</strong>, <strong>.iso (PS1)</strong>, <strong>.z64</strong>, <strong>.sfc (SNES)</strong>, <strong>.md</strong>, <strong>.nes</strong>, <strong>.zip</strong>) con <strong>auto-detección automática de consola</strong>.
+                            Selecciona tu juego o ROM personal (<strong>Pokémon Reminiscencia / RPG Maker</strong>, <strong>.gba</strong>, <strong>.nds</strong>, <strong>.iso (PS1)</strong>, <strong>.z64</strong>, <strong>.sfc</strong>, <strong>.zip</strong>) con <strong>auto-detección automática de motor</strong>.
                           </p>
                           <button
                             onClick={() => cartridgeFileInputRef.current?.click()}
@@ -703,7 +779,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                             <span>Seleccionar Archivo desde tu PC</span>
                           </button>
                           <div className="flex flex-wrap gap-1 justify-center max-w-xs pt-1">
-                            {['GBA', 'NDS', 'PS1', 'N64', 'SNES', 'Mega Drive', 'NES', 'ZIP'].map(c => (
+                            {['RPG Maker / Reminiscencia', 'GBA', 'NDS', 'PS1', 'N64', 'SNES', 'Mega Drive', 'ZIP'].map(c => (
                               <span key={c} className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-slate-300">
                                 {c}
                               </span>
@@ -721,6 +797,12 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                       </motion.div>
                     )}
                   </AnimatePresence>
+                </div>
+              )}
+
+              {activeRunningGame.type === 'rpgmaker' && (
+                <div className="flex-1 flex items-stretch w-full h-full">
+                  <RpgMakerPlayer initialFile={rpgMakerFile} onBack={closeGame} />
                 </div>
               )}
 
