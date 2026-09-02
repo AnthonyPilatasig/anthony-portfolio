@@ -100,44 +100,47 @@ export const RpgMakerPlayer: React.FC<RpgMakerPlayerProps> = ({ initialFile = nu
       setProgress(25);
       addLog(`✓ Título detectado: "${parsedTitle}"`);
 
-      // 2. Prepare files in parallel batches (5x faster than sequential extraction)
-      addLog('🔧 Aplicando compatibilidad Ruby 3.2+ y alineando archivos...');
-      setProgress(40);
-      setProgressLabel('Alineando carpetas y parcheando métodos Ruby en paralelo...');
+      // 2. Prepare files: only repack if nested in a subfolder, to prevent Out-Of-Memory (unwind) on large 500MB+ games
+      let romPayload: File | Blob = targetFile;
 
-      const flatZip = new JSZip();
-      const prefix = subfolder ? subfolder + '/' : '';
-      const candidateKeys = fileKeys.filter(key => (!prefix || key.startsWith(prefix)) && !zipData.files[key].dir);
-      const batchSize = 30;
+      if (subfolder) {
+        addLog(`🔄 Desanidando "${subfolder}" hacia la raíz...`);
+        setProgress(40);
+        setProgressLabel(`Alineando ${subfolder} a la raíz del paquete en memoria...`);
 
-      for (let i = 0; i < candidateKeys.length; i += batchSize) {
-        const batch = candidateKeys.slice(i, i + batchSize);
-        await Promise.all(batch.map(async (key) => {
-          const strippedKey = prefix ? key.slice(prefix.length) : key;
+        const flatZip = new JSZip();
+        const prefix = subfolder + '/';
+        const candidateKeys = fileKeys.filter(key => key.startsWith(prefix) && !zipData.files[key].dir);
+        const batchSize = 30;
 
-          if (strippedKey.endsWith('.rb')) {
-            let scriptText = await zipData.files[key].async('text');
-            if (scriptText.includes('File.exists?') || scriptText.includes('Dir.exists?')) {
-              scriptText = scriptText
-                .replace(/File\.exists\?/g, 'File.exist?')
-                .replace(/Dir\.exists\?/g, 'Dir.exist?');
+        for (let i = 0; i < candidateKeys.length; i += batchSize) {
+          const batch = candidateKeys.slice(i, i + batchSize);
+          await Promise.all(batch.map(async (key) => {
+            const strippedKey = key.slice(prefix.length);
+
+            if (strippedKey.endsWith('.rb')) {
+              let scriptText = await zipData.files[key].async('text');
+              if (scriptText.includes('File.exists?') || scriptText.includes('Dir.exists?')) {
+                scriptText = scriptText
+                  .replace(/File\.exists\?/g, 'File.exist?')
+                  .replace(/Dir\.exists\?/g, 'Dir.exist?');
+              }
+              flatZip.file(strippedKey, scriptText);
+            } else {
+              const data = await zipData.files[key].async('uint8array');
+              flatZip.file(strippedKey, data);
             }
-            flatZip.file(strippedKey, scriptText);
-          } else {
-            const data = await zipData.files[key].async('uint8array');
-            flatZip.file(strippedKey, data);
-          }
 
-          if (strippedKey.toLowerCase() === 'data/scripts.rxdata' && strippedKey !== 'Data/Scripts.rxdata') {
-            const data = await zipData.files[key].async('uint8array');
-            flatZip.file('Data/Scripts.rxdata', data);
-          }
-        }));
-        setProgress(40 + Math.round((i / candidateKeys.length) * 25));
-      }
+            if (strippedKey.toLowerCase() === 'data/scripts.rxdata' && strippedKey !== 'Data/Scripts.rxdata') {
+              const data = await zipData.files[key].async('uint8array');
+              flatZip.file('Data/Scripts.rxdata', data);
+            }
+          }));
+          setProgress(40 + Math.round((i / candidateKeys.length) * 25));
+        }
 
-      // Inject 0000_ruby3_shim.rb so it runs first during script compilation and execution
-      const ruby3Polyfill = `# Ruby 3.2+ Compatibility Polyfill for Pokemon Essentials / mkxp-z
+        // Inject 0000_ruby3_shim.rb for Ruby 3.2+ compatibility
+        const ruby3Polyfill = `# Ruby 3.2+ Compatibility Polyfill for Pokemon Essentials / mkxp-z
 class File
   class << self
     def exists?(path); exist?(path); end unless method_defined?(:exists?)
@@ -151,17 +154,21 @@ end
 Object.const_set(:Fixnum, Integer) unless defined?(Fixnum)
 Object.const_set(:Bignum, Integer) unless defined?(Bignum)
 `;
-      flatZip.file('Data/export/0000_ruby3_shim.rb', ruby3Polyfill);
-      flatZip.file('Data/0000_ruby3_shim.rb', ruby3Polyfill);
+        flatZip.file('Data/export/0000_ruby3_shim.rb', ruby3Polyfill);
+        flatZip.file('Data/0000_ruby3_shim.rb', ruby3Polyfill);
 
-      setProgress(68);
-      setProgressLabel('Generando contenedor de juego game.mkxpz en RAM...');
-      addLog(`✓ ${candidateKeys.length} archivos preparados con compresión STORE instantánea`);
+        setProgress(68);
+        setProgressLabel('Generando contenedor de juego game.mkxpz en RAM...');
+        addLog(`✓ ${candidateKeys.length} archivos preparados con compresión STORE instantánea`);
 
-      const romPayload = await flatZip.generateAsync({
-        type: 'blob',
-        compression: 'STORE',
-      });
+        romPayload = await flatZip.generateAsync({
+          type: 'blob',
+          compression: 'STORE',
+        });
+      } else {
+        addLog(`⚡ Raíz de juego óptima detectada (${(targetFile.size / 1048576).toFixed(1)} MB). Cargando directamente sin duplicar memoria RAM...`);
+        setProgress(68);
+      }
 
       // 3. Fast CacheStorage fetch: cache 64MB WASM core & RTP locally in browser
       setPhase('booting');
