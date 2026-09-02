@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   FiPlay, FiMaximize2, FiMinimize2, FiTv, FiVolume2, FiVolumeX,
   FiArrowLeft, FiArrowRight, FiGrid, FiSettings,
-  FiAward, FiClock, FiUpload, FiX, FiChevronLeft
+  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiHome, FiLogOut
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
 import JSZip from 'jszip';
@@ -243,6 +244,7 @@ interface ConsoleDashboardProps {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFullscreen = false }) => {
+  const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeRunningGame, setActiveRunningGame] = useState<ConsoleGame | null>(null);
   const [currentTime, setCurrentTime] = useState('');
@@ -540,6 +542,16 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           >
             {currentTime}
           </span>
+
+          <button
+            onClick={() => navigate('/laboratorio')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold text-white hover:text-white transition-all hover:bg-white/15 active:scale-95 ml-1"
+            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+            title="Salir de la consola y volver al portfolio"
+          >
+            <FiHome className="w-3.5 h-3.5 text-blue-400" />
+            <span className="hidden sm:inline">Salir</span>
+          </button>
         </div>
       </div>
 
@@ -713,6 +725,14 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 style={{ background: 'rgba(255,255,255,0.03)', color: '#475569' }}
               >
                 <FiSettings className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => navigate('/laboratorio')}
+                title="Volver al Portfolio"
+                className="w-11 h-11 rounded-[14px] flex items-center justify-center transition-all hover:bg-red-500/10 hover:text-red-400"
+                style={{ background: 'rgba(255,255,255,0.03)', color: '#64748B' }}
+              >
+                <FiLogOut className="w-5 h-5" />
               </button>
             </div>
 
