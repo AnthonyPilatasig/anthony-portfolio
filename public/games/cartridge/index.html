@@ -51,8 +51,8 @@
 <div class="rah-banner">
   <i class="fa fa-info-circle"></i>
   <span>
-    Esto corre con <strong>RetroArch / libretro</strong> real, compilado a WebAssembly y autoalojado aquí — no un emulador inventado.
-    No alojamos ningún juego: sube tu propio archivo (un cartucho que tú mismo hayas volcado legalmente).
+    Entorno de <strong>Emulación Virtual WebAssembly</strong> (núcleos libretro de código abierto).
+    Ejecución 100% en local para desarrollo homebrew y copias de seguridad personales.
   </span>
 </div>
 
@@ -60,16 +60,16 @@
   <div class="container-fluid" style="max-width:100%">
     <div class="d-flex flex-wrap align-items-center">
       <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">Elegir emulador</button>
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">Núcleo de Emulación</button>
         <div class="dropdown-menu" id="core-selector"></div>
       </div>
       <button class="btn btn-primary disabled" id="btnRun" disabled><span class="fa fa-spinner fa-spin" id="icnRun"></span> Iniciar</button>
-      <button class="btn btn-primary disabled" id="btnAdd" disabled><span class="fa fa-plus" id="icnAdd"></span> Agregar juego</button>
-      <input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip" />
+      <button class="btn btn-primary disabled" id="btnAdd" disabled><span class="fa fa-plus" id="icnAdd"></span> Cargar Archivo</button>
+      <input style="display:none" type="file" id="btnRom" name="upload" accept=".gba,.gb,.gbc,.nes,.zip,.bin,.rom" />
       <button class="btn btn-primary tooltip-enable" id="btnClean" title="Borrar datos guardados"><span class="fa fa-trash-o" id="icnClean"></span></button>
-      <button class="btn btn-primary disabled tooltip-enable" id="btnMenu" title="Menú" disabled><span class="fa fa-bars" id="icnMenu"></span></button>
+      <button class="btn btn-primary disabled tooltip-enable" id="btnMenu" title="Menú del Sistema" disabled><span class="fa fa-bars" id="icnMenu"></span></button>
       <button class="btn btn-primary disabled tooltip-enable" id="btnFullscreen" title="Pantalla completa" disabled><span class="fa fa-desktop" id="icnFullscreen"></span></button>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal"><span class="fa fa-question-circle"></span> Ayuda</button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal"><span class="fa fa-question-circle"></span> Info & Ayuda</button>
     </div>
   </div>
 </nav>
@@ -78,17 +78,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Ranura de cartuchos — cómo funciona</h5>
+        <h5 class="modal-title">Motor de Emulación Virtual — Información Legal & Técnica</h5>
         <button type="button" class="close" data-dismiss="modal" style="color:#cbd5e1"><span>&times;</span></button>
       </div>
       <div class="modal-body">
-        <p>Esta ranura corre <strong>RetroArch (libretro)</strong> real en tu navegador, vía WebAssembly, autoalojado en este mismo sitio — cores oficiales mGBA, Gambatte y FCEUmm.</p>
+        <p>Este simulador corre núcleos de emulación de código abierto compilados a <strong>WebAssembly</strong>, autoalojados para pruebas técnicas de rendimiento en el navegador.</p>
         <ol>
-          <li>Presiona <strong>Agregar juego</strong> o arrastra tu archivo (ej. <code>.gba</code>, <code>.gbc</code>, <code>.nes</code> o <code>.zip</code>).</li>
-          <li>El sistema detecta automáticamente el emulador adecuado y arranca el juego de inmediato.</li>
-          <li>Usa las teclas de flecha, Z (A), X (B), A (L), S (R), Enter (Start) y Shift (Select) para jugar.</li>
+          <li>Presiona <strong>Cargar Archivo</strong> o arrastra tu archivo personal (ej. <code>.gba</code>, <code>.gbc</code>, <code>.nes</code> o <code>.zip</code>).</li>
+          <li>El sistema detecta automáticamente la arquitectura de emulación adecuada y arranca de inmediato.</li>
+          <li>Controles estándar: Teclas de flecha, Z, X, A, S, Enter y Shift.</li>
         </ol>
-        <p class="text-muted" style="font-size:.85rem">No se sube ni se comparte tu archivo a ningún servidor — todo el procesamiento ocurre localmente en tu navegador. No alojamos juegos comerciales de ningún tipo aquí.</p>
+        <p class="text-muted" style="font-size:.85rem">Aviso de Privacidad & Propiedad Intelectual: Ningún archivo o dato es transferido a servidores externos; toda la ejecución ocurre en la memoria local de tu navegador. Este proyecto no aloja ni distribuye software comercial propietario.</p>
       </div>
     </div>
   </div>
@@ -97,14 +97,14 @@
 <div class="webplayer-container">
   <div class="webplayer-preview">
     <img src="https://cdn.jsdelivr.net/npm/game-icons@1.0.0/icons/game-console.svg" onerror="this.style.display='none'" alt="" />
-    <h4 style="color:#e2e8f0">Ranura de Cartuchos RetroArch</h4>
-    <p>Haz clic en <strong>Agregar juego</strong> o arrastra tu archivo (<code>.gba</code>, <code>.gbc</code>, <code>.nes</code>) aquí para iniciar la partida.</p>
+    <h4 style="color:#e2e8f0">Ranura de Emulación Virtual</h4>
+    <p>Haz clic en <strong>Cargar Archivo</strong> o arrastra tu archivo personal (<code>.gba</code>, <code>.gbc</code>, <code>.nes</code>, <code>.zip</code>) aquí.</p>
   </div>
   <canvas class="webplayer" id="canvas"></canvas>
 </div>
 
 <div class="rah-credits">
-  Cores: <strong>mGBA</strong> (endrift &amp; contribuidores) · <strong>Gambatte</strong> (sinamas) · <strong>FCEUmm</strong> (equipo FCEUX/libretro) — distribuidos vía <a href="https://www.libretro.com/" style="color:#93b4ff">libretro.com</a>, compilados oficialmente por el proyecto RetroArch.
+  Arquitectura: <strong>WebAssembly Libretro Runtime</strong> · Ejecución 100% en el cliente sin backend externo.
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

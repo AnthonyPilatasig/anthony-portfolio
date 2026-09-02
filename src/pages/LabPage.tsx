@@ -181,11 +181,11 @@ export const LabPage: React.FC = () => {
           <div className="flex items-center gap-2 text-[var(--theme-accent)]">
             <FiUpload className="w-5 h-5" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              Carga de Juegos ZIP
+              Carga de Paquetes ZIP
             </h3>
           </div>
           <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Sube cualquier juego web empaquetado en <code>.zip</code> (con <code>index.html</code> en la raíz). Se extrae con JSZip directamente en memoria — sin subir nada a ningún servidor.
+            Sube cualquier juego o demo web empaquetado en <code>.zip</code> (con <code>index.html</code> en la raíz). Se descomprime con JSZip en memoria RAM — sin almacenamiento ni subida a servidores.
           </p>
           <div className="pt-2 flex flex-wrap gap-1.5">
             <span className="badge-accent text-[9px]">JSZip</span>
@@ -198,16 +198,16 @@ export const LabPage: React.FC = () => {
           <div className="flex items-center gap-2 text-[var(--theme-accent)]">
             <FiCpu className="w-5 h-5" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              RetroArch WebAssembly
+              Emulación WebAssembly
             </h3>
           </div>
           <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Ranura de cartuchos real con libretro compilado a WASM — cores mGBA, Gambatte y FCEUmm. Sube tu propia ROM y juega GBA, GBC o NES directamente en el navegador.
+            Entorno virtual con núcleos abiertos libretro compilados a WebAssembly. Ejecuta tus volcados personales y homebrew en un sandbox local con guardado en el navegador.
           </p>
           <div className="pt-2 flex flex-wrap gap-1.5">
-            <span className="badge-accent text-[9px]">mGBA · GBC · NES</span>
-            <span className="badge-accent text-[9px]">libretro WASM</span>
-            <span className="badge-accent text-[9px]">Autoalojado</span>
+            <span className="badge-accent text-[9px]">Cores WASM</span>
+            <span className="badge-accent text-[9px]">libretro Runtime</span>
+            <span className="badge-accent text-[9px]">Zero Server</span>
           </div>
         </div>
 
@@ -215,15 +215,15 @@ export const LabPage: React.FC = () => {
           <div className="flex items-center gap-2 text-[var(--theme-accent)]">
             <FiZap className="w-5 h-5" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              Mini-Games Integrados
+              Juegos Widescreen Nativos
             </h3>
           </div>
           <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Cyber-Encounter (RPG táctico), Retro Snake 8-Bit y 2048 Logic Matrix — construidos 100% en TypeScript con síntesis de audio Web Audio API y soporte de gamepad.
+            Cyber-Encounter (J-RPG táctico), Retro Snake Neon DX y 2048 Logic Matrix — construidos en TypeScript y CSS moderno a pantalla completa con soporte de teclado y mando.
           </p>
           <div className="pt-2 flex flex-wrap gap-1.5">
-            <span className="badge-accent text-[9px]">Turn-Based</span>
-            <span className="badge-accent text-[9px]">WebAudio Synth</span>
+            <span className="badge-accent text-[9px]">Widescreen</span>
+            <span className="badge-accent text-[9px]">Web Audio API</span>
             <span className="badge-accent text-[9px]">Gamepad API</span>
           </div>
         </div>

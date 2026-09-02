@@ -1,5 +1,5 @@
 const libretroCores = {
-	"mgba": "Game Boy Advance (mGBA)",
-	"gambatte": "Game Boy / Color (Gambatte)",
-	"fceumm": "NES / Famicom (FCEUmm)",
+	"mgba": "Núcleo Virtual 32-Bit (mGBA WASM)",
+	"gambatte": "Núcleo Virtual 8-Bit Color (Gambatte WASM)",
+	"fceumm": "Núcleo Virtual 8-Bit Classic (FCEUmm WASM)",
 };

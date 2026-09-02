@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import {
   FiPlay, FiMaximize2, FiMinimize2, FiTv, FiVolume2, FiVolumeX,
   FiArrowLeft, FiArrowRight, FiGrid, FiSettings,
-  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiHome, FiLogOut, FiHelpCircle
+  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiLogOut
 } from 'react-icons/fi';
-import { Gamepad2, Sparkles, Disc3, ShieldCheck } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
 import JSZip from 'jszip';
 import { GAME_COVERS } from '../../assets/gameCovers';
-import { GameBoyShell } from './GameBoyShell';
 import { GameBoyBattle } from './GameBoyBattle';
 import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
@@ -131,19 +130,19 @@ const CONSOLE_GAMES: ConsoleGame[] = [
   },
   {
     id: 'cartridge-slot',
-    title: 'Ranura RetroArch',
-    badge: 'RETROARCH REAL',
+    title: 'Ranura de Emulación Virtual',
+    badge: 'OPEN SOURCE WASM',
     platform: 'libretro · WebAssembly',
-    genre: 'GBA · GBC · NES',
-    playtime: '40h+ Guardado',
-    trophies: 'mGBA · Gambatte',
+    genre: 'Arquitectura 16-Bit / 32-Bit',
+    playtime: 'Guardado Local',
+    trophies: 'Cores Libres',
     bgGradient: 'from-rose-950 via-red-950 to-[#050811]',
     accentColor: '#F43F5E',
-    description: 'Emulador RetroArch real autoalojado con WebAssembly. Sube tu propia ROM (GBA, Game Boy Color, NES) o arrástrala a la ranura para jugar con guardado local en el navegador.',
+    description: 'Entorno de emulación virtual autoalojado en WebAssembly (núcleos libretro de código abierto). Diseñado para ejecutar respaldos, pruebas técnicas y desarrollos homebrew locales en tu navegador.',
     type: 'cartridge',
     coverArt: GAME_COVERS.retroArch,
     src: './games/cartridge/index.html',
-    tags: ['mGBA Core', 'Gambatte', 'FCEUmm', 'Guardado Local'],
+    tags: ['libretro WASM', 'Cores Libres', '100% Local', 'Dumps Personales'],
   },
   {
     id: 'cyber-encounter',
@@ -155,7 +154,7 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     trophies: '8/8 Trofeos',
     bgGradient: 'from-cyan-950 via-slate-900 to-[#050811]',
     accentColor: '#06B6D4',
-    description: 'Sistema de combate táctico por turnos estilo Final Fantasy / Pokémon contra el monolito de deuda técnica con mecánicas de refactorización y escudos de arquitectura.',
+    description: 'Sistema de combate táctico por turnos estilo J-RPG contra el monolito de deuda técnica con mecánicas de refactorización y escudos de arquitectura.',
     type: 'cyber-battle',
     coverArt: GAME_COVERS.cyberEncounter,
     tags: ['Battle Arena', 'Debuffs', 'Critical Strikes', 'Pixel Shell'],
@@ -652,26 +651,20 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               )}
 
               {activeRunningGame.type === 'cyber-battle' && (
-                <div className="flex-1 flex items-center justify-center p-4">
-                  <GameBoyShell title="Cyber-Encounter: Clean Arch Battle">
-                    <GameBoyBattle onComplete={() => {}} />
-                  </GameBoyShell>
+                <div className="flex-1 flex items-stretch w-full h-full">
+                  <GameBoyBattle onBack={closeGame} />
                 </div>
               )}
 
               {activeRunningGame.type === 'snake' && (
-                <div className="flex-1 flex items-center justify-center p-4">
-                  <GameBoyShell title="Retro Snake 8-Bit DX">
-                    <SnakeGame onBack={closeGame} />
-                  </GameBoyShell>
+                <div className="flex-1 flex items-stretch w-full h-full">
+                  <SnakeGame onBack={closeGame} />
                 </div>
               )}
 
               {activeRunningGame.type === '2048' && (
-                <div className="flex-1 flex items-center justify-center p-4">
-                  <GameBoyShell title="2048 Binary Matrix">
-                    <Game2048 onBack={closeGame} />
-                  </GameBoyShell>
+                <div className="flex-1 flex items-stretch w-full h-full">
+                  <Game2048 onBack={closeGame} />
                 </div>
               )}
             </div>

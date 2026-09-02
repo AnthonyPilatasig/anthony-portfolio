@@ -1,4 +1,4 @@
-// High-Definition Stylized SVG Box Art & Cartridges (Nintendo Switch & Steam Deck aesthetics)
+// High-Definition Stylized SVG Box Art & Cartridges (Clean & Professional Gaming Aesthetics)
 
 export const GAME_COVERS = {
   zipLoader: `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -54,7 +54,6 @@ export const GAME_COVERS = {
     <text x="120" y="206" font-family="'Inter', sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">ZIP GAME SLOT</text>
   </g>
   
-  <!-- Switch-style Red/Blue Corner Badges -->
   <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
   <rect x="0" y="360" width="8" height="40" fill="#EF4444" />
   <rect x="392" y="360" width="8" height="40" fill="#06B6D4" />
@@ -81,35 +80,33 @@ export const GAME_COVERS = {
   <rect width="400" height="400" fill="url(#bg_retro)" />
   <circle cx="200" cy="180" r="140" fill="url(#pokeglow)" />
   
-  <!-- GBA Game Cartridge -->
+  <!-- Virtual Cartridge Shell -->
   <g transform="translate(60, 50)">
-    <!-- Cartridge Outer Plastic Shell -->
     <path d="M 15 0 L 265 0 C 275 0 280 8 280 18 L 280 260 C 280 270 272 278 260 278 L 20 278 C 8 278 0 270 0 260 L 0 18 C 0 8 5 0 15 0 Z" fill="url(#cart_grad)" stroke="#E11D48" stroke-width="3" />
     <path d="M 30 15 L 250 15 C 255 15 260 20 260 25 L 260 35 L 20 35 L 20 25 C 20 20 25 15 30 15 Z" fill="#1E293B" />
-    <text x="140" y="28" font-family="'Inter', sans-serif" font-weight="900" font-size="10" fill="#94A3B8" text-anchor="middle" letter-spacing="4">GAME BOY ADVANCE</text>
+    <text x="140" y="28" font-family="'Inter', sans-serif" font-weight="900" font-size="10" fill="#94A3B8" text-anchor="middle" letter-spacing="4">VIRTUAL SYSTEM CORE</text>
     
-    <!-- Cartridge Shiny Art Sticker -->
+    <!-- Shiny Art Sticker -->
     <rect x="25" y="45" width="230" height="190" rx="10" fill="#BE123C" stroke="#FDA4AF" stroke-width="2" />
     
-    <!-- RetroArch Alien Logo in Sticker -->
+    <!-- Generic Pixel Arcade Chip Logo -->
     <g transform="translate(140, 115) scale(1.4)">
-      <!-- Alien Invader / RetroArch Logo -->
       <path d="M -30 -15 L -20 -35 L -10 -20 L 10 -20 L 20 -35 L 30 -15 L 35 10 L 20 25 L 15 20 L -15 20 L -20 25 L -35 10 Z" fill="#FFFFFF" opacity="0.95" />
       <circle cx="-12" cy="-2" r="4" fill="#BE123C" />
       <circle cx="12" cy="-2" r="4" fill="#BE123C" />
       <rect x="-16" y="8" width="32" height="4" rx="2" fill="#BE123C" />
     </g>
     
-    <!-- Sticker Banner -->
+    <!-- Sticker Banner (100% Legal & Discreet) -->
     <rect x="35" y="180" width="210" height="42" rx="6" fill="#1E1B4B" />
-    <text x="140" y="198" font-family="'Inter', sans-serif" font-weight="900" font-size="12" fill="#FBBF24" text-anchor="middle" letter-spacing="1">POKÉMON / RETRO GBA</text>
-    <text x="140" y="213" font-family="'Inter', sans-serif" font-weight="700" font-size="9" fill="#E2E8F0" text-anchor="middle" letter-spacing="2">LIBRETRO WASM CORE</text>
+    <text x="140" y="198" font-family="'Inter', sans-serif" font-weight="900" font-size="12" fill="#FBBF24" text-anchor="middle" letter-spacing="1">LIBRETRO WASM CORE</text>
+    <text x="140" y="213" font-family="'Inter', sans-serif" font-weight="700" font-size="9" fill="#E2E8F0" text-anchor="middle" letter-spacing="2">16-BIT / 32-BIT ENGINE</text>
   </g>
   
   <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
   <rect x="0" y="360" width="8" height="40" fill="#F43F5E" />
   <rect x="392" y="360" width="8" height="40" fill="#F59E0B" />
-  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDA4AF" text-anchor="middle" letter-spacing="3">RANURA RETROARCH</text>
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDA4AF" text-anchor="middle" letter-spacing="3">RANURA DE EMULACIÓN</text>
 </svg>`)}`,
 
   cyberEncounter: `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -128,9 +125,8 @@ export const GAME_COVERS = {
   <rect width="400" height="400" fill="url(#bg_cyber)" />
   <circle cx="200" cy="180" r="150" fill="url(#cyberglow)" />
   
-  <!-- Monolith Boss & Grid -->
+  <!-- Monolith Boss Hexagon -->
   <g transform="translate(100, 70)">
-    <!-- Monolith Boss Hexagon -->
     <polygon points="100,10 180,50 180,150 100,190 20,150 20,50" fill="#0E7490" stroke="#22D3EE" stroke-width="4" />
     <polygon points="100,30 160,65 160,135 100,170 40,135 40,65" fill="#155E75" stroke="#67E8F9" stroke-width="2" />
     
@@ -139,7 +135,6 @@ export const GAME_COVERS = {
     <circle cx="100" cy="100" r="12" fill="#22D3EE" />
     <circle cx="100" cy="100" r="4" fill="#FFFFFF" />
     
-    <!-- Hero Swords / Particles -->
     <line x1="20" y1="210" x2="60" y2="160" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" />
     <line x1="180" y1="210" x2="140" y2="160" stroke="#F43F5E" stroke-width="4" stroke-linecap="round" />
   </g>
@@ -147,7 +142,7 @@ export const GAME_COVERS = {
   <!-- JRPG Title Banner -->
   <rect x="40" y="270" width="320" height="70" rx="14" fill="#082F49" stroke="#38BDF8" stroke-width="2" />
   <text x="200" y="298" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">CYBER-ENCOUNTER</text>
-  <text x="200" y="322" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#38BDF8" text-anchor="middle" letter-spacing="3">TACTICAL J-RPG BOSS</text>
+  <text x="200" y="322" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#38BDF8" text-anchor="middle" letter-spacing="3">TACTICAL ARCH BOSS</text>
   
   <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
   <rect x="0" y="360" width="8" height="40" fill="#06B6D4" />
@@ -171,25 +166,8 @@ export const GAME_COVERS = {
   <rect width="400" height="400" fill="url(#bg_snake)" />
   <circle cx="200" cy="180" r="140" fill="url(#snakeglow)" />
   
-  <!-- 8-Bit Grid Lines -->
-  <g stroke="#047857" stroke-width="1" opacity="0.4">
-    <line x1="60" y1="60" x2="340" y2="60" />
-    <line x1="60" y1="100" x2="340" y2="100" />
-    <line x1="60" y1="140" x2="340" y2="140" />
-    <line x1="60" y1="180" x2="340" y2="180" />
-    <line x1="60" y1="220" x2="340" y2="220" />
-    <line x1="60" y1="60" x2="60" y2="260" />
-    <line x1="100" y1="60" x2="100" y2="260" />
-    <line x1="140" y1="60" x2="140" y2="260" />
-    <line x1="180" y1="60" x2="180" y2="260" />
-    <line x1="220" y1="60" x2="220" y2="260" />
-    <line x1="260" y1="60" x2="260" y2="260" />
-    <line x1="300" y1="60" x2="300" y2="260" />
-  </g>
-  
   <!-- Pixel Snake Body (Glowing Neon Emerald) -->
   <g>
-    <!-- Tail -->
     <rect x="100" y="220" width="36" height="36" rx="6" fill="#059669" />
     <rect x="140" y="220" width="36" height="36" rx="6" fill="#10B981" />
     <rect x="140" y="180" width="36" height="36" rx="6" fill="#10B981" />
@@ -198,23 +176,21 @@ export const GAME_COVERS = {
     <rect x="220" y="140" width="36" height="36" rx="6" fill="#6EE7B7" />
     <rect x="220" y="100" width="36" height="36" rx="6" fill="#6EE7B7" />
     <rect x="260" y="100" width="36" height="36" rx="8" fill="#A7F3D0" stroke="#FFFFFF" stroke-width="2" />
-    <!-- Snake Eyes -->
     <circle cx="282" cy="110" r="4" fill="#064E3B" />
     <circle cx="282" cy="126" r="4" fill="#064E3B" />
-    <!-- Food Apple -->
     <circle cx="280" cy="200" r="14" fill="#EF4444" stroke="#FECACA" stroke-width="2" />
     <line x1="280" y1="186" x2="284" y2="180" stroke="#22C55E" stroke-width="3" stroke-linecap="round" />
   </g>
   
   <!-- Title Badge -->
   <rect x="40" y="275" width="320" height="65" rx="14" fill="#064E3B" stroke="#34D399" stroke-width="2" />
-  <text x="200" y="302" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">RETRO SNAKE 8-BIT</text>
+  <text x="200" y="302" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">RETRO SNAKE NEON</text>
   <text x="200" y="324" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#6EE7B7" text-anchor="middle" letter-spacing="3">ARCADE DELUXE EDITION</text>
   
   <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
   <rect x="0" y="360" width="8" height="40" fill="#10B981" />
   <rect x="392" y="360" width="8" height="40" fill="#34D399" />
-  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#A7F3D0" text-anchor="middle" letter-spacing="3">8-BIT MATRIX ENGINE</text>
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#A7F3D0" text-anchor="middle" letter-spacing="3">NEON MATRIX ENGINE</text>
 </svg>`)}`,
 
   matrix2048: `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -237,7 +213,6 @@ export const GAME_COVERS = {
   <g transform="translate(70, 50)">
     <rect x="0" y="0" width="260" height="210" rx="16" fill="#292524" stroke="#F59E0B" stroke-width="3" />
     
-    <!-- 4 Tiles Matrix -->
     <g transform="translate(15, 15)">
       <rect x="0" y="0" width="50" height="40" rx="8" fill="#78716C" />
       <text x="25" y="25" font-family="'Inter', sans-serif" font-weight="800" font-size="14" fill="#FFFFFF" text-anchor="middle">2</text>
@@ -251,13 +226,11 @@ export const GAME_COVERS = {
       <rect x="180" y="0" width="50" height="40" rx="8" fill="#CA8A04" />
       <text x="205" y="25" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FFFFFF" text-anchor="middle">256</text>
       
-      <!-- Big Center 2048 Glowing Tile -->
       <rect x="30" y="55" width="170" height="110" rx="14" fill="#F59E0B" stroke="#FEF3C7" stroke-width="4" />
       <text x="115" y="125" font-family="'Inter', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">2048</text>
     </g>
   </g>
   
-  <!-- Title Badge -->
   <rect x="40" y="275" width="320" height="65" rx="14" fill="#78350F" stroke="#F59E0B" stroke-width="2" />
   <text x="200" y="302" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">2048 LOGIC MATRIX</text>
   <text x="200" y="324" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#FDE68A" text-anchor="middle" letter-spacing="3">BINARY ARRAY PUZZLE</text>

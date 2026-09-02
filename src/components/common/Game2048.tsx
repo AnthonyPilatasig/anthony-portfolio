@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiAward, FiRotateCcw, FiZap, FiArrowUp, FiArrowDown, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 const SIZE = 4;
-
 type Board = number[][];
 
 const emptyBoard = (): Board => Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
@@ -48,7 +49,7 @@ const moveLeft = (board: Board): { board: Board; gained: number; moved: boolean 
   return { board: next, gained, moved };
 };
 
-const move = (board: Board, dir: 'left' | 'right' | 'up' | 'down') => {
+const moveBoard = (board: Board, dir: 'left' | 'right' | 'up' | 'down') => {
   let rotations = 0;
   if (dir === 'up') rotations = 3;
   else if (dir === 'right') rotations = 2;
@@ -74,29 +75,32 @@ const hasMoves = (board: Board) => {
   return false;
 };
 
-const TILE_COLORS: Record<number, string> = {
-  2: 'bg-slate-800 text-slate-200',
-  4: 'bg-slate-700 text-slate-100',
-  8: 'bg-amber-700 text-white',
-  16: 'bg-amber-600 text-white',
-  32: 'bg-orange-600 text-white',
-  64: 'bg-orange-500 text-white',
-  128: 'bg-yellow-500 text-slate-950',
-  256: 'bg-yellow-400 text-slate-950',
-  512: 'bg-cyan-500 text-slate-950',
-  1024: 'bg-cyan-400 text-slate-950',
-  2048: 'bg-emerald-400 text-slate-950',
+const TILE_STYLES: Record<number, { bg: string; text: string; glow?: string }> = {
+  2: { bg: '#1E293B', text: '#E2E8F0' },
+  4: { bg: '#334155', text: '#F8FAFC' },
+  8: { bg: '#B45309', text: '#FFFFFF', glow: '0 0 12px rgba(245,158,11,0.3)' },
+  16: { bg: '#D97706', text: '#FFFFFF', glow: '0 0 14px rgba(245,158,11,0.4)' },
+  32: { bg: '#EA580C', text: '#FFFFFF', glow: '0 0 16px rgba(234,88,12,0.5)' },
+  64: { bg: '#DC2626', text: '#FFFFFF', glow: '0 0 18px rgba(220,38,38,0.5)' },
+  128: { bg: '#EAB308', text: '#0F172A', glow: '0 0 20px rgba(234,179,8,0.6)' },
+  256: { bg: '#FACC15', text: '#0F172A', glow: '0 0 22px rgba(250,204,21,0.7)' },
+  512: { bg: '#06B6D4', text: '#0F172A', glow: '0 0 24px rgba(6,182,212,0.8)' },
+  1024: { bg: '#3B82F6', text: '#FFFFFF', glow: '0 0 28px rgba(59,130,246,0.9)' },
+  2048: { bg: 'linear-gradient(135deg, #10B981, #06B6D4)', text: '#FFFFFF', glow: '0 0 32px rgba(16,185,129,1)' },
 };
 
-interface Game2048Props {
-  onExit: () => void;
+export interface Game2048Props {
+  onExit?: () => void;
+  onBack?: () => void;
 }
 
-export const Game2048: React.FC<Game2048Props> = ({ onExit }) => {
+export const Game2048: React.FC<Game2048Props> = ({ onExit, onBack }) => {
+  const handleExit = onExit || onBack || (() => {});
   const [board, setBoard] = useState<Board>(() => addRandomTile(addRandomTile(emptyBoard())));
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(() => Number(localStorage.getItem('2048-best') ?? 0));
-  const [over, setOver] = useState(false);
+  const [history, setHistory] = useState<{ board: Board; score: number }[]>([]);
+  const [gameOver, setGameOver] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,39 +108,54 @@ export const Game2048: React.FC<Game2048Props> = ({ onExit }) => {
   }, []);
 
   const handleMove = (dir: 'left' | 'right' | 'up' | 'down') => {
-    if (over) return;
-    const result = move(board, dir);
-    if (!result.moved) return;
-    const withNewTile = addRandomTile(result.board);
-    setBoard(withNewTile);
-    setScore((s) => {
-      const next = s + result.gained;
-      setBest((b) => {
-        const nb = Math.max(b, next);
-        localStorage.setItem('2048-best', String(nb));
-        return nb;
-      });
-      return next;
-    });
-    if (!hasMoves(withNewTile)) setOver(true);
+    if (gameOver) return;
+    const { board: next, gained, moved } = moveBoard(board, dir);
+    if (!moved) return;
+
+    setHistory((prev) => [...prev.slice(-5), { board, score }]);
+    const nextWithRandom = addRandomTile(next);
+    const nextScore = score + gained;
+    setBoard(nextWithRandom);
+    setScore(nextScore);
+
+    if (nextScore > best) {
+      setBest(nextScore);
+      localStorage.setItem('2048-best', String(nextScore));
+    }
+
+    if (!hasMoves(nextWithRandom)) {
+      setGameOver(true);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') { onExit(); return; }
-    const map: Record<string, 'left' | 'right' | 'up' | 'down'> = {
-      ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down',
-    };
-    if (map[e.key]) {
-      e.preventDefault();
-      handleMove(map[e.key]);
+    if (e.key === 'Escape') {
+      handleExit();
+      return;
     }
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') handleMove('left');
+    else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') handleMove('right');
+    else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') handleMove('up');
+    else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') handleMove('down');
+    else return;
+    e.preventDefault();
   };
 
   const restart = () => {
     setBoard(addRandomTile(addRandomTile(emptyBoard())));
     setScore(0);
-    setOver(false);
+    setGameOver(false);
+    setHistory([]);
     containerRef.current?.focus();
+  };
+
+  const undo = () => {
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    setBoard(prev.board);
+    setScore(prev.score);
+    setHistory((h) => h.slice(0, -1));
+    setGameOver(false);
   };
 
   return (
@@ -144,34 +163,82 @@ export const Game2048: React.FC<Game2048Props> = ({ onExit }) => {
       ref={containerRef}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      className="outline-none flex flex-col items-center gap-2 py-2"
+      className="w-full h-full flex flex-col bg-[#050811] text-white select-none overflow-hidden relative outline-none"
     >
-      <div className="flex items-center justify-between w-full max-w-[272px] text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-        <span>Score: <span className="text-yellow-300">{score}</span> · Best: <span className="text-cyan-300">{best}</span></span>
-        <span>↑↓←→ · ESC</span>
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-6 py-3 bg-[#0A0E1A]/80 border-b border-amber-500/20 backdrop-blur-md z-10">
+        <div className="flex items-center gap-3">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+          <span className="font-extrabold text-sm tracking-wider text-amber-400">2048 LOGIC MATRIX WIDESCREEN</span>
+        </div>
+
+        <div className="flex items-center gap-4 text-xs font-mono">
+          <div className="px-3 py-1 rounded-xl bg-white/[0.05] border border-white/10">
+            PUNTOS: <strong className="text-amber-400 text-sm">{score}</strong>
+          </div>
+          <div className="px-3 py-1 rounded-xl bg-white/[0.05] border border-white/10 flex items-center gap-1">
+            <FiAward className="w-3.5 h-3.5 text-amber-400" /> RÉCORD: <strong className="text-white">{best}</strong>
+          </div>
+        </div>
       </div>
-      <div className="relative">
-        <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-slate-900 rounded-lg border border-yellow-500/20" style={{ width: 272 }}>
-          {board.flatMap((row, r) =>
-            row.map((v, c) => (
-              <div
-                key={`${r}-${c}`}
-                className={`w-16 h-16 rounded-md flex items-center justify-center font-mono font-bold text-lg transition-colors ${
-                  v === 0 ? 'bg-slate-950/60' : TILE_COLORS[v] ?? 'bg-emerald-300 text-slate-950'
-                }`}
+
+      {/* Main Grid Screen */}
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 relative">
+        <div className="w-full max-w-sm sm:max-w-md bg-[#0F1422] p-4 rounded-3xl border-2 border-amber-500/30 shadow-2xl shadow-amber-500/10 relative">
+          <div className="grid grid-cols-4 gap-3 aspect-square">
+            {board.map((row, r) =>
+              row.map((val, c) => {
+                const style = TILE_STYLES[val] || { bg: '#1E293B', text: '#FFFFFF' };
+                return (
+                  <motion.div
+                    key={`${r}-${c}-${val}`}
+                    initial={{ scale: val ? 1.1 : 1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                    className="rounded-2xl flex items-center justify-center font-extrabold text-lg sm:text-2xl shadow-md select-none transition-colors"
+                    style={{
+                      background: val === 0 ? 'rgba(255,255,255,0.03)' : style.bg,
+                      color: val === 0 ? 'transparent' : style.text,
+                      boxShadow: val > 0 && style.glow ? style.glow : 'none',
+                    }}
+                  >
+                    {val > 0 ? val : ''}
+                  </motion.div>
+                );
+              })
+            )}
+          </div>
+
+          {gameOver && (
+            <div className="absolute inset-0 rounded-3xl flex flex-col items-center justify-center gap-3 bg-[#050811]/92 backdrop-blur-md z-20">
+              <h2 className="text-2xl font-extrabold text-amber-400 tracking-tight">SIN MOVIMIENTOS</h2>
+              <p className="text-xs text-slate-300 font-mono">Puntuación Final: <strong className="text-white">{score}</strong></p>
+              <button
+                onClick={restart}
+                className="px-6 py-2.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-transform active:scale-95 shadow-lg"
               >
-                {v !== 0 ? v : ''}
-              </div>
-            ))
+                Reiniciar Tablero
+              </button>
+            </div>
           )}
         </div>
-        {over && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#080c14]/85 rounded-lg">
-            <p className="text-red-400 font-mono text-xs font-bold">SIN MOVIMIENTOS</p>
-            <button onClick={restart} className="text-cyan-300 underline text-xs font-mono">Jugar de nuevo</button>
-            <button onClick={onExit} className="text-slate-500 underline text-[10px] font-mono">Volver a la terminal</button>
-          </div>
-        )}
+
+        {/* Controls Bar & Mobile D-Pad */}
+        <div className="flex items-center gap-3 mt-5">
+          <button
+            onClick={undo}
+            disabled={history.length === 0}
+            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 disabled:opacity-30 text-xs font-bold font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <FiRotateCcw className="w-3.5 h-3.5" /> Deshacer
+          </button>
+          <button
+            onClick={restart}
+            className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono transition-colors cursor-pointer"
+          >
+            Reiniciar
+          </button>
+        </div>
       </div>
     </div>
   );
