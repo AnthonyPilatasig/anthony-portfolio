@@ -19,15 +19,31 @@
     user-select: none;
   }
 
-  /* ── Game Viewport Container ─────────────────────────────────────── */
-  #game-container {
+  /* ── Game Viewport Container (Always active for WebGL dimensions) ── */
+  #game-wrapper {
     position: absolute;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    z-index: 10;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
     background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #game-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    background: #000000;
+  }
+
+  #game-container canvas, #game-container iframe, #game-container > div {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
   }
 
   /* ── Top Floating Command Bar ────────────────────────────────────── */
@@ -84,7 +100,7 @@
 
   /* ── Initial Selection Card (Prompt) ─────────────────────────────── */
   .rom-prompt-overlay {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 50;
     display: flex;
@@ -235,8 +251,10 @@
 </head>
 <body>
 
-<!-- ── Main Emulator Viewport ──────────────────────────────────────── -->
-<div id="game-container"></div>
+<!-- ── Main Emulator Viewport (Guaranteed Non-Zero Size) ──────────── -->
+<div id="game-wrapper">
+  <div id="game-container"></div>
+</div>
 
 <!-- ── Top Floating Command Bar ────────────────────────────────────── -->
 <div class="top-command-bar" id="commandBar" style="display:none;">
@@ -290,7 +308,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   let currentGameBlobUrl = null;
-  let isGameRunning = false;
 
   function showToast(msg) {
     $('#toastMsg').text(msg);
@@ -322,13 +339,11 @@
     }
     currentGameBlobUrl = URL.createObjectURL(file);
 
-    // Hide prompt overlay and show game container & HUD
+    // Hide prompt overlay and show top HUD
     $('#romPromptOverlay').addClass('hidden');
-    $('#game-container').show().empty();
     $('#commandBar').show();
-    isGameRunning = true;
 
-    // Configure Universal WebAssembly Player
+    // Configure Universal WebAssembly Player with direct parameters
     window.EJS_player = '#game-container';
     window.EJS_core = core;
     window.EJS_gameUrl = currentGameBlobUrl;
@@ -338,7 +353,6 @@
     window.EJS_color = '#F43F5E';
     window.EJS_backgroundColor = '#000000';
     window.EJS_volume = 1.0;
-    window.EJS_alignStartButton = 'center';
     window.EJS_language = 'es';
     window.EJS_fullscreenOnLoad = false;
     window.EJS_hideControlBar = false;
@@ -353,8 +367,12 @@
     script.id = 'ejs-loader';
     script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
     script.onload = () => {
-      console.log("AP-Deck: Emulator loader initialized successfully.");
+      console.log("AP-Deck: Universal Engine ready.");
       $('#loaderSpinner').removeClass('active');
+      // Trigger resize after initialization to ensure canvas fills viewport
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 300);
     };
     script.onerror = (err) => {
       console.error("AP-Deck: Error loading emulator runtime:", err);
