@@ -301,11 +301,27 @@
 
   function detectCore(filename) {
     const ext = filename.split('.').pop().toLowerCase();
+    // Consolas Portátiles
     if (ext === 'gba') return 'gba';
     if (ext === 'gb' || ext === 'gbc') return 'gbc';
+    if (ext === 'nds') return 'nds';
+    if (ext === 'gg') return 'segaGG';
+    if (ext === 'ngp' || ext === 'ngc') return 'ngp';
+    if (ext === 'ws' || ext === 'wsc') return 'wswan';
+
+    // Consolas de Sobremesa 8-Bit / 16-Bit
     if (ext === 'nes') return 'nes';
     if (ext === 'sfc' || ext === 'smc') return 'snes';
-    if (ext === 'md' || ext === 'bin') return 'segaMD';
+    if (ext === 'md' || ext === 'gen') return 'segaMD';
+    if (ext === 'sms') return 'segaMS';
+    if (ext === 'pce') return 'pce';
+
+    // Consolas 32-Bit / 64-Bit
+    if (ext === 'z64' || ext === 'n64' || ext === 'v64') return 'n64';
+    if (ext === 'iso' || ext === 'cue' || ext === 'chd' || ext === 'pbp') return 'psx';
+
+    // Arcade & Binarios
+    if (ext === 'zip') return 'gba'; // or arcade/multi
     return 'gba';
   }
 
