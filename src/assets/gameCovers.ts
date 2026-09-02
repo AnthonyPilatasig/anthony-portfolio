@@ -240,4 +240,187 @@ export const GAME_COVERS = {
   <rect x="392" y="360" width="8" height="40" fill="#EA580C" />
   <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDE68A" text-anchor="middle" letter-spacing="3">PUZZLE LOGIC ENGINE</text>
 </svg>`)}`,
+
+  psxCover: `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_psx" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <radialGradient id="psxglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg_psx)" />
+  <circle cx="200" cy="170" r="140" fill="url(#psxglow)" />
+  
+  <!-- Geometric 3D CD Case Silhouette -->
+  <g transform="translate(70, 45)">
+    <rect x="0" y="0" width="260" height="220" rx="14" fill="#0B0F19" stroke="#38BDF8" stroke-width="3" />
+    <circle cx="130" cy="110" r="75" fill="#1E293B" stroke="#0284C7" stroke-width="2" />
+    <circle cx="130" cy="110" r="28" fill="#0B0F19" stroke="#38BDF8" stroke-width="2" />
+    
+    <!-- 4 Geometric Symbols -->
+    <polygon points="130,55 115,80 145,80" fill="#10B981" />
+    <circle cx="185" cy="110" r="12" fill="none" stroke="#EF4444" stroke-width="4" />
+    <g transform="translate(130, 165)">
+      <line x1="-10" y1="-10" x2="10" y2="10" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
+      <line x1="10" y1="-10" x2="-10" y2="10" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
+    </g>
+    <rect x="63" y="98" width="24" height="24" fill="none" stroke="#EC4899" stroke-width="4" rx="2" />
+  </g>
+  
+  <rect x="40" y="280" width="320" height="65" rx="14" fill="#1E293B" stroke="#38BDF8" stroke-width="2" />
+  <text x="200" y="307" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">32-BIT 3D POLYGON ENGINE</text>
+  <text x="200" y="329" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#7DD3FC" text-anchor="middle" letter-spacing="3">ISO / CHD / CUE RUNNER</text>
+  
+  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
+  <rect x="0" y="360" width="8" height="40" fill="#38BDF8" />
+  <rect x="392" y="360" width="8" height="40" fill="#3B82F6" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#BAE6FD" text-anchor="middle" letter-spacing="3">32-BIT CD-ROM RUNTIME</text>
+</svg>`)}`,
+
+  n64Cover: `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_n64" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022C22" />
+      <stop offset="50%" stop-color="#14532D" />
+      <stop offset="100%" stop-color="#713F12" />
+    </linearGradient>
+    <radialGradient id="n64glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#EAB308" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#EAB308" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg_n64)" />
+  <circle cx="200" cy="165" r="140" fill="url(#n64glow)" />
+  
+  <!-- 3D 64-Bit Prism Geometric Structure -->
+  <g transform="translate(130, 60)">
+    <polygon points="70,0 140,40 140,120 70,160 0,120 0,40" fill="#15803D" stroke="#EAB308" stroke-width="4" />
+    <polygon points="70,0 140,40 70,80 0,40" fill="#22C55E" />
+    <polygon points="70,80 140,40 140,120 70,160" fill="#166534" />
+    <text x="70" y="105" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#FACC15" text-anchor="middle">64</text>
+  </g>
+  
+  <rect x="40" y="280" width="320" height="65" rx="14" fill="#1C1917" stroke="#EAB308" stroke-width="2" />
+  <text x="200" y="307" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">64-BIT ULTRA MIPMAP ENGINE</text>
+  <text x="200" y="329" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#FEF08A" text-anchor="middle" letter-spacing="3">Z64 / N64 3D WEBGL CORE</text>
+  
+  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
+  <rect x="0" y="360" width="8" height="40" fill="#22C55E" />
+  <rect x="392" y="360" width="8" height="40" fill="#EAB308" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FEF08A" text-anchor="middle" letter-spacing="3">HIGH-LEVEL 64-BIT RUNTIME</text>
+</svg>`)}`,
+
+  ndsCover: `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_nds" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#500724" />
+      <stop offset="50%" stop-color="#831843" />
+      <stop offset="100%" stop-color="#1E1B4B" />
+    </linearGradient>
+    <radialGradient id="ndsglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#EC4899" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg_nds)" />
+  <circle cx="200" cy="165" r="140" fill="url(#ndsglow)" />
+  
+  <!-- Dual Screen Foldable Handheld -->
+  <g transform="translate(90, 40)">
+    <rect x="0" y="0" width="220" height="100" rx="10" fill="#0F172A" stroke="#EC4899" stroke-width="3" />
+    <rect x="25" y="15" width="170" height="70" rx="6" fill="#1E293B" stroke="#F472B6" stroke-width="2" />
+    
+    <line x1="0" y1="110" x2="220" y2="110" stroke="#9D174D" stroke-width="4" stroke-dasharray="10 6" />
+    
+    <rect x="0" y="120" width="220" height="100" rx="10" fill="#0F172A" stroke="#EC4899" stroke-width="3" />
+    <rect x="25" y="135" width="170" height="70" rx="6" fill="#1E293B" stroke="#06B6D4" stroke-width="2" />
+    <text x="110" y="178" font-family="'Inter', sans-serif" font-weight="900" font-size="14" fill="#38BDF8" text-anchor="middle" letter-spacing="2">TOUCH SCREEN</text>
+  </g>
+  
+  <rect x="40" y="280" width="320" height="65" rx="14" fill="#1E1B4B" stroke="#EC4899" stroke-width="2" />
+  <text x="200" y="307" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">DUAL-SCREEN TOUCH ENGINE</text>
+  <text x="200" y="329" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#FBCFE8" text-anchor="middle" letter-spacing="3">NDS DUAL DISPLAY RUNNER</text>
+  
+  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
+  <rect x="0" y="360" width="8" height="40" fill="#EC4899" />
+  <rect x="392" y="360" width="8" height="40" fill="#06B6D4" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FBCFE8" text-anchor="middle" letter-spacing="3">DUAL WASM RUNTIME</text>
+</svg>`)}`,
+
+  snesCover: `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_snes" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E1065" />
+      <stop offset="50%" stop-color="#581C87" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <radialGradient id="snesglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg_snes)" />
+  <circle cx="200" cy="165" r="140" fill="url(#snesglow)" />
+  
+  <!-- 16-Bit Super FX Cartridge -->
+  <g transform="translate(60, 50)">
+    <rect x="0" y="0" width="280" height="210" rx="20" fill="#334155" stroke="#A855F7" stroke-width="4" />
+    <rect x="25" y="30" width="230" height="130" rx="10" fill="#1E1B4B" stroke="#C084FC" stroke-width="2" />
+    <text x="140" y="85" font-family="'Inter', sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">SUPER 16-BIT</text>
+    <text x="140" y="115" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#E9D5FF" text-anchor="middle" letter-spacing="4">MODE-7 & DSP CORES</text>
+  </g>
+  
+  <rect x="40" y="280" width="320" height="65" rx="14" fill="#3B0764" stroke="#A855F7" stroke-width="2" />
+  <text x="200" y="307" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">SUPER 16-BIT MODE-7 ENGINE</text>
+  <text x="200" y="329" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#E9D5FF" text-anchor="middle" letter-spacing="3">SFC / SMC VIRTUAL ENGINE</text>
+  
+  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
+  <rect x="0" y="360" width="8" height="40" fill="#A855F7" />
+  <rect x="392" y="360" width="8" height="40" fill="#C084FC" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#E9D5FF" text-anchor="middle" letter-spacing="3">16-BIT DSP RUNTIME</text>
+</svg>`)}`,
+
+  segaCover: `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_sega" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#082F49" />
+      <stop offset="50%" stop-color="#0369A1" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <radialGradient id="segaglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg_sega)" />
+  <circle cx="200" cy="165" r="140" fill="url(#segaglow)" />
+  
+  <!-- Sega 16-Bit Arcade Grid -->
+  <g transform="translate(60, 50)">
+    <rect x="0" y="0" width="280" height="210" rx="14" fill="#0B0F19" stroke="#38BDF8" stroke-width="4" />
+    <rect x="25" y="30" width="230" height="130" rx="8" fill="#0C4A6E" stroke="#7DD3FC" stroke-width="2" />
+    <text x="140" y="85" font-family="'Inter', sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">BLAST PROCESSING</text>
+    <text x="140" y="115" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#BAE6FD" text-anchor="middle" letter-spacing="4">16-BIT HIGH-SPEED FM SYNTH</text>
+  </g>
+  
+  <rect x="40" y="280" width="320" height="65" rx="14" fill="#075985" stroke="#38BDF8" stroke-width="2" />
+  <text x="200" y="307" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">16-BIT HIGH-SPEED ARCADE</text>
+  <text x="200" y="329" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#BAE6FD" text-anchor="middle" letter-spacing="3">MD / GEN BLAST RUNNER</text>
+  
+  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
+  <rect x="0" y="360" width="8" height="40" fill="#38BDF8" />
+  <rect x="392" y="360" width="8" height="40" fill="#0284C7" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#BAE6FD" text-anchor="middle" letter-spacing="3">16-BIT ARCADE RUNTIME</text>
+</svg>`)}`,
 };
+
