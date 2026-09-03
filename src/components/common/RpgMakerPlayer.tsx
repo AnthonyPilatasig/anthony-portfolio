@@ -177,10 +177,18 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
       addLog('⚡ Obteniendo binarios WebAssembly acelerados por caché...');
 
       const base = import.meta.env.BASE_URL ?? '/';
+      const CACHE_NAME = 'mkxp-engine-cache-v2';
       const fetchWithCache = async (url: string): Promise<Blob> => {
         try {
           if ('caches' in window) {
-            const cache = await caches.open('mkxp-engine-cache-v1');
+            // Invalidate older cache versions if present
+            const cacheKeys = await caches.keys();
+            for (const key of cacheKeys) {
+              if (key.startsWith('mkxp-engine-cache-') && key !== CACHE_NAME) {
+                await caches.delete(key);
+              }
+            }
+            const cache = await caches.open(CACHE_NAME);
             const cached = await cache.match(url);
             if (cached) {
               return await cached.blob();
