@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText } from 'react-icons/fi';
+import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText, FiBookOpen, FiUsers } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
 import type { IExperience, IEducation } from '../types/portfolio.types';
@@ -18,6 +18,7 @@ const fadeUpVariant = {
 
 export const ExperiencePage: React.FC = () => {
   const { t } = useTranslation();
+  const { teachingHighlights } = portfolioData;
   
   const translatedExp = t('experienceData', { returnObjects: true }) as Partial<IExperience>[];
   const experience: IExperience[] = portfolioData.experience.map(e => {
@@ -46,7 +47,7 @@ export const ExperiencePage: React.FC = () => {
             <RevealText text={t('experience.title')} />
           </h1>
           <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
-            {t('experience.subtitle')}
+            Liderazgo técnico en desarrollo institucional, educación superior y proyectos de software.
           </p>
         </div>
 
@@ -61,7 +62,7 @@ export const ExperiencePage: React.FC = () => {
         </a>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start mb-16">
         {/* Experience Timeline */}
         <div className="md:col-span-2 space-y-8">
           <motion.h2 
@@ -125,7 +126,7 @@ export const ExperiencePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Education & Values Column */}
+        {/* Education & Philosophy Column */}
         <div className="space-y-8 md:pl-6 md:border-l border-[var(--theme-border)]">
           <div>
             <motion.h2 
@@ -145,7 +146,7 @@ export const ExperiencePage: React.FC = () => {
                   viewport={{ once: true, margin: "-50px" }}
                   variants={fadeUpVariant}
                   transition={{ delay: index * 0.1 }}
-                  className="editorial-card p-4 rounded-lg space-y-1.5"
+                  className="editorial-card p-4 rounded-xl space-y-1.5 border border-[var(--theme-border)]"
                 >
                   <h3 className="text-xs md:text-sm font-mono font-bold text-[var(--theme-ink)]">
                     {edu.degree}
@@ -163,7 +164,7 @@ export const ExperiencePage: React.FC = () => {
 
           <motion.div 
             initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
-            className="editorial-card p-5 rounded-lg border border-[var(--theme-border-strong)] space-y-3"
+            className="editorial-card p-5 rounded-xl border border-[var(--theme-border-strong)] space-y-3"
           >
             <h4 className="text-xs font-mono font-bold text-[var(--theme-accent)] uppercase flex items-center gap-2">
               <FiFileText className="w-4 h-4" />
@@ -175,6 +176,55 @@ export const ExperiencePage: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* University Teaching & Mentorship Deep Dive */}
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeUpVariant}
+        className="pt-10 border-t border-[var(--theme-border)] space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="section-index text-xs">CÁTEDRA UNIVERSITARIA &amp; MENTORÍA TÉCNICA</span>
+            <h3 className="text-2xl font-semibold text-[var(--theme-ink)]">
+              Formación de Ingenieros de Software @ ISTPET
+            </h3>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[var(--theme-accent)]">
+            <FiUsers className="w-4 h-4" />
+            <span>+120 Ingenieros Guiados</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {teachingHighlights.map((th, idx) => (
+            <div key={idx} className="editorial-card p-5 rounded-xl space-y-3 border border-[var(--theme-border)] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-[var(--theme-accent)] text-xs font-mono font-bold uppercase mb-2">
+                  <FiBookOpen className="w-4 h-4" />
+                  <span>{th.studentsCount}</span>
+                </div>
+                <h4 className="font-mono text-sm font-bold text-[var(--theme-ink)] mb-2">
+                  {th.subject}
+                </h4>
+                <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
+                  {th.description}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-1 pt-2">
+                {th.focus.map((f, fIdx) => (
+                  <span key={fIdx} className="badge text-[9px] py-0.5">
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 };

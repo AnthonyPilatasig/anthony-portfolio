@@ -46,6 +46,19 @@ export interface ISkills {
   architecture: string[];
 }
 
+export interface IManifestoItem {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface ITeachingHighlight {
+  subject: string;
+  studentsCount: string;
+  description: string;
+  focus: string[];
+}
+
 export interface IPortfolioData {
   personal: {
     name: string;
@@ -56,8 +69,14 @@ export interface IPortfolioData {
     email: string;
     github: string;
     linkedin: string;
+    twitch: string;
     status: string;
+    avatar: string;
+    avatarAlt: string;
+    tagline: string;
   };
+  manifesto: IManifestoItem[];
+  teachingHighlights: ITeachingHighlight[];
   experience: IExperience[];
   education: IEducation[];
   skills: ISkills;

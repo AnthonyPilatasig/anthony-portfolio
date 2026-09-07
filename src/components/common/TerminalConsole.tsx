@@ -229,12 +229,18 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
               <p className="text-yellow-400 font-semibold">Comandos disponibles:</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
                 <div><span className="text-cyan-400 font-bold">about</span> : Resumen profesional & biografía</div>
-                <div><span className="text-cyan-400 font-bold">projects</span> : Lista de todos los proyectos institucionales y personales</div>
+                <div><span className="text-cyan-400 font-bold">manifesto</span> : Mis 4 Reglas No Negociables de Arquitectura</div>
+                <div><span className="text-cyan-400 font-bold">projects</span> : Lista de todos los proyectos institucionales</div>
                 <div><span className="text-cyan-400 font-bold">gacad</span> : Detalles del Core Académico Gacad</div>
                 <div><span className="text-cyan-400 font-bold">istpet</span> : Detalles de la App Móvil Mi ISTPET</div>
-                <div><span className="text-cyan-400 font-bold">desktop</span> : Proyectos de escritorio nativos (DebtManager, Buscaminas Java, etc.)</div>
+                <div><span className="text-cyan-400 font-bold">rrhh</span> : Detalles del ERP Recursos Humanos</div>
+                <div><span className="text-cyan-400 font-bold">rpg</span> : Detalles del Motor RPG Java POO</div>
+                <div><span className="text-cyan-400 font-bold">teach</span> : Cátedra universitaria y mentoría de software</div>
+                <div><span className="text-cyan-400 font-bold">desktop</span> : Proyectos de escritorio nativos (DebtManager, Buscaminas)</div>
                 <div><span className="text-cyan-400 font-bold">skills</span> : Desglose del Stack Tecnológico & Arquitectura</div>
                 <div><span className="text-cyan-400 font-bold">experience</span> : Trayectoria laboral y formación académica</div>
+                <div><span className="text-cyan-400 font-bold">twitch</span> : Canal de streaming y gaming de Anthony</div>
+                <div><span className="text-cyan-400 font-bold">sao</span> : Easter egg de Sword Art Online</div>
                 <div><span className="text-cyan-400 font-bold">contact</span> : Canales de contacto y redes sociales</div>
                 <div><span className="text-cyan-400 font-bold">neofetch</span> : Información del sistema y desarrollador</div>
                 <div><span className="text-cyan-400 font-bold">sudo</span> : Permiso concedido de administrador</div>
@@ -244,12 +250,81 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
                 <div><span className="text-cyan-400 font-bold">2048</span> : Juega 2048 sin salir de la terminal</div>
                 <div><span className="text-cyan-400 font-bold">os &lt;macos|windows|linux&gt;</span> : Cambia el chrome de la ventana</div>
                 <div><span className="text-cyan-400 font-bold">clear / cls</span> : Limpiar la pantalla de la consola</div>
-                <div><span className="text-cyan-400 font-bold">ls / dir</span> : Listar comandos (alias de help)</div>
-                <div><span className="text-cyan-400 font-bold">whoami</span> : Mostrar usuario actual</div>
-                <div><span className="text-cyan-400 font-bold">date</span> : Mostrar fecha y hora del sistema</div>
-                <div><span className="text-cyan-400 font-bold">pwd</span> : Imprimir directorio de trabajo</div>
-                <div><span className="text-cyan-400 font-bold">echo [texto]</span> : Imprimir texto en pantalla</div>
               </div>
+            </div>
+          );
+          break;
+
+        case 'manifesto':
+          outputNode = (
+            <div className="text-xs space-y-2 font-mono text-slate-300">
+              <p className="text-yellow-400 font-bold">MANIFIESTO DE INGENIERÍA — ANTHONY PILATASIG:</p>
+              {portfolioData.manifesto.map(m => (
+                <div key={m.number} className="border-l-2 border-yellow-500/40 pl-2">
+                  <p className="text-cyan-300 font-semibold">{m.number} / {m.title}</p>
+                  <p className="text-slate-400">{m.description}</p>
+                </div>
+              ))}
+            </div>
+          );
+          break;
+
+        case 'teach':
+        case 'docencia':
+          outputNode = (
+            <div className="text-xs space-y-2 font-mono text-slate-300">
+              <p className="text-yellow-400 font-bold">DOCENCIA TÉCNICA &amp; MENTORÍA UNIVERSITARIA (ISTPET):</p>
+              {portfolioData.teachingHighlights.map((t, idx) => (
+                <div key={idx} className="border-l-2 border-cyan-500/40 pl-2">
+                  <p className="text-emerald-300 font-semibold">{t.subject} ({t.studentsCount})</p>
+                  <p className="text-slate-400">{t.description}</p>
+                  <p className="text-slate-500 text-[11px]">Enfoque: {t.focus.join(', ')}</p>
+                </div>
+              ))}
+            </div>
+          );
+          break;
+
+        case 'rpg':
+        case 'rpg journey':
+          outputNode = (
+            <div className="text-xs space-y-1.5 font-mono text-slate-300 border-l-2 border-purple-400 pl-3">
+              <p className="text-purple-300 font-bold">RPG Journey — Motor de Juego Java POO</p>
+              <p className="text-slate-300">Juego RPG por turnos desacoplado entre lógica (`com.rpg.logica`) y UI Swing (`com.rpg.gui`).</p>
+              <p className="text-slate-400">• Clases: Guerrero, Mago, Asesino, Tanque, Soporte, Curandero con polimorfismo dinámico.</p>
+              <p className="text-slate-400">• Estructuras: Stack LIFO de inventario y HashSet para Códice de elementos únicos.</p>
+            </div>
+          );
+          break;
+
+        case 'rrhh':
+          outputNode = (
+            <div className="text-xs space-y-1.5 font-mono text-slate-300 border-l-2 border-blue-400 pl-3">
+              <p className="text-blue-300 font-bold">ERP Recursos Humanos ISTPET (Talento Humano)</p>
+              <p className="text-slate-300">Sistema integral para nóminas, expedientes docentes y contratos con firma electrónica p12.</p>
+              <p className="text-slate-400">• Stack: C# .NET 8, Clean Architecture, Angular, MySQL y JWT.</p>
+            </div>
+          );
+          break;
+
+        case 'twitch':
+        case 'stream':
+          outputNode = (
+            <div className="text-xs space-y-1.5 font-mono text-slate-300 border-l-2 border-[#9146FF] pl-3">
+              <p className="text-[#9146FF] font-bold">Anthony's Twitch Streaming Channel</p>
+              <p className="text-slate-300">Transmisiones de desarrollo de software, testing de videojuegos y gaming chill.</p>
+              <p className="text-cyan-300"><a href={portfolioData.personal.twitch} target="_blank" rel="noreferrer" className="underline">{portfolioData.personal.twitch}</a></p>
+            </div>
+          );
+          break;
+
+        case 'sao':
+        case 'koharu':
+          outputNode = (
+            <div className="text-xs space-y-1.5 font-mono text-slate-300 border-l-2 border-amber-400 pl-3">
+              <p className="text-amber-300 font-bold">⚔️ Sword Art Online: Integral Factor Memory</p>
+              <p className="text-slate-300 font-italic">"Fight for all players waiting for the day when they can go home to the real world. And for all the NPCs living in this one... Don't worry, Anthony. I know you can do it." — Koharu</p>
+              <p className="text-slate-500 text-[10px]">Piso 100 alcanzado. Gracias por ser un verdadero héroe.</p>
             </div>
           );
           break;

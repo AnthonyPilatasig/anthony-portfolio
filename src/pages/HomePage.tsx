@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiArrowRight, FiDownload, FiCopy, FiCheck, FiMonitor, FiServer, FiLayers, FiBox } from 'react-icons/fi';
+import {
+  FiArrowRight, FiDownload, FiCopy, FiCheck, FiMonitor, FiServer,
+  FiLayers, FiBox, FiTerminal, FiBookOpen, FiAward,
+  FiCpu, FiZap, FiCheckCircle, FiGithub, FiLinkedin
+} from 'react-icons/fi';
+import { SiTwitch } from 'react-icons/si';
 import { portfolioData } from '../data/portfolio';
 import { CountUp } from '../components/common/CountUp';
 import { RevealText } from '../components/common/RevealText';
@@ -24,35 +29,35 @@ const STACK_CARDS = [
   {
     icon: <FiMonitor className="w-5 h-5" />,
     label: 'Frontend & Mobile',
-    tech: ['Angular', 'React Native', 'TypeScript', 'Tailwind'],
+    tech: ['Angular', 'React Native', 'TypeScript', 'Tailwind CSS', 'RxJS'],
   },
   {
     icon: <FiServer className="w-5 h-5" />,
-    label: 'Backend & APIs',
-    tech: ['.NET 8', 'C#', 'JWT', 'REST'],
+    label: 'Backend & Server',
+    tech: ['.NET 8', 'C#', 'Java Spring/Core', 'REST APIs', 'JWT Auth'],
   },
   {
     icon: <FiLayers className="w-5 h-5" />,
-    label: 'Arquitectura',
-    tech: ['Clean Arch', 'CQRS', 'DDD'],
+    label: 'Arquitectura & Core',
+    tech: ['Clean Architecture', 'CQRS', 'DDD', 'MediatR', 'Event-Driven'],
   },
   {
     icon: <FiBox className="w-5 h-5" />,
-    label: 'Infraestructura',
-    tech: ['Docker', 'Kubernetes', 'CI/CD'],
+    label: 'Infra & Data',
+    tech: ['Docker', 'Kubernetes', 'SQL Server', 'MySQL', 'SQLite'],
   },
 ];
 
 export const HomePage: React.FC = () => {
   const { t } = useTranslation();
-  const { personal } = portfolioData;
+  const { personal, manifesto, teachingHighlights } = portfolioData;
 
   const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
   const projects: IProject[] = portfolioData.projects.map(p => {
     const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find(ti => ti.id === p.id) || {};
     return { ...p, ...tr };
   });
-  const featured = projects.filter(p => p.isFeatured).slice(0, 4);
+  const featured = projects.filter(p => p.isFeatured).slice(0, 5);
 
   const [copied, setCopied] = useState(false);
   const handleCopyEmail = async () => {
@@ -66,32 +71,59 @@ export const HomePage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-6">
 
-      {/* ─── 01 / PROFILE ─────────────────────────────── */}
+      {/* ─── 01 / DEV IDENTITY HERO ─────────────────────────────── */}
       <motion.section
         initial="hidden"
         animate="show"
         variants={stagger}
-        className="pt-36 md:pt-44 pb-20 border-b border-[var(--theme-border)]"
+        className="pt-32 md:pt-40 pb-16 border-b border-[var(--theme-border)]"
       >
-        <motion.div variants={fadeUp}>
+        <motion.div variants={fadeUp} className="flex items-center justify-between gap-4 mb-4">
           <span className="section-index">01 / {t('home.profileBadge')}</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-mono text-[11px] text-[var(--theme-accent)] font-semibold uppercase tracking-wider">
+              {personal.status}
+            </span>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start mt-2">
-          {/* Texto principal */}
-          <motion.div variants={fadeUp} className="md:col-span-8 space-y-6">
-            <h1
-              className="text-5xl md:text-6xl lg:text-7xl leading-[1.06] text-[var(--theme-ink)] tracking-tight"
-              style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
-            >
-              <RevealText text={t('hero.mainTitle')} stagger={20} />
-            </h1>
+        {/* Hero Bento Grid Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-2">
+          
+          {/* Main Info */}
+          <motion.div variants={fadeUp} className="lg:col-span-8 space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span className="badge-accent py-1">Tech Lead @ ItspetDev</span>
+                <span className="badge py-1">Docente Universitario</span>
+                <span className="badge py-1">Quito, Ecuador (UTC-5)</span>
+              </div>
+              <h1
+                className="text-4xl sm:text-5xl md:text-6xl leading-[1.08] text-[var(--theme-ink)] tracking-tight font-semibold"
+                style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
+              >
+                <RevealText text={personal.name} stagger={18} />
+              </h1>
+              <p className="text-sm font-mono text-[var(--theme-accent)] font-medium">
+                {personal.title} • {personal.subtitle}
+              </p>
+            </div>
 
-            <p className="text-base md:text-lg text-[var(--theme-ink-muted)] leading-relaxed font-light max-w-xl">
-              {t('hero.heroDesc')}
+            <p className="text-base text-[var(--theme-ink-muted)] leading-relaxed font-light max-w-xl">
+              {personal.bio}
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            {/* Motto / Personal Quote */}
+            <div className="p-4 rounded-xl border border-[var(--theme-border-strong)] bg-[var(--theme-surface)]/80 relative overflow-hidden">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--theme-accent)]" />
+              <p className="text-xs sm:text-sm font-mono text-[var(--theme-ink)] italic pl-2">
+                "{personal.tagline}"
+              </p>
+            </div>
+
+            {/* Action Buttons & Socials */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Magnetic>
                 <Link to="/proyectos" className="btn-primary">
                   {t('hero.viewProjects')}
@@ -115,54 +147,154 @@ export const HomePage: React.FC = () => {
                   : <FiCopy className="w-3.5 h-3.5" />}
                 <span>{copied ? t('hero.emailCopied') : t('hero.copyEmail')}</span>
               </button>
+
+              <Link to="/terminal" className="btn-secondary text-xs">
+                <FiTerminal className="w-3.5 h-3.5 text-[var(--theme-accent)]" />
+                <span>CLI Terminal</span>
+              </Link>
             </div>
 
-            {/* Disponibilidad */}
-            <div className="flex items-center gap-2 pt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-xs text-[var(--theme-ink-muted)]">{t('hero.statusAvailable')}</span>
+            {/* Social Links Strip */}
+            <div className="flex items-center gap-4 pt-1 font-mono text-xs text-[var(--theme-ink-muted)]">
+              <a
+                href={personal.github}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 hover:text-[var(--theme-accent)] transition-colors"
+              >
+                <FiGithub className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </a>
+              <a
+                href={personal.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 hover:text-[var(--theme-accent)] transition-colors"
+              >
+                <FiLinkedin className="w-3.5 h-3.5" />
+                <span>LinkedIn</span>
+              </a>
+              <a
+                href={personal.twitch}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 hover:text-[#9146FF] transition-colors"
+              >
+                <SiTwitch className="w-3.5 h-3.5 text-[#9146FF]" />
+                <span>Twitch</span>
+              </a>
+              <Link
+                to="/laboratorio"
+                className="flex items-center gap-1.5 hover:text-[var(--theme-accent)] transition-colors ml-auto"
+              >
+                <FiZap className="w-3.5 h-3.5 text-amber-500" />
+                <span>AP-Deck Lab →</span>
+              </Link>
             </div>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div variants={fadeUp} className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-3">
-            {[
-              { value: <CountUp end={10} suffix="+" />, label: t('hero.statSystems') },
-              { value: <><CountUp end={3} suffix="+" /> <span>Yrs</span></>, label: t('hero.statExperience') },
-              { value: '.NET 8', label: t('hero.statArchitecture') },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                className="editorial-card p-4 rounded-lg flex flex-col gap-1"
-              >
-                <span className="font-mono text-xl font-semibold text-[var(--theme-ink)] flex items-baseline gap-1">
-                  {stat.value}
-                </span>
-                <span className="font-mono text-[10px] text-[var(--theme-ink-muted)] uppercase tracking-wider">
-                  {stat.label}
-                </span>
+          {/* Dev Identity Card with Real Avatar */}
+          <motion.div variants={fadeUp} className="lg:col-span-4 flex flex-col items-center">
+            <div className="editorial-card p-4 rounded-2xl w-full max-w-sm space-y-4 border border-[var(--theme-border-strong)] relative group">
+              
+              {/* Photo Frame */}
+              <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-[var(--theme-bg)] border border-[var(--theme-border)]">
+                <img
+                  src={personal.avatar}
+                  alt={personal.name}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/80 via-transparent to-transparent" />
+                
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[10px] font-mono text-slate-200 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
+                  <span className="flex items-center gap-1.5 font-bold text-white">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+                    Anthony Pilatasig
+                  </span>
+                  <span className="text-amber-300">Lead Arch & Dev</span>
+                </div>
               </div>
-            ))}
+
+              {/* Quick Metrics */}
+              <div className="grid grid-cols-2 gap-2 text-center font-mono">
+                <div className="p-2.5 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
+                  <span className="text-lg font-bold text-[var(--theme-ink)] block">
+                    <CountUp end={10} suffix="+" />
+                  </span>
+                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Sistemas & Apps</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
+                  <span className="text-lg font-bold text-[var(--theme-ink)] block">
+                    <CountUp end={120} suffix="+" />
+                  </span>
+                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Alumnos Formados</span>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </motion.section>
 
-      {/* ─── 02 / SELECTED WORK ───────────────────────── */}
+      {/* ─── 02 / ENGINEERING MANIFESTO (SELLO DE SENIORITY) ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-60px' }}
         variants={stagger}
-        className="py-20 border-b border-[var(--theme-border)]"
+        className="py-16 border-b border-[var(--theme-border)]"
       >
-        <motion.div variants={fadeUp} className="flex items-end justify-between mb-10">
+        <motion.div variants={fadeUp} className="mb-8">
+          <span className="section-index">02 / MANIFIESTO &amp; PRINCIPIOS DE INGENIERÍA</span>
+          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
+            Mis Reglas No Negociables de Arquitectura
+          </h2>
+          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
+            Criterio técnico forjado liderando sistemas empresariales institucionales y cátedras universitarias.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {manifesto.map((item, idx) => (
+            <motion.div
+              key={idx}
+              variants={fadeUp}
+              className="editorial-card p-5 rounded-xl space-y-2 border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-bold text-[var(--theme-accent)] px-2 py-0.5 rounded bg-[var(--theme-accent)]/10">
+                  {item.number}
+                </span>
+                <h3 className="font-mono text-xs font-bold text-[var(--theme-ink)] uppercase tracking-wide">
+                  {item.title}
+                </h3>
+              </div>
+              <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                {item.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ─── 03 / SELECTED WORK ───────────────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={stagger}
+        className="py-16 border-b border-[var(--theme-border)]"
+      >
+        <motion.div variants={fadeUp} className="flex items-end justify-between mb-8">
           <div>
-            <span className="section-index">02 / {t('projects.badge')}</span>
+            <span className="section-index">03 / {t('projects.badge')}</span>
             <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">{t('projects.title')}</h2>
+            <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
+              Cores institucionales, aplicaciones móviles, software nativo de escritorio y motores de videojuegos.
+            </p>
           </div>
           <Link
             to="/proyectos"
-            className="font-mono text-xs text-[var(--theme-ink-muted)] hover:text-[var(--theme-accent)] transition-colors flex items-center gap-1"
+            className="font-mono text-xs text-[var(--theme-ink-muted)] hover:text-[var(--theme-accent)] transition-colors flex items-center gap-1 shrink-0"
           >
             {t('home.viewAll', { count: projects.length })}
             <FiArrowRight className="w-3 h-3" />
@@ -183,9 +315,16 @@ export const HomePage: React.FC = () => {
                   {String(idx + 1).padStart(2, '0')}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-[var(--theme-ink)] group-hover:text-[var(--theme-accent)] transition-colors truncate">
-                    {p.title}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-semibold text-[var(--theme-ink)] group-hover:text-[var(--theme-accent)] transition-colors truncate">
+                      {p.title}
+                    </h3>
+                    {p.architectureBadges && p.architectureBadges[0] && (
+                      <span className="badge-accent py-0.5 text-[9px] hidden md:inline-flex">
+                        {p.architectureBadges[0]}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-[var(--theme-ink-muted)] font-light truncate mt-0.5">
                     {p.description}
                   </p>
@@ -204,31 +343,48 @@ export const HomePage: React.FC = () => {
         </motion.div>
       </motion.section>
 
-      {/* ─── 03 / STACK ───────────────────────────────── */}
+      {/* ─── 04 / UNIVERSIDAD & DOCENCIA TÉCNICA (LEADERSHIP) ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-60px' }}
         variants={stagger}
-        className="py-20 border-b border-[var(--theme-border)]"
+        className="py-16 border-b border-[var(--theme-border)]"
       >
-        <motion.div variants={fadeUp}>
-          <span className="section-index">03 / {t('techShowcase.badge')}</span>
-          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight mb-10">
-            {t('techShowcase.title')}
+        <motion.div variants={fadeUp} className="mb-8">
+          <span className="section-index">04 / LIDERAZGO &amp; DOCENCIA UNIVERSITARIA</span>
+          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
+            Formación Técnica &amp; Mentoría Universitaria
           </h2>
+          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
+            Impartiendo cátedras de programación avanzada, estructuras de datos y buenas prácticas de ingeniería en ISTPET.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {STACK_CARDS.map((card, i) => (
-            <motion.div key={i} variants={fadeUp} className="editorial-card p-5 rounded-lg space-y-3">
-              <div className="text-[var(--theme-accent)]">{card.icon}</div>
-              <h3 className="font-mono text-xs font-semibold text-[var(--theme-ink)] uppercase tracking-wide">
-                {card.label}
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {card.tech.map(t => (
-                  <span key={t} className="badge">{t}</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {teachingHighlights.map((teach, i) => (
+            <motion.div key={i} variants={fadeUp} className="editorial-card p-5 rounded-xl space-y-3 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-2 border-b border-[var(--theme-border)] pb-2 mb-2">
+                  <div className="flex items-center gap-2 text-[var(--theme-accent)]">
+                    <FiBookOpen className="w-4 h-4" />
+                    <span className="font-mono text-[10px] font-bold uppercase">{teach.studentsCount}</span>
+                  </div>
+                  <FiAward className="w-3.5 h-3.5 text-amber-500" />
+                </div>
+                <h3 className="font-mono text-xs font-bold text-[var(--theme-ink)] mb-1">
+                  {teach.subject}
+                </h3>
+                <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
+                  {teach.description}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-1 pt-2">
+                {teach.focus.map((f) => (
+                  <span key={f} className="badge text-[9px] py-0.5">
+                    {f}
+                  </span>
                 ))}
               </div>
             </motion.div>
@@ -236,7 +392,39 @@ export const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* ─── 04 / GET IN TOUCH ────────────────────────── */}
+      {/* ─── 05 / STACK & ARQUITECTURA ───────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={stagger}
+        className="py-16 border-b border-[var(--theme-border)]"
+      >
+        <motion.div variants={fadeUp}>
+          <span className="section-index">05 / {t('techShowcase.badge')}</span>
+          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight mb-8">
+            {t('techShowcase.title')}
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {STACK_CARDS.map((card, i) => (
+            <motion.div key={i} variants={fadeUp} className="editorial-card p-5 rounded-xl space-y-3">
+              <div className="text-[var(--theme-accent)]">{card.icon}</div>
+              <h3 className="font-mono text-xs font-semibold text-[var(--theme-ink)] uppercase tracking-wide">
+                {card.label}
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {card.tech.map(tech => (
+                  <span key={tech} className="badge">{tech}</span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ─── 06 / GET IN TOUCH ────────────────────────── */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -244,13 +432,16 @@ export const HomePage: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="py-20"
       >
-        <span className="section-index">04 / {t('contact.badge')}</span>
+        <span className="section-index">06 / {t('contact.badge')}</span>
         <h2
           className="text-3xl md:text-4xl text-[var(--theme-ink)] tracking-tight mt-2 mb-6"
           style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
         >
-          {t('hub.aboutDesc')}
+          ¿Construimos algo extraordinario juntos?
         </h2>
+        <p className="text-sm font-light text-[var(--theme-ink-muted)] max-w-xl mb-6">
+          Disponible para roles de Liderazgo Técnico, Arquitectura de Backend .NET 8 / Full-Stack y proyectos de alto rendimiento.
+        </p>
         <div className="flex flex-wrap gap-3">
           <Magnetic>
             <Link to="/contacto" className="btn-primary">
@@ -263,8 +454,12 @@ export const HomePage: React.FC = () => {
           <a href={personal.linkedin} target="_blank" rel="noreferrer" className="btn-secondary">
             LinkedIn
           </a>
+          <a href={personal.twitch} target="_blank" rel="noreferrer" className="btn-secondary text-[#9146FF]">
+            Twitch
+          </a>
         </div>
       </motion.section>
     </div>
   );
 };
+

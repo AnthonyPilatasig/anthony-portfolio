@@ -9,13 +9,59 @@ export const portfolioData: IPortfolioData = {
     name: "Anthony David Pilatasig Macas",
     title: "Lead Software Developer & Architect",
     subtitle: "Diseño y construyo sistemas empresariales, núcleos académicos y aplicaciones multiplataforma con .NET 8, Clean Architecture, CQRS y React.",
-    bio: "Diseño e implemento arquitecturas de software resilientes, desde cores de gestión académica de alta concurrencia hasta soluciones móviles y nativas de escritorio. Mi trabajo combina rigor arquitectónico en backend (.NET 8, Clean Architecture, CQRS) con interfaces web y móviles ágiles y accesibles.",
+    bio: "Ingeniero de software, docente técnico y apasionado de la lógica de videojuegos. Lidero el diseño arquitectónico de ecosistemas institucionales de alta concurrencia (.NET 8, Clean Architecture, CQRS, Angular y React Native) y formo a nuevas generaciones de ingenieros en paradigmas de POO y calidad de código.",
+    tagline: "Construyo sistemas empresariales de misión crítica de día; diseño motores lógicos de videojuegos y arquitecturas de alto rendimiento de noche.",
     location: "Quito, Ecuador (UTC-5)",
     email: "antpila3848@gmail.com",
     github: "https://github.com/AnthonyPilatasig",
     linkedin: "https://linkedin.com/in/anthony-pilatasig",
-    status: "Disponible para Desafíos Lead & Full Stack"
+    twitch: "https://twitch.tv/anthony_pilatasig",
+    status: "Disponible para Desafíos Lead & Full Stack",
+    avatar: asset("assets/anthony_profile.png"),
+    avatarAlt: asset("assets/anthony_avatar_alt.png"),
   },
+  manifesto: [
+    {
+      number: "01",
+      title: "Cero Latencia Innecesaria (Sub-100ms)",
+      description: "Cada consulta SQL, índice relacional y handler CQRS debe justificarse por su rendimiento. La velocidad de respuesta es una característica esencial de la experiencia de usuario y la eficiencia de costos en la nube."
+    },
+    {
+      number: "02",
+      title: "Clean Architecture con Propósito",
+      description: "La arquitectura por capas desacopladas no es un dogma decorativo; es el escudo que protege las reglas de negocio contra la obsolescencia y los cambios de infraestructura o librerías externas."
+    },
+    {
+      number: "03",
+      title: "De la Lógica de Videojuegos a Sistemas Críticos",
+      description: "La prevención de estados inconsistentes, la concurrencia en bucles de juego y la encapsulación estricta en un RPG son los mismos cimientos matemáticos que hacen indestructible a un core transaccional empresarial."
+    },
+    {
+      number: "04",
+      title: "Enseñar es la Prueba Suprema de Dominio",
+      description: "Como docente universitario de ingeniería, defiendo que el código Senior debe ser autoexplicativo, auditable y testeable. Si no puedes guiar a un estudiante a entenderlo y refactorizarlo, tu diseño aún no es simple."
+    }
+  ],
+  teachingHighlights: [
+    {
+      subject: "Programación Orientada a Objetos & SOLID",
+      studentsCount: "+120 Alumnos",
+      description: "Cátedra práctica de modelado de dominio, herencia vs composición, polimorfismo estricto y diseño desacoplado en Java y C#.",
+      focus: ["POO Pura", "Interfaces", "SOLID", "Patrones GoF", "Clean Code"]
+    },
+    {
+      subject: "Estructuras de Datos & Complejidad Algorítmica",
+      studentsCount: "3 Ciclos Lectivos",
+      description: "Laboratorios de análisis computacional O(n), gestión de memoria, programación dinámica (Knapsack) y estructuras recursivas.",
+      focus: ["Big-O Analysis", "Recursividad", "Matrices 2D", "Dynamic Programming"]
+    },
+    {
+      subject: "Mentoría de Proyectos Integradores",
+      studentsCount: "15+ Equipos",
+      description: "Dirección técnica de proyectos reales de software: pipelines de pruebas unitarias, diseño de base de datos relacional y control de versiones Git.",
+      focus: ["Code Review", "Unit Testing", "Git Flow", "Refactorización"]
+    }
+  ],
   experience: [
     {
       id: 1,
@@ -42,7 +88,7 @@ export const portfolioData: IPortfolioData = {
         "Mentorée 15+ proyectos integradores estudiantiles con enfoque en refactorización, pruebas unitarias y calidad de código.",
         "Implementé laboratorios prácticos de análisis algorítmico y optimización de complejidad O(n)."
       ],
-      technologies: ["Clean Code", "POO", "Algoritmos", "Mentoring Técnico", "Arquitectura de Software"]
+      technologies: ["Clean Code", "POO", "Algoritmos", "Mentoring Técnico", "Arquitectura de Software", "SOLID"]
     },
     {
       id: 3,
@@ -73,8 +119,8 @@ export const portfolioData: IPortfolioData = {
   ],
   skills: {
     frontend: ["Angular", "React", "React Native", "TypeScript", "Tailwind CSS", "RxJS", "State Management (Redux/Context)"],
-    backend: ["C# (.NET 8 / .NET Core)", "Node.js / Express", "Python", "RESTful APIs", "JWT Auth", "Entity Framework Core"],
-    desktop: ["C# WinForms / WPF", "Java Desktop (Swing)", "Algoritmos & POO", "SQLite Local Storage"],
+    backend: ["C# (.NET 8 / .NET Core)", "Node.js / Express", "Java (Spring/Core)", "Python", "RESTful APIs", "JWT Auth", "Entity Framework Core"],
+    desktop: ["C# WinForms / WPF", "Java Desktop (Swing)", "Game Loops & POO", "SQLite Local Storage"],
     databases: ["SQL Server", "MySQL", "PostgreSQL", "SQLite", "MongoDB"],
     architecture: ["Clean Architecture", "CQRS", "Domain-Driven Design (DDD)", "Microservicios", "Docker", "Kubernetes", "Git & CI/CD"]
   },
@@ -87,7 +133,7 @@ export const portfolioData: IPortfolioData = {
       description: "Núcleo web administrativo de alta disponibilidad para la gestión académica completa: admisiones, expedientes, matrículas y actas de calificaciones.",
       longDescription: "Sistema centralizado que digitalizó al 100% las operaciones académicas institucionales. Diseñado sobre una arquitectura desacoplada para garantizar alta concurrencia durante los periodos de matriculación masiva.",
       problem: "Procesos académicos manuales y cuellos de botella en inscripciones simultáneas que provocaban caídas del servidor.",
-      decision: "Adopté Clean Architecture y CQRS en C# .NET 8 con Angular, separando estrictamente la lectura (Queries) de la escritura (Commands).",
+      decision: "Adopté Clean Architecture y CQRS en C# .NET 8 con Angular, separando estrictamente la lectura (Queries) de la escritura (Commands) con handlers MediatR independientes.",
       tradeoff: "Mayor tiempo de desarrollo inicial y sobrecosto conceptual en la definición de DTOs y Handlers a cambio de escalabilidad y aislamiento de errores.",
       impact: "Tiempos de respuesta sub-100ms en consultas de notas y 100% de digitalización sin caídas del sistema en los últimos 4 periodos lectivos.",
       metrics: ["Sub-100ms Latencia", "+2,500 Usuarios Activos", "100% Uptime Lectivo"],
@@ -119,6 +165,25 @@ export const portfolioData: IPortfolioData = {
     },
     {
       id: 3,
+      title: "ERP Recursos Humanos ISTPET (Talento Humano)",
+      client: "Instituto Superior Tecnológico Traversari",
+      category: "web",
+      description: "Ecosistema integral de gestión de personal institucional: nóminas, expedientes docentes, firmas digitales de contratos y control de asistencia biométrica.",
+      longDescription: "Módulo administrativo de alta confidencialidad para el departamento de Recursos Humanos. Integra flujos de aprobación de permisos, cálculo automático de aportes y firmado electrónico.",
+      problem: "Firma manual de cientos de contratos semestrales y dispersión de registros de asistencia docente.",
+      decision: "Estructuré una arquitectura por capas en .NET 8 con autenticación RBAC, cifrado de documentos y frontend reactivo en Angular.",
+      tradeoff: "Flujos de validación criptográfica más estrictos para contratos a cambio de validez legal plena y auditoría inmutable.",
+      impact: "Reducción de 2 semanas a 24 horas en el proceso de contratación y renovación docente semestral.",
+      metrics: ["Firma Digital p12", "Cero Pérdida Documental", "Automatización RRHH"],
+      image: asset("assets/projects/microservices_preview.jpg"),
+      technologies: ["C#", ".NET 8", "Angular", "TypeScript", "MySQL", "JWT", "Firma Digital"],
+      architectureBadges: ["Enterprise ERP", "Digital Signatures", "RBAC Security"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/ItspetDev",
+      isFeatured: true
+    },
+    {
+      id: 4,
       title: "DebtManager — Motor Financiero C# Desktop",
       client: "Proyecto de Ingeniería Personal",
       category: "desktop",
@@ -137,8 +202,46 @@ export const portfolioData: IPortfolioData = {
       isFeatured: true
     },
     {
-      id: 4,
-      title: "Arquitectura Microservicios Educación",
+      id: 5,
+      title: "RPG Journey — Motor POO & Combate por Turnos",
+      client: "Proyecto de Lógica & Game Dev en Java",
+      category: "desktop",
+      description: "Motor de juego de rol interactivo por turnos desarrollado en Java puro con Swing, demostrando herencia, polimorfismo, contratos de interfaces y colas LIFO.",
+      longDescription: "Diseño desacoplado entre el modelo de dominio (paquete `com.rpg.logica`) y la interfaz visual (`com.rpg.gui`). Incluye clases como Guerrero, Mago, Asesino, Tanque, Soporte, Curandero con progresión de estadísticas y renderizado personalizado de barras de vida.",
+      problem: "Crear una arquitectura limpia y extensible para reglas de combate y progresión sin acoplar la UI con las fórmulas matemáticas de daño.",
+      decision: "Apliqué la interfaz `AccionEspecial` y clases abstractas para asegurar polimorfismo estricto, junto a un `Stack` LIFO para inventario y `HashSet` para el Códice de ítems únicos.",
+      tradeoff: "Mayor volumen de clases y diseño previo de jerarquías a cambio de poder añadir nuevas clases de personajes en minutos sin tocar la UI.",
+      impact: "Arquitectura 100% desacoplada que sirvió como caso de estudio práctico para cátedras de Programación Orientada a Objetos.",
+      metrics: ["POO Pura & Swing", "Polimorfismo Dinámico", "Custom UI Painting"],
+      image: asset("assets/projects/buscaminas_preview.jpg"),
+      technologies: ["Java", "Swing", "POO Avanzada", "Polimorfismo", "Data Structures"],
+      architectureBadges: ["Game Dev POO", "Decoupled Architecture", "Java Swing"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig",
+      isFeatured: true
+    },
+    {
+      id: 6,
+      title: "Buscaminas POO Recursivo (Java Desktop)",
+      client: "Proyecto de Algoritmos & POO",
+      category: "desktop",
+      description: "Juego nativo de escritorio aplicando POO y algoritmo de destape recursivo en matrices bidimensionales con control de estados y temporizadores.",
+      longDescription: "Implementación matemática del clásico Buscaminas que gestiona la dispersión aleatoria de minas, el cálculo de casillas adyacentes y el destape en cascada mediante llamadas recursivas controladas.",
+      problem: "Manejar la expansión del tablero en áreas vacías sin causar desbordamientos de pila (StackOverflow) ni congelar el hilo de la interfaz de usuario.",
+      decision: "Estructuré la lógica en una matriz bidimensional con un algoritmo de búsqueda recursiva en profundidad acotada y eventos de Swing.",
+      tradeoff: "Uso de Swing nativo para asegurar compatibilidad universal en cualquier sistema operativo sin dependencias externas.",
+      impact: "Respuesta instantánea < 1ms por clic y caso de estudio de recursividad para estudiantes de ingeniería.",
+      metrics: ["< 1ms Latencia", "Recursión Bidimensional", "Zero Dependencias"],
+      image: asset("assets/projects/buscaminas_preview.jpg"),
+      technologies: ["Java", "Swing", "Recursividad", "Matrices 2D", "Event-Driven"],
+      architectureBadges: ["Algorithmic Engine", "Recursion Depth", "Zero-Dependency"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig",
+      isFeatured: false
+    },
+    {
+      id: 7,
+      title: "Arquitectura Microservicios Educación (.NET 8)",
       client: "Proyecto Avanzado de Arquitectura",
       category: "architecture",
       description: "Ecosistema distribuido backend en .NET 8 con comunicación por eventos, CQRS, DDD y despliegue en contenedores Docker y Kubernetes.",
@@ -153,29 +256,10 @@ export const portfolioData: IPortfolioData = {
       architectureBadges: ["Microservices", "Event-Driven", "K8s Distributed"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig/net8-education-microservices",
-      isFeatured: true
-    },
-    {
-      id: 5,
-      title: "Optimización de Inventarios (Knapsack 0/1)",
-      client: "Investigación Algorítmica",
-      category: "desktop",
-      description: "Sistema algorítmico en Java para la resolución del problema de la mochila (Knapsack 0/1) con programación dinámica comparando 3 enfoques.",
-      longDescription: "Benchmark de rendimiento computacional que analiza algoritmos recursivos puros, memorización (top-down) y tabulación (bottom-up) sobre grandes volúmenes de datos.",
-      problem: "Lentitud exponencial O(2^n) al calcular combinaciones óptimas de inventario logístico.",
-      decision: "Diseñé un motor de programación dinámica en Java reduciendo la complejidad temporal a O(n*W).",
-      tradeoff: "Mayor consumo de memoria espacial O(n*W) a cambio de pasar de ejecución en minutos a milisegundos.",
-      impact: "Optimización de tiempo de ejecución de ~45 segundos a 12 milisegundos en pruebas de volumen alto.",
-      metrics: ["O(n*W) Eficiencia", "12ms Tiempo Ejecución", "Dynamic Prog."],
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-      technologies: ["Java", "Dynamic Programming", "Algoritmos Avanzados"],
-      architectureBadges: ["Dynamic Prog.", "Knapsack 0/1", "Algorithm Benchmarking"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/AnthonyPilatasig/Sistema_Optimazacion_Inventario_Algoritmos-y-Estructura-de-Datos-",
       isFeatured: false
     },
     {
-      id: 6,
+      id: 8,
       title: "SIAT / AVIALB — Policía Nacional del Ecuador",
       client: "Policía Nacional del Ecuador",
       category: "web",
@@ -186,7 +270,7 @@ export const portfolioData: IPortfolioData = {
       tradeoff: "Estrictos requisitos de validación previa que incrementan la longitud de los formularios a cambio de seguridad legal.",
       impact: "Estandarización del 100% de partes de peritaje vial institucional con validez jurídica.",
       metrics: ["100% Estándar Pericial", "RBAC Security", "Audit Trail"],
-      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
+      image: asset("assets/projects/gacad_preview.jpg"),
       technologies: ["C#", ".NET Core", "TypeScript", "SQL Server", "Security Protocols"],
       architectureBadges: ["Public Security", "Audit Trails", "Enterprise .NET"],
       liveUrl: "#",
