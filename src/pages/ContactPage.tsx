@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiCheckCircle } from 'react-icons/fi';
+import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiCheckCircle, FiPhone, FiCopy, FiCheck } from 'react-icons/fi';
+import { SiTwitch, SiWhatsapp } from 'react-icons/si';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
 
@@ -16,37 +17,38 @@ export const ContactPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [phoneCopied, setPhoneCopied] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+
+  const handleCopyPhone = async () => {
+    if (!personal.phone) return;
+    try {
+      await navigator.clipboard.writeText(personal.phone);
+      setPhoneCopied(true);
+      setTimeout(() => setPhoneCopied(false), 2500);
+    } catch { /* silent */ }
+  };
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(personal.email);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2500);
+    } catch { /* silent */ }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setFormError(null);
     try {
-      // NOTA: Reemplaza 'YOUR_FORM_ID' con tu ID real de formspree.io
-      // Crear cuenta gratis en https://formspree.io y obtener el endpoint
-      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-        }),
-      });
-      if (response.ok) {
-        setFormSubmitted(true);
-      } else {
-        const data = await response.json();
-        setFormError(data?.error || 'Error al enviar. Intenta de nuevo.');
-      }
-    } catch {
-      // Fallback: abrir mailto si Formspree falla
-      const subject = encodeURIComponent(formData.subject);
-      const body = encodeURIComponent(`De: ${formData.name} (${formData.email})\n\n${formData.message}`);
+      const subject = encodeURIComponent(formData.subject || 'Contacto desde Portafolio');
+      const body = encodeURIComponent(`Hola Anthony,\n\nDe: ${formData.name} (${formData.email})\n\nMensaje:\n${formData.message}`);
       window.open(`mailto:${personal.email}?subject=${subject}&body=${body}`, '_blank');
       setFormSubmitted(true);
+    } catch {
+      setFormError('Error al abrir el cliente de correo.');
     } finally {
       setIsLoading(false);
     }
@@ -182,21 +184,74 @@ export const ContactPage: React.FC = () => {
         {/* Sidebar Direct Connections */}
         <motion.div 
           initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
-          className="space-y-4"
+          className="space-y-3"
         >
           <span className="section-index block mb-1">
             {t('contact.directLinks')}
           </span>
 
+          {/* WhatsApp Direct Chat */}
+          <a
+            href={`https://wa.me/593983588715?text=${encodeURIComponent('Hola Anthony, vi tu portafolio y me gustaría conversar contigo sobre una oportunidad laboral / proyecto.')}`}
+            target="_blank"
+            rel="noreferrer"
+            className="editorial-card p-3.5 rounded-lg flex items-center justify-between group hover:border-emerald-500/50 transition-colors"
+          >
+            <span className="flex items-center gap-3">
+              <SiWhatsapp className="w-5 h-5 text-emerald-500" />
+              <div>
+                <span className="text-xs font-mono font-bold text-[var(--theme-ink)] block">WhatsApp Directo</span>
+                <span className="text-[10px] text-[var(--theme-ink-muted)]">Respuesta rápida</span>
+              </div>
+            </span>
+            <span className="text-xs font-mono text-emerald-500 group-hover:translate-x-0.5 transition-transform">↗</span>
+          </a>
+
+          {/* Phone Copy */}
+          <div className="editorial-card p-3.5 rounded-lg flex items-center justify-between">
+            <span className="flex items-center gap-3">
+              <FiPhone className="w-5 h-5 text-[var(--theme-accent)]" />
+              <div>
+                <span className="text-xs font-mono font-bold text-[var(--theme-ink)] block">{personal.phone}</span>
+                <span className="text-[10px] text-[var(--theme-ink-muted)]">Móvil / WhatsApp</span>
+              </div>
+            </span>
+            <button
+              onClick={handleCopyPhone}
+              className="px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--theme-bg)] hover:bg-[var(--theme-border)] text-[var(--theme-ink)] transition-colors border border-[var(--theme-border)] flex items-center gap-1"
+            >
+              {phoneCopied ? <FiCheck className="w-3 h-3 text-emerald-500" /> : <FiCopy className="w-3 h-3" />}
+              <span>{phoneCopied ? '¡Copiado!' : 'Copiar'}</span>
+            </button>
+          </div>
+
+          {/* Email Copy */}
+          <div className="editorial-card p-3.5 rounded-lg flex items-center justify-between">
+            <span className="flex items-center gap-3 min-w-0">
+              <FiMail className="w-5 h-5 text-[var(--theme-accent)] shrink-0" />
+              <div className="truncate">
+                <span className="text-xs font-mono font-bold text-[var(--theme-ink)] block truncate">{personal.email}</span>
+                <span className="text-[10px] text-[var(--theme-ink-muted)]">Correo Principal</span>
+              </div>
+            </span>
+            <button
+              onClick={handleCopyEmail}
+              className="px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--theme-bg)] hover:bg-[var(--theme-border)] text-[var(--theme-ink)] transition-colors border border-[var(--theme-border)] shrink-0 flex items-center gap-1"
+            >
+              {emailCopied ? <FiCheck className="w-3 h-3 text-emerald-500" /> : <FiCopy className="w-3 h-3" />}
+              <span>{emailCopied ? '¡Copiado!' : 'Copiar'}</span>
+            </button>
+          </div>
+
           <a
             href={personal.github}
             target="_blank"
             rel="noreferrer"
-            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
+            className="editorial-card p-3.5 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
               <FiGithub className="w-5 h-5 text-[var(--theme-accent)]" />
-              <span className="text-sm font-mono text-[var(--theme-ink)]">GitHub Profile</span>
+              <span className="text-xs font-mono text-[var(--theme-ink)]">GitHub (AnthonyPilatasig)</span>
             </span>
             <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">↗</span>
           </a>
@@ -205,30 +260,32 @@ export const ContactPage: React.FC = () => {
             href={personal.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
+            className="editorial-card p-3.5 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
               <FiLinkedin className="w-5 h-5 text-[var(--theme-accent)]" />
-              <span className="text-sm font-mono text-[var(--theme-ink)]">LinkedIn</span>
+              <span className="text-xs font-mono text-[var(--theme-ink)]">LinkedIn Profile</span>
             </span>
             <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">↗</span>
           </a>
 
           <a
-            href={`mailto:${personal.email}`}
-            className="editorial-card p-4 rounded-lg flex items-center justify-between group"
+            href={personal.twitch}
+            target="_blank"
+            rel="noreferrer"
+            className="editorial-card p-3.5 rounded-lg flex items-center justify-between group"
           >
             <span className="flex items-center gap-3">
-              <FiMail className="w-5 h-5 text-[var(--theme-accent)]" />
-              <span className="text-sm font-mono text-[var(--theme-ink)]">{personal.email}</span>
+              <SiTwitch className="w-5 h-5 text-[#9146FF]" />
+              <span className="text-xs font-mono text-[var(--theme-ink)]">Twitch Streams</span>
             </span>
-            <span className="text-[var(--theme-ink-muted)] group-hover:text-[var(--theme-accent)] transition-colors">✉</span>
+            <span className="text-[var(--theme-ink-muted)] group-hover:text-[#9146FF] transition-colors">↗</span>
           </a>
 
-          <div className="editorial-card p-4 rounded-lg flex items-center justify-between">
+          <div className="editorial-card p-3.5 rounded-lg flex items-center justify-between">
             <span className="flex items-center gap-2">
               <FiMapPin className="w-4 h-4 text-[var(--theme-accent)]" />
-              <span className="text-sm font-mono text-[var(--theme-ink)]">Quito, Ecuador</span>
+              <span className="text-xs font-mono text-[var(--theme-ink)]">Quito, Ecuador</span>
             </span>
             <span className="text-[10px] font-mono text-[var(--theme-ink-muted)]">UTC-5</span>
           </div>

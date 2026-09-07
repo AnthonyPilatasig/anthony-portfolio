@@ -59,18 +59,18 @@ export const AboutPage: React.FC = () => {
           className="md:col-span-8 space-y-6"
         >
           <h2 className="text-2xl font-light text-[var(--theme-ink)] leading-snug">
-            <RevealText text="De la Lógica de Videojuegos a la Arquitectura de Misión Crítica" stagger={25} />
+            <RevealText text="De la Lógica de Videojuegos a la Arquitectura de Software" stagger={25} />
           </h2>
 
           <div className="space-y-4 text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
             <p>
-              Soy <strong>Anthony David Pilatasig Macas</strong>. Mi vocación como desarrollador no empezó en manuales corporativos aburridos, sino desarmando la lógica de videojuegos, creando mecánicas de combate por turnos y experimentando con emulación y algoritmos. Descubrí temprano que tanto un loop de juego a 60 FPS como un core institucional con miles de peticiones simultáneas comparten la misma ley fundamental: <em>el respeto absoluto por la memoria, la concurrencia y la claridad de estados</em>.
+              Soy <strong>Anthony David Pilatasig Macas</strong>. Mi interés por la programación nació explorando la lógica detrás de los videojuegos: creando mecánicas por turnos, entendiendo estados y experimentando con estructuras de datos. Aprendí temprano que tanto el loop de un juego en Java como un sistema institucional con miles de consultas comparten un mismo pilar: <em>la claridad en la separación de responsabilidades y el control estricto de excepciones</em>.
             </p>
             <p>
-              Como <strong>Lead Software Developer en ItspetDev</strong>, lidero la arquitectura de <strong>Gacad</strong> (Core Académico), la app móvil oficial <strong>Mi ISTPET</strong> (React Native) y el <strong>ERP de Recursos Humanos</strong> con contratos y firmas digitales. Todo estructurado en <strong>.NET 8 con Clean Architecture y CQRS</strong>, logrando que consultas masivas de notas e inscripciones respondan en tiempos récord sub-100ms.
+              Como <strong>Full Stack Developer &amp; Mobile Lead en el ISTPET</strong>, desarrollo la app móvil oficial <strong>Mi ISTPET</strong> (React Native en Google Play Store), la modernización del core académico <strong>Gacad</strong> y el sistema de <strong>Recursos Humanos</strong> con contratos y expedientes digitales, utilizando <strong>.NET 8, C#, Angular, Clean Architecture y CQRS</strong>.
             </p>
             <p>
-              En paralelo, ejerzo la <strong>docencia técnica universitaria</strong> en el ISTPET formando a más de 120 alumnos en Programación Orientada a Objetos (POO), principios SOLID, estructuras de datos y refactorización. Para mí, enseñar es la prueba definitiva de maestría: un verdadero arquitecto Senior no escribe código criptográfico; diseña sistemas tan limpios que cualquiera en su equipo puede comprenderlos y evolucionarlos.
+              En paralelo, ejerzo la <strong>docencia técnica superior</strong> en el ISTPET impartiendo cátedras de Programación Orientada a Objetos (POO), algoritmos y control de versiones con Git/GitHub. Para mí, enseñar refuerza la disciplina de escribir código legible, modular y libre de complicaciones innecesarias.
             </p>
           </div>
 
@@ -165,7 +165,7 @@ export const AboutPage: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[var(--theme-ink-muted)]">Rol:</span>
-                <span className="text-[var(--theme-accent)] font-semibold">Tech Lead &amp; Docente</span>
+                <span className="text-[var(--theme-accent)] font-semibold">Full Stack Lead &amp; Docente</span>
               </div>
             </div>
 

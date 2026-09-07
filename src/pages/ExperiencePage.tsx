@@ -162,6 +162,40 @@ export const ExperiencePage: React.FC = () => {
             </div>
           </div>
 
+          {/* Certifications (Cisco & Python) */}
+          {portfolioData.certifications && portfolioData.certifications.length > 0 && (
+            <div>
+              <motion.h3 
+                initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUpVariant}
+                className="text-lg font-mono font-semibold text-[var(--theme-ink)] flex items-center gap-2 mb-4"
+              >
+                <FiCheck className="w-4 h-4 text-emerald-500" />
+                <span>Certificaciones Oficiales</span>
+              </motion.h3>
+
+              <div className="space-y-3">
+                {portfolioData.certifications.map((cert, cIdx) => (
+                  <motion.div
+                    key={cIdx}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-50px" }}
+                    variants={fadeUpVariant}
+                    className="editorial-card p-3.5 rounded-xl border border-[var(--theme-border)] space-y-1"
+                  >
+                    <span className="badge-accent text-[9px] py-0.5">{cert.category}</span>
+                    <h4 className="text-xs font-mono font-bold text-[var(--theme-ink)]">
+                      {cert.title}
+                    </h4>
+                    <p className="text-[11px] text-[var(--theme-ink-muted)] font-light">
+                      {cert.issuer}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <motion.div 
             initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} variants={fadeUpVariant}
             className="editorial-card p-5 rounded-xl border border-[var(--theme-border-strong)] space-y-3"
@@ -194,7 +228,7 @@ export const ExperiencePage: React.FC = () => {
           </div>
           <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[var(--theme-accent)]">
             <FiUsers className="w-4 h-4" />
-            <span>+120 Ingenieros Guiados</span>
+            <span>Docencia Técnica &amp; POO</span>
           </div>
         </div>
 

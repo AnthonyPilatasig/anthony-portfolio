@@ -13,6 +13,9 @@ import { CountUp } from '../components/common/CountUp';
 import { RevealText } from '../components/common/RevealText';
 import { Magnetic } from '../components/common/Magnetic';
 import { ProjectReel } from '../components/common/ProjectReel';
+import { AnimeGridCanvas } from '../components/common/AnimeGridCanvas';
+import { ArchitectureDiagram } from '../components/common/ArchitectureDiagram';
+import { TwitchLiveStatus } from '../components/common/TwitchLiveStatus';
 import type { IProject } from '../types/portfolio.types';
 
 const fadeUp = {
@@ -76,9 +79,10 @@ export const HomePage: React.FC = () => {
         initial="hidden"
         animate="show"
         variants={stagger}
-        className="pt-32 md:pt-40 pb-16 border-b border-[var(--theme-border)]"
+        className="pt-32 md:pt-40 pb-16 border-b border-[var(--theme-border)] relative"
       >
-        <motion.div variants={fadeUp} className="flex items-center justify-between gap-4 mb-4">
+        <AnimeGridCanvas />
+        <motion.div variants={fadeUp} className="flex items-center justify-between gap-4 mb-4 relative z-10">
           <span className="section-index">01 / {t('home.profileBadge')}</span>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -94,9 +98,9 @@ export const HomePage: React.FC = () => {
           {/* Main Info */}
           <motion.div variants={fadeUp} className="lg:col-span-8 space-y-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="badge-accent py-1">Tech Lead @ ItspetDev</span>
-                <span className="badge py-1">Docente Universitario</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="badge-accent py-1">Full Stack &amp; Mobile Lead @ ISTPET</span>
+                <span className="badge py-1">Docente Técnico Superior</span>
                 <span className="badge py-1">Quito, Ecuador (UTC-5)</span>
               </div>
               <h1
@@ -211,7 +215,7 @@ export const HomePage: React.FC = () => {
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
                     Anthony Pilatasig
                   </span>
-                  <span className="text-amber-300">Lead Arch & Dev</span>
+                  <span className="text-amber-300">Full Stack &amp; Mobile Lead</span>
                 </div>
               </div>
 
@@ -219,15 +223,15 @@ export const HomePage: React.FC = () => {
               <div className="grid grid-cols-2 gap-2 text-center font-mono">
                 <div className="p-2.5 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
                   <span className="text-lg font-bold text-[var(--theme-ink)] block">
-                    <CountUp end={10} suffix="+" />
+                    <CountUp end={7} suffix="+" />
                   </span>
-                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Sistemas & Apps</span>
+                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Sistemas &amp; Apps</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
                   <span className="text-lg font-bold text-[var(--theme-ink)] block">
-                    <CountUp end={120} suffix="+" />
+                    <CountUp end={2} suffix="+ Años" />
                   </span>
-                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Alumnos Formados</span>
+                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Docencia Técnica</span>
                 </div>
               </div>
             </div>
@@ -343,7 +347,30 @@ export const HomePage: React.FC = () => {
         </motion.div>
       </motion.section>
 
-      {/* ─── 04 / UNIVERSIDAD & DOCENCIA TÉCNICA (LEADERSHIP) ─── */}
+      {/* ─── 04 / ARQUITECTURA & CQRS EN VIVO ─────────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={stagger}
+        className="py-16 border-b border-[var(--theme-border)]"
+      >
+        <motion.div variants={fadeUp} className="mb-6">
+          <span className="section-index">04 / INGENIERÍA DE SOFTWARE &amp; ARQUITECTURA</span>
+          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
+            Diseño por Capas &amp; Patrón CQRS (.NET 8)
+          </h2>
+          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
+            Explora interactivamente la estructura desacoplada utilizada en los cores de <strong>Gacad</strong> y <strong>Mi ISTPET</strong>.
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeUp}>
+          <ArchitectureDiagram />
+        </motion.div>
+      </motion.section>
+
+      {/* ─── 05 / UNIVERSIDAD & DOCENCIA TÉCNICA (LEADERSHIP) ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
@@ -352,7 +379,7 @@ export const HomePage: React.FC = () => {
         className="py-16 border-b border-[var(--theme-border)]"
       >
         <motion.div variants={fadeUp} className="mb-8">
-          <span className="section-index">04 / LIDERAZGO &amp; DOCENCIA UNIVERSITARIA</span>
+          <span className="section-index">05 / LIDERAZGO &amp; DOCENCIA UNIVERSITARIA</span>
           <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
             Formación Técnica &amp; Mentoría Universitaria
           </h2>
@@ -392,7 +419,7 @@ export const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* ─── 05 / STACK & ARQUITECTURA ───────────────── */}
+      {/* ─── 06 / STACK & ARQUITECTURA ───────────────── */}
       <motion.section
         initial="hidden"
         whileInView="show"
@@ -401,7 +428,7 @@ export const HomePage: React.FC = () => {
         className="py-16 border-b border-[var(--theme-border)]"
       >
         <motion.div variants={fadeUp}>
-          <span className="section-index">05 / {t('techShowcase.badge')}</span>
+          <span className="section-index">06 / {t('techShowcase.badge')}</span>
           <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight mb-8">
             {t('techShowcase.title')}
           </h2>
@@ -424,7 +451,19 @@ export const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* ─── 06 / GET IN TOUCH ────────────────────────── */}
+      {/* ─── 07 / TWITCH LIVE HUB & COMMUNITY ─────────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={fadeUp}
+        className="py-12 border-b border-[var(--theme-border)]"
+      >
+        <span className="section-index mb-2 block">07 / COMUNIDAD &amp; STREAMING EN VIVO</span>
+        <TwitchLiveStatus channel="anthony_pilatasig" />
+      </motion.section>
+
+      {/* ─── 08 / GET IN TOUCH ────────────────────────── */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -432,7 +471,7 @@ export const HomePage: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="py-20"
       >
-        <span className="section-index">06 / {t('contact.badge')}</span>
+        <span className="section-index">08 / {t('contact.badge')}</span>
         <h2
           className="text-3xl md:text-4xl text-[var(--theme-ink)] tracking-tight mt-2 mb-6"
           style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
@@ -440,7 +479,7 @@ export const HomePage: React.FC = () => {
           ¿Construimos algo extraordinario juntos?
         </h2>
         <p className="text-sm font-light text-[var(--theme-ink-muted)] max-w-xl mb-6">
-          Disponible para roles de Liderazgo Técnico, Arquitectura de Backend .NET 8 / Full-Stack y proyectos de alto rendimiento.
+          Disponible para roles de Full Stack Senior / Lead (.NET 8 + Angular / React + Mobile), Arquitectura de Software y proyectos de alto rendimiento.
         </p>
         <div className="flex flex-wrap gap-3">
           <Magnetic>
