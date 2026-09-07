@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers, FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle, FiSettings, FiGitBranch } from 'react-icons/fi';
+import {
+  FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers,
+  FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle,
+  FiSettings, FiGitBranch, FiShield, FiLock, FiInfo, FiCheck
+} from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
 import type { IProject, ProjectCategory } from '../types/portfolio.types';
@@ -17,6 +21,16 @@ export const ProjectsPage: React.FC = () => {
 
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
+  const [modalTab, setModalTab] = useState<'case-study' | 'architecture'>('case-study');
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedProject(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const filteredProjects = activeCategory === 'all' 
     ? projects 
@@ -31,20 +45,20 @@ export const ProjectsPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
       {/* Page Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-14 border-b border-[var(--theme-border)] pb-8"
+        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-[var(--theme-border)] pb-8"
       >
         <div>
           <span className="section-index">02 / {t('projects.badge')}</span>
           <h1 className="text-4xl md:text-6xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight">
             <RevealText text={t('projects.title')} />
           </h1>
-          <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
+          <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2 max-w-2xl">
             {t('projects.subtitle')}
           </p>
         </div>
@@ -57,7 +71,7 @@ export const ProjectsPage: React.FC = () => {
               onClick={() => setActiveCategory(cat.key)}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs transition-all ${
                 activeCategory === cat.key
-                  ? 'bg-[var(--theme-accent)] text-white border border-[var(--theme-accent)] font-medium'
+                  ? 'bg-[var(--theme-accent)] text-white border border-[var(--theme-accent)] font-medium shadow-sm'
                   : 'btn-secondary font-mono'
               }`}
             >
@@ -68,201 +82,338 @@ export const ProjectsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Projects List Layout */}
-      <div className="flex flex-col gap-6 md:gap-2 group/list">
+      {/* Projects Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 group/list">
         {filteredProjects.map((project, index) => (
           <motion.div
             key={project.id}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: (index % 4) * 0.1 }}
-            className="flex flex-col md:flex-row gap-6 p-4 md:p-6 rounded-2xl transition-all duration-300 md:group-hover/list:opacity-30 md:hover:!opacity-100 hover:bg-[var(--theme-border)]/50 cursor-pointer group/item"
-            onClick={() => setSelectedProject(project)}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.4, delay: (index % 4) * 0.08 }}
+            className="editorial-card p-5 sm:p-6 rounded-2xl flex flex-col justify-between border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/60 cursor-pointer group/item transition-all duration-300 shadow-sm hover:shadow-md"
+            onClick={() => {
+              setSelectedProject(project);
+              setModalTab('case-study');
+            }}
           >
-            {/* Image Section */}
-            <div className="w-full md:w-1/3 shrink-0 rounded-xl overflow-hidden bg-[var(--theme-surface)] border border-[var(--theme-border)] relative aspect-video md:aspect-[4/3]">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover opacity-90 group-hover/item:opacity-100 group-hover/item:scale-105 transition-all duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] to-transparent opacity-80" />
-              
-              <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-10">
-                <span className="badge bg-[var(--theme-surface)]">
-                  {project.category.toUpperCase()}
-                </span>
-              </div>
-            </div>
+            {/* Image & Top Meta */}
+            <div>
+              <div className="w-full rounded-xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border)] relative aspect-video mb-4">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover opacity-90 group-hover/item:opacity-100 group-hover/item:scale-105 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/90 via-transparent to-transparent opacity-80" />
+                
+                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span className="badge bg-[var(--theme-surface)] backdrop-blur-md">
+                    {project.category.toUpperCase()}
+                  </span>
+                  {project.isFeatured && (
+                    <span className="badge-accent py-0.5">
+                      DESTACADO
+                    </span>
+                  )}
+                </div>
 
-            {/* Content Section */}
-            <div className="flex-1 flex flex-col justify-start">
-              <h3 className="text-xl md:text-2xl font-semibold text-[var(--theme-ink)] group-hover/item:text-[var(--theme-accent)] transition-colors mb-2">
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-slate-200">
+                  <span className="truncate pr-2">{project.client}</span>
+                  <span className="text-[var(--theme-accent)] flex items-center gap-1 shrink-0 font-semibold">
+                    Ver Detalles →
+                  </span>
+                </div>
+              </div>
+
+              {/* Title & Description */}
+              <h3 className="text-xl font-semibold text-[var(--theme-ink)] group-hover/item:text-[var(--theme-accent)] transition-colors mb-2">
                 {project.title}
               </h3>
-              <p className="text-sm text-[var(--theme-ink-muted)] font-mono mb-3">
-                {t('projects.client')} {project.client}
-              </p>
-              <p className="text-sm md:text-base text-[var(--theme-ink-muted)] leading-relaxed font-light mb-4">
+              <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light mb-4 line-clamp-3">
                 {project.description}
               </p>
+            </div>
 
-              {/* Badges & Technologies */}
-              <div className="mt-auto space-y-3">
-                {project.metrics && project.metrics.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.metrics.map((m, mIdx) => (
-                      <span key={mIdx} className="text-[10px] font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <FiTrendingUp className="w-2.5 h-2.5" />
-                        {m}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {project.architectureBadges && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.architectureBadges.map((badge, bIdx) => (
-                      <span key={bIdx} className="badge-accent py-0.5">
-                        {badge}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, tIdx) => (
-                    <span key={tIdx} className="badge">
-                      {tech}
+            {/* Badges & Metrics Strip */}
+            <div className="space-y-3 pt-2 border-t border-[var(--theme-border)]">
+              {project.metrics && project.metrics.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {project.metrics.slice(0, 3).map((m, mIdx) => (
+                    <span key={mIdx} className="text-[10px] font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <FiTrendingUp className="w-2.5 h-2.5" />
+                      {m}
                     </span>
                   ))}
                 </div>
+              )}
+
+              <div className="flex flex-wrap gap-1.5">
+                {project.technologies.slice(0, 5).map((tech, tIdx) => (
+                  <span key={tIdx} className="badge text-[10px] py-0.5">
+                    {tech}
+                  </span>
+                ))}
+                {project.technologies.length > 5 && (
+                  <span className="badge text-[10px] py-0.5">
+                    +{project.technologies.length - 5}
+                  </span>
+                )}
               </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Modal Detail View */}
+      {/* ─── MODAL DETAIL VIEW (RESPONSIVE & NDA-SAFE) ──────────────── */}
       <AnimatePresence>
         {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--theme-ink)]/20 backdrop-blur-sm">
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 bg-black/80 backdrop-blur-md overflow-y-auto"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedProject(null);
+            }}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-2xl bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25 }}
+              className="w-full max-w-5xl bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] rounded-2xl p-6 sm:p-8 md:p-10 max-h-[92vh] overflow-y-auto shadow-2xl relative my-auto space-y-6"
             >
+              {/* Close Button */}
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 p-2 text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] rounded-full bg-[var(--theme-border)] hover:bg-[var(--theme-border-strong)] transition-colors"
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] rounded-full bg-[var(--theme-border)] hover:bg-[var(--theme-border-strong)] transition-colors z-20"
+                aria-label="Cerrar modal"
               >
                 <FiX className="w-5 h-5" />
               </button>
 
-              <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono text-xs uppercase mb-2">
-                <span>{selectedProject.category}</span>
-                <span>•</span>
-                <span>{selectedProject.client}</span>
+              {/* Modal Header */}
+              <div className="space-y-2 pr-10">
+                <div className="flex flex-wrap items-center gap-2 text-[var(--theme-accent)] font-mono text-xs uppercase">
+                  <span className="badge-accent py-0.5">{selectedProject.category}</span>
+                  <span>•</span>
+                  <span>{selectedProject.client}</span>
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl font-semibold text-[var(--theme-ink)] tracking-tight">
+                  {selectedProject.title}
+                </h3>
+                <p className="text-xs sm:text-sm font-mono text-[var(--theme-ink-muted)]">
+                  {selectedProject.longDescription || selectedProject.description}
+                </p>
               </div>
 
-              <h3 className="text-2xl font-mono font-bold text-[var(--theme-ink)] mb-2">
-                {selectedProject.title}
-              </h3>
-
-              <div className="w-full h-56 rounded-xl overflow-hidden mb-6 bg-[var(--theme-bg)] relative">
-                <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] to-transparent opacity-80" />
+              {/* Modal Tabs Navigation */}
+              <div className="flex items-center gap-3 border-b border-[var(--theme-border)] pb-3">
+                <button
+                  onClick={() => setModalTab('case-study')}
+                  className={`px-4 py-2 rounded-lg text-xs font-mono transition-all ${
+                    modalTab === 'case-study'
+                      ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
+                      : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
+                  }`}
+                >
+                  1. Caso de Estudio &amp; Reto Técnico
+                </button>
+                <button
+                  onClick={() => setModalTab('architecture')}
+                  className={`px-4 py-2 rounded-lg text-xs font-mono transition-all ${
+                    modalTab === 'architecture'
+                      ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
+                      : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
+                  }`}
+                >
+                  2. Arquitectura &amp; Seguridad (NDA-Safe)
+                </button>
               </div>
 
-              <div className="space-y-4 text-xs md:text-sm text-[var(--theme-ink-muted)] font-light leading-relaxed">
-                {!selectedProject.problem && (
-                  <p>{selectedProject.longDescription || selectedProject.description}</p>
-                )}
+              {/* Tab 1: Case Study */}
+              {modalTab === 'case-study' && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-6"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Left: Image & Stack */}
+                    <div className="lg:col-span-5 space-y-4">
+                      <div className="w-full rounded-xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border)] aspect-video relative">
+                        <img
+                          src={selectedProject.image}
+                          alt={selectedProject.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
 
-                {selectedProject.problem && (
-                  <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-red-500/20 space-y-1.5">
-                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-mono font-bold text-xs uppercase tracking-wider">
-                      <FiAlertCircle className="w-4 h-4" />
-                      <span>{t('projects.sectionProblem')}</span>
-                    </div>
-                    <p>{selectedProject.problem}</p>
-                  </div>
-                )}
-
-                {selectedProject.decision && (
-                  <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-accent)]/20 space-y-1.5">
-                    <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono font-bold text-xs uppercase tracking-wider">
-                      <FiSettings className="w-4 h-4" />
-                      <span>{t('projects.sectionDecision')}</span>
-                    </div>
-                    <p>{selectedProject.decision}</p>
-                  </div>
-                )}
-
-                {selectedProject.tradeoff && (
-                  <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border-strong)] space-y-1.5">
-                    <div className="flex items-center gap-2 text-[var(--theme-ink)] font-mono font-bold text-xs uppercase tracking-wider">
-                      <FiGitBranch className="w-4 h-4" />
-                      <span>{t('projects.sectionTradeoff')}</span>
-                    </div>
-                    <p>{selectedProject.tradeoff}</p>
-                  </div>
-                )}
-
-                {selectedProject.impact && (
-                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs uppercase tracking-wider">
-                      <FiTrendingUp className="w-4 h-4" />
-                      <span>{t('projects.sectionImpact')}</span>
-                    </div>
-                    <p className="text-[var(--theme-ink)] font-normal">{selectedProject.impact}</p>
-
-                    {selectedProject.metrics && (
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {selectedProject.metrics.map((metric, idx) => (
-                          <span key={idx} className="badge bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30">
-                            <FiCheckCircle className="w-3 h-3" />
-                            <span>{metric}</span>
+                      {/* Key Metrics */}
+                      {selectedProject.metrics && (
+                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
+                          <span className="font-mono text-xs font-semibold text-[var(--theme-ink)] block">
+                            Métricas &amp; Despliegue:
                           </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {selectedProject.metrics.map((m, mIdx) => (
+                              <span key={mIdx} className="badge bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-[10px]">
+                                <FiTrendingUp className="w-2.5 h-2.5" />
+                                {m}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Technologies */}
+                      <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
+                        <span className="font-mono text-xs font-semibold text-[var(--theme-ink)] block">
+                          Stack Tecnológico:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedProject.technologies.map((tech, idx) => (
+                            <span key={idx} className="badge text-[10px]">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Detailed Structured Sections */}
+                    <div className="lg:col-span-7 space-y-4">
+                      {/* Problem Statement */}
+                      {selectedProject.problem && (
+                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-red-500/20 space-y-1.5">
+                          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-mono font-bold text-xs uppercase">
+                            <FiAlertCircle className="w-4 h-4" />
+                            <span>1. El Reto de Negocio &amp; Problema Técnico</span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                            {selectedProject.problem}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Architecture Decision */}
+                      {selectedProject.decision && (
+                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-accent)]/20 space-y-1.5">
+                          <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono font-bold text-xs uppercase">
+                            <FiSettings className="w-4 h-4" />
+                            <span>2. Decisión de Ingeniería &amp; Patrón Aplicado</span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                            {selectedProject.decision}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Trade-off */}
+                      {selectedProject.tradeoff && (
+                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border-strong)] space-y-1.5">
+                          <div className="flex items-center gap-2 text-[var(--theme-ink)] font-mono font-bold text-xs uppercase">
+                            <FiGitBranch className="w-4 h-4" />
+                            <span>3. Trade-off &amp; Compensaciones Asumidas</span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                            {selectedProject.tradeoff}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Impact */}
+                      {selectedProject.impact && (
+                        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-1.5">
+                          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs uppercase">
+                            <FiCheckCircle className="w-4 h-4" />
+                            <span>4. Impacto Cuantitativo &amp; Resultado Real</span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-[var(--theme-ink)] font-normal leading-relaxed">
+                            {selectedProject.impact}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Key Features List */}
+                  {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
+                    <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
+                      <h4 className="font-mono text-xs font-semibold text-[var(--theme-ink)] uppercase tracking-wide flex items-center gap-2">
+                        <FiCheck className="w-4 h-4 text-emerald-500" />
+                        <span>Funcionalidades &amp; Módulos Desarrollados:</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        {selectedProject.keyFeatures.map((feat, fIdx) => (
+                          <div key={fIdx} className="flex items-start gap-2 text-xs text-[var(--theme-ink-muted)] font-light">
+                            <span className="text-[var(--theme-accent)] mt-0.5">•</span>
+                            <span>{feat}</span>
+                          </div>
                         ))}
                       </div>
-                    )}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </motion.div>
+              )}
 
-                {selectedProject.architectureBadges && (
-                  <div>
-                    <h4 className="text-xs font-mono font-bold text-[var(--theme-accent)] uppercase mb-2">
-                      {t('projects.sectionStack')}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedProject.architectureBadges.map((badge, idx) => (
-                        <span key={idx} className="badge-accent">
-                          <FiCheckCircle className="w-3 h-3 text-[var(--theme-accent)]" />
-                          <span>{badge}</span>
-                        </span>
-                      ))}
+              {/* Tab 2: Architecture & Security (NDA-Safe) */}
+              {modalTab === 'architecture' && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-6"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Architecture Overview */}
+                    <div className="editorial-card p-5 rounded-xl border border-[var(--theme-border)] space-y-3">
+                      <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono text-xs font-bold uppercase">
+                        <FiLayers className="w-4 h-4" />
+                        <span>Diseño de Arquitectura &amp; Flujo de Datos</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                        {selectedProject.architectureOverview || 'Arquitectura estructurada bajo principios de Clean Architecture y bajo acoplamiento.'}
+                      </p>
+                      
+                      {selectedProject.architectureBadges && (
+                        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[var(--theme-border)]">
+                          {selectedProject.architectureBadges.map((badge, bIdx) => (
+                            <span key={bIdx} className="badge-accent text-[10px]">
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Security & Compliance */}
+                    <div className="editorial-card p-5 rounded-xl border border-[var(--theme-border)] space-y-3">
+                      <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-mono text-xs font-bold uppercase">
+                        <FiShield className="w-4 h-4" />
+                        <span>Seguridad, RBAC &amp; Cumplimiento</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
+                        {selectedProject.securityAndCompliance || 'Implementación de roles RBAC, autenticación JWT segura y pistas de auditoría.'}
+                      </p>
                     </div>
                   </div>
-                )}
 
-                <div>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.technologies.map((tech, idx) => (
-                      <span key={idx} className="badge">
-                        {tech}
+                  {/* NDA Disclaimer Note */}
+                  <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                    <FiLock className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 block uppercase">
+                        Nota de Confidencialidad &amp; Cumplimiento Contractual (NDA-Safe)
                       </span>
-                    ))}
+                      <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
+                        {selectedProject.ndaDisclaimer || 'La información expuesta describe exclusivamente patrones arquitectónicos de dominio público, metodologías de ingeniería de software y tecnologías aplicadas, protegiendo llaves criptográficas, credenciales internas y bases de datos privadas.'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              )}
 
-              <div className="flex flex-wrap gap-4 items-center pt-6 mt-6 border-t border-[var(--theme-border)]">
+              {/* Action Buttons Footer */}
+              <div className="flex flex-wrap gap-3 items-center pt-4 border-t border-[var(--theme-border)]">
                 {selectedProject.githubUrl && (
                   <a
                     href={selectedProject.githubUrl}
@@ -282,7 +433,7 @@ export const ProjectsPage: React.FC = () => {
                     className="btn-primary text-xs flex items-center gap-2"
                   >
                     <FiExternalLink className="w-4 h-4" />
-                    <span>{t('projects.liveDemo')}</span>
+                    <span>{selectedProject.category === 'mobile' ? 'Ver en Google Play Store' : t('projects.liveDemo')}</span>
                   </a>
                 )}
                 <button

@@ -49,7 +49,7 @@ export const Navbar: React.FC = () => {
           : 'bg-[var(--theme-bg)]'
       }`}
     >
-      <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-14 flex items-center justify-between">
 
         {/* Brand */}
         <NavLink

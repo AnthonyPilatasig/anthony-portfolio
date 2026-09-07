@@ -11,6 +11,10 @@ export interface IProject {
   decision?: string;
   tradeoff?: string;
   impact?: string;
+  architectureOverview?: string;
+  securityAndCompliance?: string;
+  keyFeatures?: string[];
+  ndaDisclaimer?: string;
   metrics?: string[];
   image: string;
   technologies: string[];

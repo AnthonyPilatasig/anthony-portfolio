@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="w-full max-w-5xl mx-auto mt-20 border-t border-[var(--theme-border)] pt-10 pb-14 px-6">
+    <footer className="w-full max-w-7xl mx-auto mt-20 border-t border-[var(--theme-border)] pt-10 pb-14 px-4 sm:px-6 lg:px-8 xl:px-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         {/* Identity */}
         <div className="space-y-3">

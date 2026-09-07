@@ -33,7 +33,7 @@ export const AboutPage: React.FC = () => {
   const [vulnGameOpen, setVulnGameOpen] = useState(false);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-32 md:pt-40 pb-20">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}
