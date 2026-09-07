@@ -7,108 +7,134 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 export const portfolioData: IPortfolioData = {
   personal: {
     name: "Anthony David Pilatasig Macas",
-    title: "Lead Software Developer & Architect",
-    subtitle: "Diseño y construyo sistemas empresariales, núcleos académicos y aplicaciones multiplataforma con .NET 8, Clean Architecture, CQRS y React.",
-    bio: "Ingeniero de software, docente técnico y apasionado de la lógica de videojuegos. Lidero el diseño arquitectónico de ecosistemas institucionales de alta concurrencia (.NET 8, Clean Architecture, CQRS, Angular y React Native) y formo a nuevas generaciones de ingenieros en paradigmas de POO y calidad de código.",
-    tagline: "Construyo sistemas empresariales de misión crítica de día; diseño motores lógicos de videojuegos y arquitecturas de alto rendimiento de noche.",
+    title: "Full Stack Developer & Mobile Lead",
+    subtitle: "Especializado en .NET 8, Angular, React Native y bases de datos relacionales",
+    bio: "Desarrollador Full Stack con +3 años de experiencia construyendo aplicaciones web, móviles y de escritorio en el ecosistema .NET (C#), Angular y React Native. En el ISTPET lidero el desarrollo de la app oficial 'Mi ISTPET' (publicada en Google Play) y la modernización de los sistemas académicos y de recursos humanos. Además, imparto clases prácticas de programación y comparto mi afición por la lógica de videojuegos, el anime y el streaming en Twitch.",
+    tagline: "Desarrollando software institucional que resuelve problemas reales; explorando lógica de videojuegos, código limpio y streaming.",
     location: "Quito, Ecuador (UTC-5)",
     email: "antpila3848@gmail.com",
+    phone: "+593 98 358 8715",
     github: "https://github.com/AnthonyPilatasig",
     linkedin: "https://linkedin.com/in/anthony-pilatasig",
     twitch: "https://twitch.tv/anthony_pilatasig",
-    status: "Disponible para Desafíos Lead & Full Stack",
+    status: "Disponible para Proyectos & Desafíos Full Stack",
     avatar: asset("assets/anthony_profile.png"),
-    avatarAlt: asset("assets/anthony_avatar_alt.png"),
+    avatarReal: asset("assets/anthony_real.jpg"),
   },
   manifesto: [
     {
       number: "01",
-      title: "Cero Latencia Innecesaria (Sub-100ms)",
-      description: "Cada consulta SQL, índice relacional y handler CQRS debe justificarse por su rendimiento. La velocidad de respuesta es una característica esencial de la experiencia de usuario y la eficiencia de costos en la nube."
+      title: "Código con Sentido Práctico",
+      description: "La mejor arquitectura es la que resuelve el problema real de forma simple y mantenible, sin sobreingeniería innecesaria ni complicaciones artificiales."
     },
     {
       number: "02",
-      title: "Clean Architecture con Propósito",
-      description: "La arquitectura por capas desacopladas no es un dogma decorativo; es el escudo que protege las reglas de negocio contra la obsolescencia y los cambios de infraestructura o librerías externas."
+      title: "Rendimiento & Experiencia de Usuario",
+      description: "En web y móvil, cada milisegundo cuenta. Optimizar consultas, reducir re-renders y prever el funcionamiento offline cuando falla la conexión."
     },
     {
       number: "03",
-      title: "De la Lógica de Videojuegos a Sistemas Críticos",
-      description: "La prevención de estados inconsistentes, la concurrencia en bucles de juego y la encapsulación estricta en un RPG son los mismos cimientos matemáticos que hacen indestructible a un core transaccional empresarial."
+      title: "Pasión por la Lógica y los Detalles",
+      description: "Tanto al programar un motor de combate RPG en Java como al diseñar un módulo de inscripciones en .NET 8, la clave está en el control estricto de estados y excepciones."
     },
     {
       number: "04",
-      title: "Enseñar es la Prueba Suprema de Dominio",
-      description: "Como docente universitario de ingeniería, defiendo que el código Senior debe ser autoexplicativo, auditable y testeable. Si no puedes guiar a un estudiante a entenderlo y refactorizarlo, tu diseño aún no es simple."
+      title: "Aprender y Compartir en Comunidad",
+      description: "Dar clases de programación refuerza los fundamentos y el hábito de escribir código limpio y legible para que cualquier compañero de equipo pueda entenderlo."
     }
   ],
   teachingHighlights: [
     {
-      subject: "Programación Orientada a Objetos & SOLID",
-      studentsCount: "+120 Alumnos",
-      description: "Cátedra práctica de modelado de dominio, herencia vs composición, polimorfismo estricto y diseño desacoplado en Java y C#.",
-      focus: ["POO Pura", "Interfaces", "SOLID", "Patrones GoF", "Clean Code"]
+      subject: "Paradigmas & Programación Orientada a Objetos",
+      studentsCount: "Cátedra ISTPET",
+      description: "Clases prácticas sobre modelado de clases, herencia, polimorfismo, interfaces y diseño desacoplado en Java y C#.",
+      focus: ["POO", "Polimorfismo", "Interfaces", "Clean Code"]
     },
     {
-      subject: "Estructuras de Datos & Complejidad Algorítmica",
-      studentsCount: "3 Ciclos Lectivos",
-      description: "Laboratorios de análisis computacional O(n), gestión de memoria, programación dinámica (Knapsack) y estructuras recursivas.",
-      focus: ["Big-O Analysis", "Recursividad", "Matrices 2D", "Dynamic Programming"]
+      subject: "Algoritmos & Estructuras de Datos",
+      studentsCount: "Laboratorios Prácticos",
+      description: "Ejercicios de lógica computacional, matrices bidimensionales, recursividad y estructuras de datos aplicadas.",
+      focus: ["Matrices 2D", "Recursión", "Lógica Algorítmica"]
     },
     {
-      subject: "Mentoría de Proyectos Integradores",
-      studentsCount: "15+ Equipos",
-      description: "Dirección técnica de proyectos reales de software: pipelines de pruebas unitarias, diseño de base de datos relacional y control de versiones Git.",
-      focus: ["Code Review", "Unit Testing", "Git Flow", "Refactorización"]
+      subject: "Buenas Prácticas & Repositorios GitHub",
+      studentsCount: "Mentoría de Proyectos",
+      description: "Guía a estudiantes en el uso de control de versiones con Git, trabajo colaborativo y estructura limpia de proyectos.",
+      focus: ["Git / GitHub", "Code Review", "Estructura Modular"]
+    }
+  ],
+  certifications: [
+    {
+      title: "CCNAv7: Introduction to Networks / Switching & Routing / Enterprise Automation",
+      issuer: "Cisco Networking Academy",
+      category: "Redes & Infraestructura"
+    },
+    {
+      title: "Fundamentos de Python (Nivel 1 y 2)",
+      issuer: "Cisco / Python Institute",
+      category: "Programación"
     }
   ],
   experience: [
     {
       id: 1,
-      role: "Software Developer Lead & Architect",
-      company: "ItspetDev (Instituto Superior Tecnológico Mayor Pedro Traversari)",
-      period: "2022 - Presente",
-      description: "Lidero la arquitectura e implementación del ecosistema digital institucional completo: Core Académico (Gacad), la App Móvil oficial (Mi ISTPET) y el ERP de Recursos Humanos.",
+      role: "Desarrollador Full Stack & Mobile Lead",
+      company: "Instituto Superior Tecnológico Mayor Pedro Traversari (ISTPET)",
+      period: "Mayo 2024 - Presente",
+      description: "Lidero el desarrollo de las aplicaciones institucionales clave, incluyendo la app móvil oficial y la modernización de los sistemas core de la institución.",
       achievements: [
-        "Diseñé e implementé la arquitectura backend distribuida con Clean Architecture & CQRS en .NET 8, reduciendo latencias de consulta a sub-100ms.",
-        "Desarrollé desde cero la App Móvil oficial 'Mi ISTPET' en React Native, conectando a +2,500 estudiantes activos con notificaciones en tiempo real y carnet digital QR.",
-        "Optimicé modelos de datos relacionales en SQL Server y MySQL, logrando un 35% de mejora en la eficiencia de índices de inscripciones y notas.",
-        "Integré protocolos de seguridad JWT, firmas digitales para contratos laborales y módulos transaccionales bancarios."
+        "Desarrollé y publiqué en Google Play Store la app móvil 'Mi ISTPET' (React Native Expo | .NET 8), digitalizando al 100% el carnet estudiantil con código QR y consultas en vivo.",
+        "Modernicé el ERP Académico Institucional (Gacad) con C#, Angular y Clean Architecture/CQRS sobre bases de datos legacy para matrículas y distributivos docentes.",
+        "Implementé el Sistema Integrado de Recursos Humanos en Angular y .NET 8 con MySQL para contratos y expedientes digitales.",
+        "Desarrollé la Bolsa de Empleo institucional, AMMI Online y la automatización del reglamento de becas (Bienestar Institucional).",
+        "Configuré pipelines CI/CD en Azure DevOps con Git Flow y especificación de APIs RESTful en Swagger."
       ],
-      technologies: ["C#", ".NET 8", "Angular", "React Native", "Clean Architecture", "CQRS", "SQL Server", "MySQL", "Docker"]
+      technologies: [".NET 8", "C#", "Angular", "React Native", "Expo", "Clean Architecture", "CQRS", "MySQL", "Azure DevOps"]
     },
     {
       id: 2,
-      role: "Docente Universitario de Ingeniería de Software (Tiempo Parcial)",
+      role: "Docente Técnico Superior — Área de Desarrollo de Software",
       company: "Instituto Superior Tecnológico Mayor Pedro Traversari",
-      period: "2024 - Presente",
-      description: "Imparto cátedras avanzadas de programación, estructuras de datos y paradigmas de arquitectura, formando a más de 120 futuros desarrolladores.",
+      period: "Octubre 2025 - Presente",
+      description: "Imparto cátedras prácticas sobre algoritmos, programación orientada a objetos y evaluación de proyectos de software en Git y GitHub.",
       achievements: [
-        "Diseñé e instruí planes de estudio prácticos sobre Programación Orientada a Objetos (POO), Clean Code y patrones de diseño empresariales.",
-        "Mentorée 15+ proyectos integradores estudiantiles con enfoque en refactorización, pruebas unitarias y calidad de código.",
-        "Implementé laboratorios prácticos de análisis algorítmico y optimización de complejidad O(n)."
+        "Instrucción práctica sobre diseño e implementación de paradigmas algorítmicos y POO.",
+        "Fomento de buenas prácticas de ingeniería evaluando proyectos y repositorios en GitHub.",
+        "Mentoría técnica para proyectos estudiantiles de fin de ciclo."
       ],
-      technologies: ["Clean Code", "POO", "Algoritmos", "Mentoring Técnico", "Arquitectura de Software", "SOLID"]
+      technologies: ["POO", "Java", "C#", "Algoritmos", "Git / GitHub", "Clean Code"]
     },
     {
       id: 3,
-      role: "Consultor & Software Engineer Backend",
-      company: "Proyectos de Consultoría Externa / Sector Público",
-      period: "2023 - Presente",
-      description: "Desarrollo de soluciones backend de misión crítica y sistemas de procesamiento de datos para el sector público y privado en Ecuador.",
+      role: "Desarrollador Full Stack (Proyectos Sectoriales)",
+      company: "Club Deportivo Miguel Iturralde (CDMI) & SIAT / AvialB",
+      period: "2023 - 2024",
+      description: "Desarrollo de soluciones web y móviles para gestión deportiva y peritaje vial de campo.",
       achievements: [
-        "Construí los módulos de investigación y procesamiento vial SIAT / AVIALB para la Policía Nacional del Ecuador.",
-        "Diseñé una arquitectura de microservicios en .NET 8, Docker y Kubernetes para entornos educativos de evaluación masiva."
+        "Scorecraft (CDMI): Creé de forma integral la plataforma en C# y Angular para centralizar métricas deportivas, inscripciones y fichas médicas.",
+        "AvialB / SIAT: Diseñé un ecosistema offline-first (Ionic, Angular, C#) con sincronización asíncrona local-servidor para levantamiento de accidentes en campo sin internet."
       ],
-      technologies: ["C#", ".NET Core", "TypeScript", "Microservicios", "Docker", "PostgreSQL", "Security Protocols"]
+      technologies: ["C#", ".NET Core", "Angular", "Ionic", "Offline-First", "SQL Server"]
+    },
+    {
+      id: 4,
+      role: "Pasante Desarrollador Móvil",
+      company: "Universidad de Especialidades Turísticas (UDET)",
+      period: "Marzo 2022 - Marzo 2023",
+      description: "Desarrollo de aplicación móvil multiplataforma en Xamarin e integración de servicios RESTful institucionales.",
+      achievements: [
+        "Construcción de módulos móviles multiplataforma en Xamarin.",
+        "Integración de endpoints RESTful para consulta de trámites universitarios."
+      ],
+      technologies: ["Xamarin", "C#", ".NET", "RESTful APIs"]
     }
   ],
   education: [
     {
       id: 1,
-      degree: "Ingeniería de Software",
-      institution: "Universidad Politécnica Salesiana (Quito, Ecuador)",
-      status: "5to Semestre en curso"
+      degree: "Ingeniería en Software",
+      institution: "Universidad Politécnica Salesiana (UPS, Quito)",
+      status: "En curso"
     },
     {
       id: 2,
@@ -118,25 +144,44 @@ export const portfolioData: IPortfolioData = {
     }
   ],
   skills: {
-    frontend: ["Angular", "React", "React Native", "TypeScript", "Tailwind CSS", "RxJS", "State Management (Redux/Context)"],
-    backend: ["C# (.NET 8 / .NET Core)", "Node.js / Express", "Java (Spring/Core)", "Python", "RESTful APIs", "JWT Auth", "Entity Framework Core"],
-    desktop: ["C# WinForms / WPF", "Java Desktop (Swing)", "Game Loops & POO", "SQLite Local Storage"],
-    databases: ["SQL Server", "MySQL", "PostgreSQL", "SQLite", "MongoDB"],
-    architecture: ["Clean Architecture", "CQRS", "Domain-Driven Design (DDD)", "Microservicios", "Docker", "Kubernetes", "Git & CI/CD"]
+    frontend: ["Angular 17+", "React", "React Native (Expo)", "Ionic", "TypeScript", "JavaScript", "Tailwind CSS"],
+    backend: [".NET 8 / C#", "CQRS & Clean Architecture", "RESTful APIs", "Java (Spring/Core)", "Python", "Microservicios"],
+    desktop: ["C# .NET Desktop", "Java Swing (POO)", "SQLite Local Storage", "LINQ"],
+    databases: ["MySQL", "SQL Server", "SQLite", "PostgreSQL"],
+    architecture: ["Azure DevOps", "CI/CD Pipelines", "Docker", "Git & Git Flow", "Scrum", "OpenAPI (Swagger)"]
   },
   projects: [
     {
       id: 1,
-      title: "Gacad — Core Académico Institucional",
+      title: "Mi ISTPET — App Móvil Estudiantil (Play Store)",
+      client: "Instituto Superior Tecnológico Traversari",
+      category: "mobile",
+      description: "Aplicación móvil oficial publicada en Google Play Store. Digitalizó el carnet estudiantil con código QR e incluye horarios, notas y pagos en vivo.",
+      longDescription: "Plataforma móvil nativa/híbrida construida en React Native Expo y backend en .NET 8. Eliminó por completo el carnet físico institucional y conecta a miles de estudiantes con sus registros académicos.",
+      problem: "Dependencia de carnets plásticos físicos y falta de un canal móvil directo para que los estudiantes consulten horarios, notas y estados de pago.",
+      decision: "Desarrollé la app en React Native Expo consumiendo APIs seguras en .NET 8 con JWT y renderizado dinámico de carnet digital con código QR validable en portería.",
+      tradeoff: "Ajuste de tiempos de bundling y persistencia local para asegurar apertura fluida en teléfonos de gama de entrada.",
+      impact: "Publicada exitosamente en Google Play Store; digitalización del 100% de carnets estudiantiles institucionales.",
+      metrics: ["Google Play Store", "Carnet QR Digital", ".NET 8 + Expo"],
+      image: asset("assets/projects/mi_istpet_preview.jpg"),
+      technologies: ["React Native", "Expo", "TypeScript", ".NET 8", "MySQL", "JWT"],
+      architectureBadges: ["Mobile App", "Google Play", "QR Verification"],
+      liveUrl: "https://play.google.com/store/apps",
+      githubUrl: "https://github.com/ItspetDev",
+      isFeatured: true
+    },
+    {
+      id: 2,
+      title: "Gacad — ERP Académico Institucional (Core ISTPET)",
       client: "Instituto Superior Tecnológico Traversari",
       category: "web",
-      description: "Núcleo web administrativo de alta disponibilidad para la gestión académica completa: admisiones, expedientes, matrículas y actas de calificaciones.",
-      longDescription: "Sistema centralizado que digitalizó al 100% las operaciones académicas institucionales. Diseñado sobre una arquitectura desacoplada para garantizar alta concurrencia durante los periodos de matriculación masiva.",
-      problem: "Procesos académicos manuales y cuellos de botella en inscripciones simultáneas que provocaban caídas del servidor.",
-      decision: "Adopté Clean Architecture y CQRS en C# .NET 8 con Angular, separando estrictamente la lectura (Queries) de la escritura (Commands) con handlers MediatR independientes.",
-      tradeoff: "Mayor tiempo de desarrollo inicial y sobrecosto conceptual en la definición de DTOs y Handlers a cambio de escalabilidad y aislamiento de errores.",
-      impact: "Tiempos de respuesta sub-100ms en consultas de notas y 100% de digitalización sin caídas del sistema en los últimos 4 periodos lectivos.",
-      metrics: ["Sub-100ms Latencia", "+2,500 Usuarios Activos", "100% Uptime Lectivo"],
+      description: "Sistema web core para la gestión integral de matrículas, distributivos docentes, asignación de aulas y actas de calificaciones.",
+      longDescription: "Modernización del sistema académico institucional. Diseñado sobre una arquitectura desacoplada con Clean Architecture y patrón CQRS, integrándose eficazmente con bases de datos legacy.",
+      problem: "Sistemas dispersos y lentitud en procesos de matriculación y asignación de distributivos docentes sobre bases de datos históricas.",
+      decision: "Implementé la solución Full Stack con Angular y C# .NET 8 bajo Clean Architecture y CQRS, separando consultas de comandos y preservando la integridad de datos históricos.",
+      tradeoff: "Mayor tiempo inicial de modelado de handlers y DTOs a cambio de estabilidad total durante los periodos de matrícula.",
+      impact: "Centralización digital de todos los procesos académicos institucionales con consultas rápidas y seguras.",
+      metrics: ["Clean Architecture", "CQRS Pattern", "Legacy DB Integration"],
       image: asset("assets/projects/gacad_preview.jpg"),
       technologies: ["Angular", "TypeScript", "C#", ".NET 8", "SQL Server", "Clean Architecture", "CQRS"],
       architectureBadges: ["Core Académico", "Clean Architecture", "CQRS Pattern"],
@@ -145,54 +190,54 @@ export const portfolioData: IPortfolioData = {
       isFeatured: true
     },
     {
-      id: 2,
-      title: "Mi ISTPET — App Móvil Estudiantil",
-      client: "Instituto Superior Tecnológico Traversari",
-      category: "mobile",
-      description: "Aplicación móvil oficial full-stack para la comunidad universitaria con horario, notas en vivo, pagos y carnet digital QR.",
-      longDescription: "Plataforma móvil nativa/híbrida que brinda acceso inmediato a los registros estudiantiles, verificación de carnet digital por código QR e integración con pasarelas de pago.",
-      problem: "Falta de un canal directo de comunicación y consulta académica en movilidad para los estudiantes.",
-      decision: "Construí la aplicación en React Native con TypeScript, consumiendo la API RESTful securizada en .NET 8 con caché local de sesiones.",
-      tradeoff: "Compatibilidad entre versiones iOS/Android requirió optimización rigurosa de re-renders y bundling de assets.",
-      impact: "+2,500 descargas activas y reducción del 70% en consultas presenciales en ventanilla de secretaría.",
-      metrics: ["+2,500 Estudiantes", "-70% Trámites Presenciales", "QR Validado"],
-      image: asset("assets/projects/mi_istpet_preview.jpg"),
-      technologies: ["React Native", "TypeScript", "API REST", ".NET 8", "MySQL", "JWT"],
-      architectureBadges: ["Mobile Native", "Offline Persistence", "QR Security"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/ItspetDev",
-      isFeatured: true
-    },
-    {
       id: 3,
-      title: "ERP Recursos Humanos ISTPET (Talento Humano)",
+      title: "Sistema Integrado de Recursos Humanos (ISTPET)",
       client: "Instituto Superior Tecnológico Traversari",
       category: "web",
-      description: "Ecosistema integral de gestión de personal institucional: nóminas, expedientes docentes, firmas digitales de contratos y control de asistencia biométrica.",
-      longDescription: "Módulo administrativo de alta confidencialidad para el departamento de Recursos Humanos. Integra flujos de aprobación de permisos, cálculo automático de aportes y firmado electrónico.",
-      problem: "Firma manual de cientos de contratos semestrales y dispersión de registros de asistencia docente.",
-      decision: "Estructuré una arquitectura por capas en .NET 8 con autenticación RBAC, cifrado de documentos y frontend reactivo en Angular.",
-      tradeoff: "Flujos de validación criptográfica más estrictos para contratos a cambio de validez legal plena y auditoría inmutable.",
-      impact: "Reducción de 2 semanas a 24 horas en el proceso de contratación y renovación docente semestral.",
-      metrics: ["Firma Digital p12", "Cero Pérdida Documental", "Automatización RRHH"],
+      description: "Plataforma web para control de contratos laborales, expediente digital del personal, evaluaciones de desempeño y gestión docente.",
+      longDescription: "Módulo administrativo integral desarrollado en Angular y .NET 8 con base de datos MySQL. Unifica el ciclo de vida del personal administrativo y docente con control de roles.",
+      problem: "Control manual y disperso de contratos semestrales, expedientes de docentes y evaluaciones de desempeño.",
+      decision: "Diseñé una arquitectura web en C# y Angular con SharePoint/almacenamiento seguro, autenticación JWT y control de accesos RBAC.",
+      tradeoff: "Validaciones más estrictas en la subida y firma de documentos para garantizar validez y auditoría interna.",
+      impact: "Trazabilidad unificada del 100% de expedientes y contratos del personal de la institución.",
+      metrics: ["Trazabilidad 100%", "Expediente Digital", "MySQL + .NET 8"],
       image: asset("assets/projects/microservices_preview.jpg"),
-      technologies: ["C#", ".NET 8", "Angular", "TypeScript", "MySQL", "JWT", "Firma Digital"],
-      architectureBadges: ["Enterprise ERP", "Digital Signatures", "RBAC Security"],
+      technologies: ["Angular", "TypeScript", "C#", ".NET 8", "MySQL", "JWT", "SharePoint"],
+      architectureBadges: ["Enterprise RRHH", "Digital Records", "RBAC Security"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true
     },
     {
       id: 4,
-      title: "DebtManager — Motor Financiero C# Desktop",
+      title: "Scorecraft — Plataforma Deportiva CDMI",
+      client: "Club Deportivo Miguel Iturralde",
+      category: "web",
+      description: "Plataforma web integral para gestión de métricas deportivas, inscripciones de jugadores y seguimiento de fichas médicas.",
+      longDescription: "Sistema desarrollado de inicio a fin (análisis, base de datos relacional, C# y Angular) para centralizar la información deportiva, control de entrenamientos y fichas de salud de los deportistas.",
+      problem: "Registros en papel de fichas médicas e inscripciones dispersas que dificultaban el seguimiento del rendimiento deportivo.",
+      decision: "Construí un panel web reactivo en Angular con backend .NET y SQL Server para registro centralizado y reportes automáticos.",
+      tradeoff: "Requirió capacitación a los entrenadores para digitalizar datos en lugar de formularios físicos.",
+      impact: "Centralización total de expedientes deportivos y fichas de salud de los jugadores del club.",
+      metrics: ["Gestión Deportiva", "Fichas Médicas", "C# + Angular"],
+      image: asset("assets/projects/gacad_preview.jpg"),
+      technologies: ["Angular", "TypeScript", "C#", ".NET Core", "SQL Server"],
+      architectureBadges: ["Sports Analytics", "Health Records", "Full Stack"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/AnthonyPilatasig",
+      isFeatured: true
+    },
+    {
+      id: 5,
+      title: "DebtManager — Software Financiero C# Desktop",
       client: "Proyecto de Ingeniería Personal",
       category: "desktop",
-      description: "Aplicación nativa de escritorio en C# para control financiero personal, seguimiento de amortizaciones y gestión de deudas fuera de línea.",
-      longDescription: "Herramienta de escritorio enfocada en el rendimiento sin dependencia de red. Incluye calculadoras de cuotas con métodos francés y alemán, gráficos interactivos y persistencia relacional local.",
-      problem: "Inseguridad de privacidad y dependencia de conexión a internet en aplicaciones de gestión financiera existentes.",
-      decision: "Implementé una aplicación nativa C# .NET Desktop con motor de persistencia en SQLite cifrado localmente y LINQ.",
-      tradeoff: "Limitación al entorno de escritorio a cambio de cero latencia de red y privacidad total del usuario.",
-      impact: "Cálculo instantáneo de cuotas y reportes financieros exportables con tiempo de respuesta < 5ms.",
+      description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones sin internet.",
+      longDescription: "Herramienta de escritorio enfocada en el rendimiento instantáneo y la privacidad. Incluye calculadoras financieras (método francés y alemán), gráficos interactivos y persistencia relacional local.",
+      problem: "Dependencia de internet y falta de privacidad en apps comerciales para gestión de deudas personales.",
+      decision: "Implementé una aplicación nativa en C# con SQLite local y consultas LINQ optimizadas para respuesta en menos de 5ms.",
+      tradeoff: "Software de escritorio sin sincronización en la nube, priorizando la privacidad total y cero latencia.",
+      impact: "Cálculos financieros instantáneos y control completo de amortizaciones 100% offline.",
       metrics: ["< 5ms Respuesta", "100% Offline", "Cifrado SQLite"],
       image: asset("assets/projects/debtmanager_preview.jpg"),
       technologies: ["C#", ".NET Desktop", "SQLite", "LINQ", "UI Design"],
@@ -202,80 +247,62 @@ export const portfolioData: IPortfolioData = {
       isFeatured: true
     },
     {
-      id: 5,
-      title: "RPG Journey — Motor POO & Combate por Turnos",
-      client: "Proyecto de Lógica & Game Dev en Java",
-      category: "desktop",
-      description: "Motor de juego de rol interactivo por turnos desarrollado en Java puro con Swing, demostrando herencia, polimorfismo, contratos de interfaces y colas LIFO.",
-      longDescription: "Diseño desacoplado entre el modelo de dominio (paquete `com.rpg.logica`) y la interfaz visual (`com.rpg.gui`). Incluye clases como Guerrero, Mago, Asesino, Tanque, Soporte, Curandero con progresión de estadísticas y renderizado personalizado de barras de vida.",
-      problem: "Crear una arquitectura limpia y extensible para reglas de combate y progresión sin acoplar la UI con las fórmulas matemáticas de daño.",
-      decision: "Apliqué la interfaz `AccionEspecial` y clases abstractas para asegurar polimorfismo estricto, junto a un `Stack` LIFO para inventario y `HashSet` para el Códice de ítems únicos.",
-      tradeoff: "Mayor volumen de clases y diseño previo de jerarquías a cambio de poder añadir nuevas clases de personajes en minutos sin tocar la UI.",
-      impact: "Arquitectura 100% desacoplada que sirvió como caso de estudio práctico para cátedras de Programación Orientada a Objetos.",
-      metrics: ["POO Pura & Swing", "Polimorfismo Dinámico", "Custom UI Painting"],
-      image: asset("assets/projects/buscaminas_preview.jpg"),
-      technologies: ["Java", "Swing", "POO Avanzada", "Polimorfismo", "Data Structures"],
-      architectureBadges: ["Game Dev POO", "Decoupled Architecture", "Java Swing"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/AnthonyPilatasig",
-      isFeatured: true
-    },
-    {
       id: 6,
-      title: "Buscaminas POO Recursivo (Java Desktop)",
-      client: "Proyecto de Algoritmos & POO",
-      category: "desktop",
-      description: "Juego nativo de escritorio aplicando POO y algoritmo de destape recursivo en matrices bidimensionales con control de estados y temporizadores.",
-      longDescription: "Implementación matemática del clásico Buscaminas que gestiona la dispersión aleatoria de minas, el cálculo de casillas adyacentes y el destape en cascada mediante llamadas recursivas controladas.",
-      problem: "Manejar la expansión del tablero en áreas vacías sin causar desbordamientos de pila (StackOverflow) ni congelar el hilo de la interfaz de usuario.",
-      decision: "Estructuré la lógica en una matriz bidimensional con un algoritmo de búsqueda recursiva en profundidad acotada y eventos de Swing.",
-      tradeoff: "Uso de Swing nativo para asegurar compatibilidad universal en cualquier sistema operativo sin dependencias externas.",
-      impact: "Respuesta instantánea < 1ms por clic y caso de estudio de recursividad para estudiantes de ingeniería.",
-      metrics: ["< 1ms Latencia", "Recursión Bidimensional", "Zero Dependencias"],
-      image: asset("assets/projects/buscaminas_preview.jpg"),
-      technologies: ["Java", "Swing", "Recursividad", "Matrices 2D", "Event-Driven"],
-      architectureBadges: ["Algorithmic Engine", "Recursion Depth", "Zero-Dependency"],
+      title: "AvialB / SIAT — Peritaje Vial Offline-First",
+      client: "Consultoría / Peritaje Vial",
+      category: "mobile",
+      description: "Ecosistema móvil y web offline-first para levantamiento de accidentes de tránsito en campo con sincronización asíncrona.",
+      longDescription: "Aplicación desarrollada en Ionic, Angular y C# diseñada para peritos e investigadores que deben registrar evidencias viales en zonas rurales sin cobertura de internet.",
+      problem: "Pérdida de conectividad en carreteras y levantamiento manual de partes periciales en papel.",
+      decision: "Diseñé una arquitectura Offline-First con base de datos local en el dispositivo y sincronización en segundo plano al recuperar red.",
+      tradeoff: "Lógica compleja de resolución de conflictos durante la sincronización de partes policiales.",
+      impact: "Digitalización de partes periciales directamente en el lugar del siniestro con validez formal.",
+      metrics: ["Offline-First", "Ionic + Angular", "Sync Asíncrona"],
+      image: asset("assets/projects/gacad_preview.jpg"),
+      technologies: ["Ionic", "Angular", "TypeScript", "C#", ".NET Core", "SQL Server"],
+      architectureBadges: ["Offline-First", "Field Operations", "Async Sync"],
       liveUrl: "#",
-      githubUrl: "https://github.com/AnthonyPilatasig",
+      githubUrl: "https://github.com/ItspetDev",
       isFeatured: false
     },
     {
       id: 7,
-      title: "Arquitectura Microservicios Educación (.NET 8)",
-      client: "Proyecto Avanzado de Arquitectura",
-      category: "architecture",
-      description: "Ecosistema distribuido backend en .NET 8 con comunicación por eventos, CQRS, DDD y despliegue en contenedores Docker y Kubernetes.",
-      longDescription: "Diseño de arquitectura distribuida para plataformas de aprendizaje masivo. Separa la analítica de estudiantes, los exámenes adaptativos y el catálogo de contenidos en servicios independientes.",
-      problem: "Monolitos educativos que colapsan ante picos de demanda durante exámenes de fin de ciclo.",
-      decision: "Estructuré microservicios independientes en .NET 8 orquestados en Kubernetes con arquitectura hexagonales y contratos gRPC / REST.",
-      tradeoff: "Mayor complejidad operacional y necesidad de tracing distribuido a cambio de aislamiento total de fallos.",
-      impact: "Aislamiento completo de fallos: un fallo en analítica no interrumpe la toma de exámenes.",
-      metrics: ["Fault Isolation", "Zero-Downtime K8s", "CQRS / DDD"],
-      image: asset("assets/projects/microservices_preview.jpg"),
-      technologies: ["C#", ".NET 8", "CQRS", "DDD", "Docker", "Kubernetes", "gRPC"],
-      architectureBadges: ["Microservices", "Event-Driven", "K8s Distributed"],
+      title: "RPG Journey — Motor de Juego Java POO (Swing)",
+      client: "Proyecto de Lógica & Game Dev",
+      category: "desktop",
+      description: "Juego de rol interactivo por turnos desarrollado en Java puro con Swing, demostrando herencia, polimorfismo, interfaces y colecciones.",
+      longDescription: "Diseño desacoplado entre el modelo de lógica (`com.rpg.logica`) y la presentación gráfica (`com.rpg.gui`). Incluye clases como Guerrero, Mago, Asesino, Tanque, Soporte, Curandero con polimorfismo dinámico y custom painting para las barras de estado.",
+      problem: "Diseñar un motor de combate por turnos extensible sin acoplar la interfaz visual con las fórmulas matemáticas de daño.",
+      decision: "Apliqué la interfaz `AccionEspecial`, clases abstractas para los personajes y estructuras LIFO (`Stack`) para el inventario de botín.",
+      tradeoff: "Mayor estructuración de clases a cambio de poder añadir nuevas clases de personajes sin modificar la interfaz gráfica.",
+      impact: "Proyecto didáctico y funcional que ilustra los principios de POO pura en Java.",
+      metrics: ["POO Pura & Swing", "Polimorfismo Dinámico", "Custom Painting"],
+      image: asset("assets/projects/buscaminas_preview.jpg"),
+      technologies: ["Java", "Swing", "POO Avanzada", "Polimorfismo", "Estructuras de Datos"],
+      architectureBadges: ["Game Dev POO", "Decoupled Architecture", "Java Swing"],
       liveUrl: "#",
-      githubUrl: "https://github.com/AnthonyPilatasig/net8-education-microservices",
+      githubUrl: "https://github.com/AnthonyPilatasig",
       isFeatured: false
     },
     {
       id: 8,
-      title: "SIAT / AVIALB — Policía Nacional del Ecuador",
-      client: "Policía Nacional del Ecuador",
-      category: "web",
-      description: "Sistema especializado para la recolección, auditoría y análisis de accidentes de tránsito del Servicio de Investigación de Accidentes de Tránsito.",
-      longDescription: "Aplicación gubernamental para estandarización de parte policial, levantamiento de evidencias viales y generación de informes periciales oficiales con trazabilidad auditables.",
-      problem: "Formatos físicos dispersos y falta de trazabilidad forense en investigaciones de accidentes viales.",
-      decision: "Implementé módulos en .NET Core y SQL Server con pistas de auditoría inmutables y control de acceso basado en roles (RBAC).",
-      tradeoff: "Estrictos requisitos de validación previa que incrementan la longitud de los formularios a cambio de seguridad legal.",
-      impact: "Estandarización del 100% de partes de peritaje vial institucional con validez jurídica.",
-      metrics: ["100% Estándar Pericial", "RBAC Security", "Audit Trail"],
-      image: asset("assets/projects/gacad_preview.jpg"),
-      technologies: ["C#", ".NET Core", "TypeScript", "SQL Server", "Security Protocols"],
-      architectureBadges: ["Public Security", "Audit Trails", "Enterprise .NET"],
+      title: "Buscaminas POO Recursivo (Java Desktop)",
+      client: "Proyecto Algorítmico",
+      category: "desktop",
+      description: "Juego nativo de escritorio aplicando POO y algoritmo de destape recursivo en matrices bidimensionales con control de estados.",
+      longDescription: "Implementación matemática del clásico Buscaminas que gestiona la dispersión aleatoria de minas, el cálculo de casillas adyacentes y el destape en cascada mediante llamadas recursivas.",
+      problem: "Manejar la expansión de casillas vacías en el tablero sin congelar la interfaz de usuario.",
+      decision: "Estructuré la lógica en matrices 2D con un algoritmo recursivo de búsqueda en profundidad acotada y eventos de Swing.",
+      tradeoff: "Interfaz gráfica nativa de Swing sin librerías externas para máxima portabilidad.",
+      impact: "Respuesta instantánea y código limpio para fines didácticos en algoritmos.",
+      metrics: ["< 1ms Latencia", "Recursión en Matrices", "Swing Nativo"],
+      image: asset("assets/projects/buscaminas_preview.jpg"),
+      technologies: ["Java", "Swing", "Recursividad", "Matrices 2D", "Event-Driven"],
+      architectureBadges: ["Algorithmic Engine", "Recursion", "Zero-Dependency"],
       liveUrl: "#",
-      githubUrl: "https://github.com/ItspetDev",
+      githubUrl: "https://github.com/AnthonyPilatasig",
       isFeatured: false
     }
   ]
 };
+

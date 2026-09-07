@@ -59,6 +59,12 @@ export interface ITeachingHighlight {
   focus: string[];
 }
 
+export interface ICertification {
+  title: string;
+  issuer: string;
+  category: string;
+}
+
 export interface IPortfolioData {
   personal: {
     name: string;
@@ -67,16 +73,18 @@ export interface IPortfolioData {
     bio: string;
     location: string;
     email: string;
+    phone: string;
     github: string;
     linkedin: string;
     twitch: string;
     status: string;
     avatar: string;
-    avatarAlt: string;
+    avatarReal: string;
     tagline: string;
   };
   manifesto: IManifestoItem[];
   teachingHighlights: ITeachingHighlight[];
+  certifications: ICertification[];
   experience: IExperience[];
   education: IEducation[];
   skills: ISkills;
