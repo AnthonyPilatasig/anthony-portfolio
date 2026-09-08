@@ -34,6 +34,23 @@ export const ProjectsPage: React.FC = () => {
     } catch { /* silent */ }
   };
 
+  // Prevent background body scroll when modal or lightbox is open
+  useEffect(() => {
+    if (selectedProject || zoomedImage) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [selectedProject, zoomedImage]);
+
   // Close modal on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -187,100 +204,106 @@ export const ProjectsPage: React.FC = () => {
       <AnimatePresence>
         {selectedProject && (
           <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 bg-black/80 backdrop-blur-md overflow-y-auto"
+            className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md overscroll-contain"
             onClick={(e) => {
               if (e.target === e.currentTarget) setSelectedProject(null);
             }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.96, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.25 }}
-              className="w-full max-w-5xl bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] rounded-2xl p-6 sm:p-8 md:p-10 max-h-[92vh] overflow-y-auto shadow-2xl relative my-auto space-y-6"
+              exit={{ opacity: 0, scale: 0.96, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-5xl h-[92vh] max-h-[920px] flex flex-col bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] rounded-2xl shadow-2xl relative overflow-hidden my-auto"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] rounded-full bg-[var(--theme-border)] hover:bg-[var(--theme-border-strong)] transition-colors z-20"
-                aria-label="Cerrar modal"
-              >
-                <FiX className="w-5 h-5" />
-              </button>
+              {/* Fixed Header & Tabs */}
+              <div className="p-5 sm:p-6 md:p-8 pb-3 border-b border-[var(--theme-border)] shrink-0 space-y-4 bg-[var(--theme-surface)] relative">
+                {/* Close Button */}
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] rounded-full bg-[var(--theme-border)] hover:bg-[var(--theme-border-strong)] transition-colors z-20"
+                  aria-label="Cerrar modal"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
 
-              {/* Modal Header */}
-              <div className="space-y-2 pr-10">
-                <div className="flex flex-wrap items-center gap-2 text-[var(--theme-accent)] font-mono text-xs uppercase">
-                  <span className="badge-accent py-0.5">{selectedProject.category}</span>
-                  <span>•</span>
-                  <span>{selectedProject.client}</span>
+                {/* Modal Header */}
+                <div className="space-y-1.5 pr-10">
+                  <div className="flex flex-wrap items-center gap-2 text-[var(--theme-accent)] font-mono text-xs uppercase">
+                    <span className="badge-accent py-0.5">{selectedProject.category}</span>
+                    <span>•</span>
+                    <span>{selectedProject.client}</span>
+                  </div>
+
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[var(--theme-ink)] tracking-tight">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-mono text-[var(--theme-ink-muted)] line-clamp-2">
+                    {selectedProject.longDescription || selectedProject.description}
+                  </p>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-semibold text-[var(--theme-ink)] tracking-tight">
-                  {selectedProject.title}
-                </h3>
-                <p className="text-xs sm:text-sm font-mono text-[var(--theme-ink-muted)]">
-                  {selectedProject.longDescription || selectedProject.description}
-                </p>
-              </div>
-
-              {/* Modal Tabs Navigation (4 Tabs) */}
-              <div className="flex flex-wrap items-center gap-2 border-b border-[var(--theme-border)] pb-3">
-                <button
-                  onClick={() => setModalTab('case-study')}
-                  className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                    modalTab === 'case-study'
-                      ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                      : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                  }`}
-                >
-                  <FiInfo className="w-3.5 h-3.5" />
-                  <span>1. Caso de Estudio &amp; Reto</span>
-                </button>
-                <button
-                  onClick={() => setModalTab('architecture')}
-                  className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                    modalTab === 'architecture'
-                      ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                      : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                  }`}
-                >
-                  <FiLayers className="w-3.5 h-3.5" />
-                  <span>2. Diagrama de Arquitectura</span>
-                </button>
-                <button
-                  onClick={() => setModalTab('gallery')}
-                  className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                    modalTab === 'gallery'
-                      ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                      : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                  }`}
-                >
-                  <FiMonitor className="w-3.5 h-3.5" />
-                  <span>3. Capturas &amp; UI Mockups</span>
-                  {selectedProject.screenshots && (
-                    <span className="ml-1 px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">
-                      {selectedProject.screenshots.length}
-                    </span>
-                  )}
-                </button>
-                {selectedProject.codeSnippet && (
+                {/* Modal Tabs Navigation (4 Tabs) */}
+                <div className="flex flex-wrap items-center gap-2 pt-1">
                   <button
-                    onClick={() => setModalTab('code')}
+                    onClick={() => setModalTab('case-study')}
                     className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                      modalTab === 'code'
+                      modalTab === 'case-study'
                         ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
                         : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
                     }`}
                   >
-                    <FiCpu className="w-3.5 h-3.5" />
-                    <span>4. Código &amp; Backend (.NET/TS)</span>
+                    <FiInfo className="w-3.5 h-3.5" />
+                    <span>1. Caso de Estudio &amp; Reto</span>
                   </button>
-                )}
+                  <button
+                    onClick={() => setModalTab('architecture')}
+                    className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
+                      modalTab === 'architecture'
+                        ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
+                        : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
+                    }`}
+                  >
+                    <FiLayers className="w-3.5 h-3.5" />
+                    <span>2. Diagrama de Arquitectura</span>
+                  </button>
+                  <button
+                    onClick={() => setModalTab('gallery')}
+                    className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
+                      modalTab === 'gallery'
+                        ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
+                        : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
+                    }`}
+                  >
+                    <FiMonitor className="w-3.5 h-3.5" />
+                    <span>3. Capturas Reales</span>
+                    {selectedProject.screenshots && (
+                      <span className="ml-1 px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">
+                        {selectedProject.screenshots.length}
+                      </span>
+                    )}
+                  </button>
+                  {selectedProject.codeSnippet && (
+                    <button
+                      onClick={() => setModalTab('code')}
+                      className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
+                        modalTab === 'code'
+                          ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
+                          : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
+                      }`}
+                    >
+                      <FiCpu className="w-3.5 h-3.5" />
+                      <span>4. Código &amp; Backend (.NET/TS)</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* ── TAB 1: CASE STUDY ──────────────────────────────── */}
-              {modalTab === 'case-study' && (
+              {/* Scrollable Content Body */}
+              <div className="flex-1 overflow-y-auto p-5 sm:p-6 md:p-8 space-y-6 overscroll-contain">
+                {/* ── TAB 1: CASE STUDY ──────────────────────────────── */}
+                {modalTab === 'case-study' && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -670,9 +693,10 @@ export const ProjectsPage: React.FC = () => {
                   </div>
                 </motion.div>
               )}
+              </div>
 
-              {/* Action Buttons Footer */}
-              <div className="flex flex-wrap gap-3 items-center pt-4 border-t border-[var(--theme-border)]">
+              {/* Action Buttons Sticky Footer */}
+              <div className="p-4 sm:p-5 border-t border-[var(--theme-border)] bg-[var(--theme-surface)] shrink-0 flex flex-wrap gap-3 items-center">
                 {selectedProject.githubUrl && (
                   <a
                     href={selectedProject.githubUrl}
