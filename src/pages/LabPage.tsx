@@ -1,13 +1,41 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
-  FiCpu, FiZap, FiMonitor, FiUpload, FiExternalLink
+  FiCpu, FiZap, FiMonitor, FiExternalLink
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
+import { RevealText } from '../components/common/RevealText';
+
+const MODE_COUNT = 5;
+
+const PREVIEW_TILES = [
+  { color: '#F43F5E', label: 'RPG' },
+  { color: '#EF4444', label: 'WASM' },
+  { color: '#06B6D4', label: 'Cyber' },
+  { color: '#10B981', label: 'Snake' },
+  { color: '#F59E0B', label: '2048' },
+];
 
 export const LabPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const infoCards = [
+    {
+      key: 'rpgmaker',
+      icon: <Gamepad2 className="w-5 h-5" />,
+    },
+    {
+      key: 'wasm',
+      icon: <FiCpu className="w-5 h-5" />,
+    },
+    {
+      key: 'native',
+      icon: <FiZap className="w-5 h-5" />,
+    },
+  ] as const;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24 font-sans">
@@ -20,13 +48,13 @@ export const LabPage: React.FC = () => {
         className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 border-b border-[var(--theme-border)] pb-8"
       >
         <div>
-          <span className="section-index">05 / GAME DEV &amp; VIRTUAL CONSOLE</span>
+          <span className="section-index">{t('lab.badge')}</span>
           <h1 className="text-4xl md:text-6xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight flex items-center gap-3">
-            <Gamepad2 className="w-10 h-10 text-[var(--theme-accent)]" />
-            <span>Laboratorio &amp; Consola Virtual</span>
+            <Gamepad2 className="w-9 h-9 md:w-10 md:h-10 text-[var(--theme-accent)] shrink-0" />
+            <RevealText text={t('lab.title')} />
           </h1>
           <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2 max-w-2xl">
-            Consola virtual interactiva y sandbox de motores gráficos. Ejecuta proyectos web en formato <code>.zip</code>, binarios locales en WebAssembly o mini-games nativos en TypeScript.
+            {t('lab.subtitle')}
           </p>
         </div>
       </motion.div>
@@ -47,8 +75,8 @@ export const LabPage: React.FC = () => {
           onKeyDown={e => e.key === 'Enter' && navigate('/console')}
           style={{
             background: 'linear-gradient(135deg, #0F1629 0%, #050811 100%)',
-            border: '1px solid rgba(99,102,241,0.25)',
-            boxShadow: '0 0 60px rgba(99,102,241,0.08)',
+            border: '1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent)',
+            boxShadow: '0 0 60px color-mix(in srgb, var(--theme-accent) 12%, transparent)',
             minHeight: 320,
           }}
         >
@@ -56,7 +84,7 @@ export const LabPage: React.FC = () => {
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-100"
             style={{
-              background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(99,102,241,0.18) 0%, transparent 70%)',
+              background: 'radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--theme-accent) 22%, transparent) 0%, transparent 70%)',
             }}
           />
 
@@ -79,13 +107,17 @@ export const LabPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <span
                 className="text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest"
-                style={{ background: 'rgba(99,102,241,0.2)', color: '#A5B4FC', border: '1px solid rgba(99,102,241,0.3)' }}
+                style={{
+                  background: 'color-mix(in srgb, var(--theme-accent) 20%, transparent)',
+                  color: 'var(--theme-accent)',
+                  border: '1px solid color-mix(in srgb, var(--theme-accent) 35%, transparent)',
+                }}
               >
-                Virtual Console
+                {t('lab.consoleEyebrow')}
               </span>
               <span className="flex items-center gap-1.5 text-[11px]" style={{ color: '#34D399' }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                En línea
+                {t('lab.consoleStatus')}
               </span>
             </div>
 
@@ -98,17 +130,17 @@ export const LabPage: React.FC = () => {
                 AP-Deck
               </h2>
               <p className="text-slate-400 mt-3 text-base max-w-lg leading-relaxed">
-                Consola virtual interactiva de alto rendimiento. Carga proyectos desde <strong className="text-slate-200">.zip</strong> en memoria RAM, ejecuta binarios locales con el Intérprete WebAssembly, o disfruta los mini-games integrados.
+                {t('lab.consoleDesc')}
               </p>
             </div>
 
             {/* Feature pills */}
             <div className="flex flex-wrap gap-2">
               {[
-                { icon: <FiUpload className="w-3.5 h-3.5" />, label: 'Carga .zip sin descomprimir' },
-                { icon: <Gamepad2 className="w-3.5 h-3.5" />, label: 'Intérprete WebAssembly' },
-                { icon: <FiMonitor className="w-3.5 h-3.5" />, label: 'Pantalla completa' },
-                { icon: <FiCpu className="w-3.5 h-3.5" />, label: 'Compatible con móvil' },
+                { icon: <Gamepad2 className="w-3.5 h-3.5" />, label: t('lab.features.rpgmaker') },
+                { icon: <FiCpu className="w-3.5 h-3.5" />, label: t('lab.features.wasm') },
+                { icon: <FiMonitor className="w-3.5 h-3.5" />, label: t('lab.features.fullscreen') },
+                { icon: <FiZap className="w-3.5 h-3.5" />, label: t('lab.features.mobile') },
               ].map(f => (
                 <span
                   key={f.label}
@@ -133,10 +165,10 @@ export const LabPage: React.FC = () => {
                 onClick={e => { e.stopPropagation(); navigate('/console'); }}
               >
                 <FiExternalLink className="w-4 h-4" />
-                Abrir AP-Deck
+                {t('lab.consoleCta')}
               </button>
               <span className="text-[12px] text-slate-500">
-                5 modos disponibles
+                {t('lab.consoleModes', { count: MODE_COUNT })}
               </span>
             </div>
           </div>
@@ -146,13 +178,7 @@ export const LabPage: React.FC = () => {
             className="relative z-10 flex items-center gap-2 px-8 sm:px-10 lg:px-14 pb-8 overflow-x-auto"
             onClick={e => e.stopPropagation()}
           >
-            {[
-              { color: '#6366F1', label: 'ZIP' },
-              { color: '#F43F5E', label: 'WASM' },
-              { color: '#06B6D4', label: 'Cyber' },
-              { color: '#10B981', label: 'Snake' },
-              { color: '#F59E0B', label: '2048' },
-            ].map(g => (
+            {PREVIEW_TILES.map(g => (
               <div
                 key={g.label}
                 className="shrink-0 w-14 h-14 rounded-[14px] flex items-center justify-center"
@@ -177,56 +203,24 @@ export const LabPage: React.FC = () => {
         transition={{ duration: 0.55, delay: 0.2 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono"
       >
-        <div className="editorial-card p-6 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-[var(--theme-accent)]">
-            <FiUpload className="w-5 h-5" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              Carga de Paquetes ZIP
-            </h3>
+        {infoCards.map(({ key, icon }) => (
+          <div key={key} className="editorial-card p-6 rounded-2xl space-y-3">
+            <div className="flex items-center gap-2 text-[var(--theme-accent)]">
+              {icon}
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
+                {t(`lab.cards.${key}.title`)}
+              </h3>
+            </div>
+            <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
+              {t(`lab.cards.${key}.desc`)}
+            </p>
+            <div className="pt-2 flex flex-wrap gap-1.5">
+              {(t(`lab.cards.${key}.tags`, { returnObjects: true }) as string[]).map(tag => (
+                <span key={tag} className="badge-accent text-[9px]">{tag}</span>
+              ))}
+            </div>
           </div>
-          <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Sube cualquier juego o demo web empaquetado en <code>.zip</code> (con <code>index.html</code> en la raíz). Se descomprime con JSZip en memoria RAM — sin almacenamiento ni subida a servidores.
-          </p>
-          <div className="pt-2 flex flex-wrap gap-1.5">
-            <span className="badge-accent text-[9px]">JSZip</span>
-            <span className="badge-accent text-[9px]">Blob URLs</span>
-            <span className="badge-accent text-[9px]">100% Local</span>
-          </div>
-        </div>
-
-        <div className="editorial-card p-6 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-[var(--theme-accent)]">
-            <FiCpu className="w-5 h-5" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              Emulación WebAssembly
-            </h3>
-          </div>
-          <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Entorno virtual con núcleos abiertos libretro compilados a WebAssembly. Ejecuta tus volcados personales y homebrew en un sandbox local con guardado en el navegador.
-          </p>
-          <div className="pt-2 flex flex-wrap gap-1.5">
-            <span className="badge-accent text-[9px]">Cores WASM</span>
-            <span className="badge-accent text-[9px]">libretro Runtime</span>
-            <span className="badge-accent text-[9px]">Zero Server</span>
-          </div>
-        </div>
-
-        <div className="editorial-card p-6 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-[var(--theme-accent)]">
-            <FiZap className="w-5 h-5" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
-              Juegos Widescreen Nativos
-            </h3>
-          </div>
-          <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-            Cyber-Encounter (J-RPG táctico), Retro Snake Neon DX y 2048 Logic Matrix — construidos en TypeScript y CSS moderno a pantalla completa con soporte de teclado y mando.
-          </p>
-          <div className="pt-2 flex flex-wrap gap-1.5">
-            <span className="badge-accent text-[9px]">Widescreen</span>
-            <span className="badge-accent text-[9px]">Web Audio API</span>
-            <span className="badge-accent text-[9px]">Gamepad API</span>
-          </div>
-        </div>
+        ))}
       </motion.div>
     </div>
   );

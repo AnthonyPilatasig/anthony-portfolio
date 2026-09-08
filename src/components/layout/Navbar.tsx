@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiHome, FiFolder, FiBriefcase, FiUser, FiTerminal, FiMail, FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 
 export const Navbar: React.FC = () => {
   const { t, i18n } = useTranslation();

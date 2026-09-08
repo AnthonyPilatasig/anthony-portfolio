@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FiAward, FiRotateCcw, FiZap, FiVolume2, FiArrowUp, FiArrowDown, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+import { FiAward, FiArrowUp, FiArrowDown, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 const GRID_COLS = 28;
 const GRID_ROWS = 20;
@@ -128,6 +128,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({ onExit, onBack }) => {
       s.snake = [head, ...s.snake];
       if (head.x === s.food.x && head.y === s.food.y) {
         setScore((sc) => sc + 10);
+        setSpeed((sp) => Math.max(45, sp - 2));
         s.food = randomCell(s.snake);
       } else {
         s.snake.pop();
@@ -161,6 +162,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({ onExit, onBack }) => {
       food: randomCell(initialSnake),
     };
     setScore(0);
+    setSpeed(90);
     setGameOver(false);
     containerRef.current?.focus();
   };

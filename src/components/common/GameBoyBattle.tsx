@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiShield, FiZap, FiCoffee, FiRotateCcw, FiAward, FiActivity, FiX } from 'react-icons/fi';
-import { PixelSprite, makeCritterGrid, CRITTER_PALETTES } from './PixelSprite';
+import { FiShield, FiZap, FiCoffee, FiRotateCcw, FiAward, FiActivity } from 'react-icons/fi';
+import { PixelSprite } from './PixelSprite';
+import { makeCritterGrid, CRITTER_PALETTES } from './critterSprite';
 
 const ENEMY_NAMES = ['NULL_POINTER_EXCEPTION', 'RACE_CONDITION', 'MEMORY_LEAK', 'DEADLOCK_MUTEX', 'STACK_OVERFLOW', 'SEGMENTATION_FAULT'];
 const PLAYER_MAX_HP = 100;
@@ -74,7 +74,7 @@ export const GameBoyBattle: React.FC<GameBoyBattleProps> = ({ onClose, onBack, o
   };
 
   const enemyCounterattack = () => {
-    let dmg = rand(8 + level * 2, 16 + level * 2);
+    const dmg = rand(8 + level * 2, 16 + level * 2);
     setHitFlash('player');
     setTimeout(() => setHitFlash(null), 250);
 

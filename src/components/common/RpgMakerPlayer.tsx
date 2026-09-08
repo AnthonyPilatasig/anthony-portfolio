@@ -21,7 +21,10 @@ export const RpgMakerPlayer: React.FC<RpgMakerPlayerProps> = ({ initialFile = nu
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [crtEnabled, setCrtEnabled] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showTouchControls, setShowTouchControls] = useState(false);
+  const [showTouchControls, setShowTouchControls] = useState(() =>
+    typeof window !== 'undefined' &&
+    ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024)
+  );
   const [logLines, setLogLines] = useState<string[]>([]);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -32,12 +35,6 @@ export const RpgMakerPlayer: React.FC<RpgMakerPlayerProps> = ({ initialFile = nu
 
   const addLog = useCallback((msg: string) => {
     setLogLines(prev => [...prev.slice(-19), msg]);
-  }, []);
-
-  // Detect mobile or touch screen automatically
-  useEffect(() => {
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024;
-    setShowTouchControls(isTouch);
   }, []);
 
   // Virtual Key Dispatcher for Touch Controls
@@ -59,7 +56,7 @@ export const RpgMakerPlayer: React.FC<RpgMakerPlayerProps> = ({ initialFile = nu
     if (nostalgistInstanceRef.current) {
       try {
         nostalgistInstanceRef.current.exit();
-      } catch (_) {}
+      } catch { /* ignore */ }
       nostalgistInstanceRef.current = null;
     }
 
@@ -199,7 +196,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
               return await res.blob();
             }
           }
-        } catch (_) {}
+        } catch { /* ignore */ }
         return await fetch(url).then(r => r.blob());
       };
 
@@ -271,7 +268,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
             let cur = '';
             for (const p of parts) {
               cur += '/' + p;
-              try { fs.mkdir(cur); } catch (_) {}
+              try { fs.mkdir(cur); } catch { /* ignore */ }
             }
           }
           try {
@@ -279,7 +276,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
               '/home/web_user/retroarch/userdata/system/RTP.mkxpz',
               '/home/web_user/retroarch/userdata/system/mkxp-z/RTP/Standard.mkxpz'
             );
-          } catch (_) {}
+          } catch { /* ignore */ }
         },
       });
 
@@ -305,7 +302,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
       if (nostalgistInstanceRef.current) {
         try {
           nostalgistInstanceRef.current.exit();
-        } catch (_) {}
+        } catch { /* ignore */ }
         nostalgistInstanceRef.current = null;
       }
     };
@@ -337,7 +334,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
             if (nostalgistInstanceRef.current) {
               try {
                 nostalgistInstanceRef.current.exit();
-              } catch (_) {}
+              } catch { /* ignore */ }
               nostalgistInstanceRef.current = null;
             }
             onBack();

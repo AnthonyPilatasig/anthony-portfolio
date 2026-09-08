@@ -31,7 +31,35 @@
   "lab": {
     "badge": "05 / The Lab",
     "title": "Things I built just for fun.",
-    "subtitle": "A tour of the easter eggs and technical experiments hidden inside this portfolio."
+    "subtitle": "A tour of the easter eggs and technical experiments hidden inside this portfolio.",
+    "consoleEyebrow": "Virtual Console",
+    "consoleStatus": "Online",
+    "consoleDesc": "A high-performance interactive virtual console. Run an RPG Maker / Pokémon Essentials engine in WebAssembly, emulate classic consoles with libretro cores, or enjoy native mini-games — everything runs 100% locally in your browser.",
+    "consoleCta": "Open AP-Deck",
+    "consoleModes": "{{count}} modes available",
+    "features": {
+      "rpgmaker": "RPG Maker engine in WASM",
+      "wasm": "Multi-console emulation",
+      "fullscreen": "Fullscreen mode",
+      "mobile": "Mobile friendly"
+    },
+    "cards": {
+      "rpgmaker": {
+        "title": "RPG Maker & Pokémon Essentials Engine",
+        "desc": "Launch any RPG Maker XP / VX / Ace or Pokémon Essentials project straight in the browser, powered by the mkxp-z core compiled to WebAssembly and running entirely client-side.",
+        "tags": ["mkxp-z WASM", "RGSS Runtime", "100% Local"]
+      },
+      "wasm": {
+        "title": "Multi-Console WebAssembly Emulation",
+        "desc": "An environment with open-source libretro cores compiled to WebAssembly, with automatic system detection: GBA, NDS, PS1, N64, SNES and Mega Drive, with local save support in the browser.",
+        "tags": ["libretro Cores", "Auto-Detection", "Zero Server"]
+      },
+      "native": {
+        "title": "Native Widescreen Mini-Games",
+        "desc": "Cyber-Encounter (tactical J-RPG), Retro Snake Neon DX and 2048 Logic Matrix, built with TypeScript and modern CSS with keyboard and gamepad support.",
+        "tags": ["Pure TypeScript", "Web Audio API", "Gamepad API"]
+      }
+    }
   },
   "techShowcase": {
     "badge": "Stack & Infrastructure",

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   FiPlay, FiMaximize2, FiMinimize2, FiTv, FiVolume2, FiVolumeX,
   FiArrowLeft, FiArrowRight, FiGrid, FiSettings,
-  FiAward, FiClock, FiUpload, FiX, FiChevronLeft, FiLogOut
+  FiAward, FiClock, FiUpload, FiChevronLeft, FiLogOut
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
 import JSZip from 'jszip';
@@ -46,7 +46,7 @@ class ModernConsoleAudio {
       gain.connect(this.ctx.destination);
       osc.start(now);
       osc.stop(now + 0.045);
-    } catch {}
+    } catch { /* audio not available */ }
   }
 
   playLaunch() {
@@ -69,7 +69,7 @@ class ModernConsoleAudio {
         osc.start(now + idx * 0.04);
         osc.stop(now + idx * 0.04 + 0.3);
       });
-    } catch {}
+    } catch { /* audio not available */ }
   }
 
   playBack() {
@@ -89,7 +89,7 @@ class ModernConsoleAudio {
       gain.connect(this.ctx.destination);
       osc.start(now);
       osc.stop(now + 0.08);
-    } catch {}
+    } catch { /* audio not available */ }
   }
 }
 
@@ -107,7 +107,7 @@ export interface ConsoleGame {
   bgGradient: string;
   accentColor: string;
   description: string;
-  type: 'zip-loader' | 'cartridge' | 'rpgmaker' | 'cyber-battle' | 'snake' | '2048';
+  type: 'cartridge' | 'rpgmaker' | 'cyber-battle' | 'snake' | '2048';
   src?: string;
   coverArt: string;
   tags: string[];
@@ -128,21 +128,6 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     type: 'rpgmaker',
     coverArt: GAME_COVERS.retroArch,
     tags: ['Universal RPG Maker', 'Pokémon Essentials', 'Cualquier .ZIP', '100% Local'],
-  },
-  {
-    id: 'zip-loader',
-    title: 'Cargar desde ZIP',
-    badge: 'TU JUEGO WEB',
-    platform: 'Cualquier Motor HTML5',
-    genre: 'Importador Instantáneo',
-    playtime: 'Ilimitado',
-    trophies: 'Modo Libre',
-    bgGradient: 'from-indigo-950 via-purple-950 to-[#050811]',
-    accentColor: '#6366F1',
-    description: 'Sube o arrastra cualquier juego web comprimido en formato .zip (con index.html en la raíz). Se extrae en la memoria RAM del navegador y se lanza con rendimiento 100% nativo sin subir nada a servidores.',
-    type: 'zip-loader',
-    coverArt: GAME_COVERS.zipLoader,
-    tags: ['HTML5 / Web', 'RPG Maker MV/MZ', 'Godot Web', '100% Local'],
   },
   {
     id: 'cartridge-slot',
@@ -207,53 +192,6 @@ const CONSOLE_GAMES: ConsoleGame[] = [
   },
 ];
 
-// ─── ZIP Extraction Helper ───────────────────────────────────────────────────
-interface ZipGameEntry {
-  name: string;
-  url: string;
-}
-
-async function extractZipToBlobs(file: File): Promise<ZipGameEntry[]> {
-  const zip = new JSZip();
-  const loaded = await zip.loadAsync(file);
-  const entries: ZipGameEntry[] = [];
-
-  const promises = Object.keys(loaded.files).map(async (path) => {
-    const entry = loaded.files[path];
-    if (entry.dir) return;
-    const blob = await entry.async('blob');
-    const mimeType = guessMime(path);
-    const blobWithType = new Blob([blob], { type: mimeType });
-    entries.push({ name: path, url: URL.createObjectURL(blobWithType) });
-  });
-
-  await Promise.all(promises);
-  return entries;
-}
-
-function guessMime(path: string): string {
-  const ext = path.split('.').pop()?.toLowerCase() ?? '';
-  const map: Record<string, string> = {
-    html: 'text/html',
-    js: 'application/javascript',
-    mjs: 'application/javascript',
-    css: 'text/css',
-    json: 'application/json',
-    png: 'image/png',
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    gif: 'image/gif',
-    svg: 'image/svg+xml',
-    webp: 'image/webp',
-    ogg: 'audio/ogg',
-    mp3: 'audio/mpeg',
-    wav: 'audio/wav',
-    wasm: 'application/wasm',
-    data: 'application/octet-stream',
-  };
-  return map[ext] ?? 'application/octet-stream';
-}
-
 interface ConsoleDashboardProps {
   embeddedFullscreen?: boolean;
 }
@@ -266,19 +204,16 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
   const [crtEnabled, setCrtEnabled] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [controllerConnected, setControllerConnected] = useState(false);
+  const [controllerConnected, setControllerConnected] = useState(() => {
+    if (typeof navigator === 'undefined' || typeof navigator.getGamepads !== 'function') return false;
+    const pads = navigator.getGamepads();
+    return !!pads && Array.from(pads).some(p => p !== null);
+  });
   const [showTrophies, setShowTrophies] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [isPortrait, setIsPortrait] = useState(false);
   const [showGameInfo, setShowGameInfo] = useState(false);
 
-  // ZIP loader state
-  const [zipLoading, setZipLoading] = useState(false);
-  const [zipError, setZipError] = useState<string | null>(null);
-  const [zipBlobEntries, setZipBlobEntries] = useState<ZipGameEntry[]>([]);
-  const [zipIframeSrc, setZipIframeSrc] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const blobsRef = useRef<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Cartridge loader state
@@ -304,7 +239,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           setActiveRunningGame(rpgGame);
           return;
         }
-      } catch {}
+      } catch { /* not an RPG Maker package, fall through to ROM loader */ }
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -314,7 +249,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         type: 'LOAD_ROM_DATA',
         name: file.name,
         data: arrayBuffer,
-      }, '*');
+      }, window.location.origin);
     }
     setCartridgeRomLoaded(true);
   };
@@ -336,15 +271,54 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     const handleDisconnect = () => setControllerConnected(false);
     window.addEventListener('gamepadconnected', handleConnect);
     window.addEventListener('gamepaddisconnected', handleDisconnect);
-    if (typeof navigator.getGamepads === 'function') {
-      const pads = navigator.getGamepads();
-      if (pads && Array.from(pads).some(p => p !== null)) setControllerConnected(true);
-    }
     return () => {
       window.removeEventListener('gamepadconnected', handleConnect);
       window.removeEventListener('gamepaddisconnected', handleDisconnect);
     };
   }, []);
+
+  const selectedGame = CONSOLE_GAMES[selectedIndex];
+
+  const selectGame = useCallback((updater: number | ((prev: number) => number)) => {
+    setShowGameInfo(false);
+    setSelectedIndex(prev => (typeof updater === 'function' ? updater(prev) : updater));
+  }, []);
+
+  const isCoarsePointer = () =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
+  const launchGame = useCallback((game: ConsoleGame) => {
+    if (soundEnabled) consoleAudio.playLaunch();
+    setActiveRunningGame(game);
+    if (isCoarsePointer() && containerRef.current) {
+      containerRef.current.requestFullscreen()
+        .then(() => {
+          setIsFullscreen(true);
+          const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+          orientation?.lock?.('landscape').catch(() => { /* orientation lock unsupported */ });
+        })
+        .catch(() => { /* fullscreen request rejected */ });
+    }
+  }, [soundEnabled]);
+
+  const closeGame = useCallback(() => {
+    if (soundEnabled) consoleAudio.playBack();
+    setActiveRunningGame(null);
+    setCartridgeRomLoaded(false);
+    const orientation = screen.orientation as ScreenOrientation & { unlock?: () => void };
+    orientation?.unlock?.();
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => { /* already exited */ });
+    setIsFullscreen(false);
+  }, [soundEnabled]);
+
+  const toggleFullscreen = () => {
+    if (!containerRef.current) return;
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => { /* fullscreen request rejected */ });
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => { /* already exited */ });
+    }
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -358,14 +332,14 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
       }
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         e.preventDefault();
-        setSelectedIndex(prev => {
+        selectGame(prev => {
           const next = (prev + 1) % CONSOLE_GAMES.length;
           if (soundEnabled) consoleAudio.playNavigate();
           return next;
         });
       } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         e.preventDefault();
-        setSelectedIndex(prev => {
+        selectGame(prev => {
           const next = (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length;
           if (soundEnabled) consoleAudio.playNavigate();
           return next;
@@ -380,7 +354,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, activeRunningGame, soundEnabled, navigate]);
+  }, [selectedIndex, activeRunningGame, soundEnabled, navigate, launchGame, selectGame]);
 
   // Portrait detector
   useEffect(() => {
@@ -397,133 +371,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     document.addEventListener('fullscreenchange', onFsChange);
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
-
-  useEffect(() => {
-    setShowGameInfo(false);
-  }, [selectedIndex]);
-
-  useEffect(() => {
-    return () => {
-      blobsRef.current.forEach(url => URL.revokeObjectURL(url));
-    };
-  }, []);
-
-  const selectedGame = CONSOLE_GAMES[selectedIndex];
-
-  const isCoarsePointer = () =>
-    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-
-  const launchGame = useCallback((game: ConsoleGame) => {
-    if (soundEnabled) consoleAudio.playLaunch();
-    setActiveRunningGame(game);
-    if (isCoarsePointer() && containerRef.current) {
-      containerRef.current.requestFullscreen()
-        .then(() => {
-          setIsFullscreen(true);
-          const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
-          orientation?.lock?.('landscape').catch(() => {});
-        })
-        .catch(() => {});
-    }
-  }, [soundEnabled]);
-
-  const closeGame = useCallback(() => {
-    if (soundEnabled) consoleAudio.playBack();
-    setActiveRunningGame(null);
-    setZipIframeSrc(null);
-    setZipError(null);
-    setCartridgeRomLoaded(false);
-    const orientation = screen.orientation as ScreenOrientation & { unlock?: () => void };
-    orientation?.unlock?.();
-    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-    setIsFullscreen(false);
-  }, [soundEnabled]);
-
-  const toggleFullscreen = () => {
-    if (!containerRef.current) return;
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
-    }
-  };
-
-  // ZIP Handler
-  const handleZipFile = async (file: File) => {
-    if (!file.name.toLowerCase().endsWith('.zip')) {
-      setZipError('El archivo debe ser un .zip');
-      return;
-    }
-    setZipLoading(true);
-    setZipError(null);
-    setZipBlobEntries([]);
-    setZipIframeSrc(null);
-
-    try {
-      blobsRef.current.forEach(url => URL.revokeObjectURL(url));
-      blobsRef.current = [];
-
-      const entries = await extractZipToBlobs(file);
-      blobsRef.current = entries.map(e => e.url);
-      setZipBlobEntries(entries);
-
-      const rootIndex =
-        entries.find(e => e.name.toLowerCase() === 'index.html') ||
-        entries.find(e => e.name.toLowerCase().endsWith('/index.html') && e.name.split('/').length === 2);
-
-      if (!rootIndex) {
-        const isRpgMaker = entries.some(e => {
-          const lower = e.name.toLowerCase();
-          return lower.endsWith('scripts.rxdata') ||
-                 lower.endsWith('game.ini') ||
-                 lower.endsWith('game.rgssad') ||
-                 lower.includes('data/scripts.rxdata');
-        });
-        const hasRom = entries.some(e => {
-          const ext = e.name.split('.').pop()?.toLowerCase();
-          return ['gba', 'nds', 'sfc', 'smc', 'z64', 'n64', 'iso', 'md', 'nes', 'gbc'].includes(ext || '');
-        });
-
-        if (isRpgMaker) {
-          setRpgMakerFile(file);
-          const rpgGame = CONSOLE_GAMES.find(g => g.id === 'rpg-maker') ?? CONSOLE_GAMES[0];
-          setActiveRunningGame(rpgGame);
-          setZipLoading(false);
-          return;
-        }
-
-        if (hasRom) {
-          const cartridgeGame = CONSOLE_GAMES.find(g => g.id === 'cartridge-slot') ?? CONSOLE_GAMES[2];
-          setActiveRunningGame(cartridgeGame);
-          setCartridgeRomLoaded(true);
-          setZipLoading(false);
-          const arrayBuffer = await file.arrayBuffer();
-          setTimeout(() => {
-            const iframe = document.getElementById('cartridgeIframe') as HTMLIFrameElement;
-            if (iframe?.contentWindow) {
-              iframe.contentWindow.postMessage({
-                type: 'LOAD_ROM_DATA',
-                name: file.name,
-                data: arrayBuffer,
-              }, '*');
-            }
-          }, 450);
-          return;
-        }
-
-        setZipError('No se encontró index.html ni una estructura de ROM / RPG Maker reconocida en el ZIP.');
-        setZipLoading(false);
-        return;
-      }
-
-      setZipIframeSrc(rootIndex.url);
-      setActiveRunningGame(CONSOLE_GAMES.find(g => g.id === 'zip-loader') ?? CONSOLE_GAMES[0]);
-    } catch (err) {
-      setZipError(`Error al extraer el ZIP: ${err instanceof Error ? err.message : String(err)}`);
-    } finally {
-      setZipLoading(false);
-    }
-  };
 
   const rootClasses = embeddedFullscreen
     ? 'fixed inset-0 w-screen h-screen z-[9999] bg-[#050811] flex flex-col overflow-hidden select-none'
@@ -720,32 +567,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
             {/* Game Screen Frame */}
             <div className="flex-1 min-h-0 flex items-stretch bg-black relative">
-              {activeRunningGame.type === 'zip-loader' && zipIframeSrc && (
-                <iframe
-                  src={zipIframeSrc}
-                  title="Juego cargado desde ZIP"
-                  className="w-full h-full border-0 bg-black"
-                  allow="autoplay; fullscreen; gamepad"
-                  sandbox="allow-scripts allow-same-origin allow-modals allow-pointer-lock allow-forms"
-                />
-              )}
-
-              {activeRunningGame.type === 'zip-loader' && !zipIframeSrc && (
-                <div className="flex-1 flex items-center justify-center p-6 bg-[#050811]">
-                  <div className="text-slate-400 text-center max-w-sm">
-                    <FiUpload className="w-12 h-12 mx-auto mb-3 text-indigo-400 animate-bounce" />
-                    <h3 className="text-lg font-bold text-white">Cargar juego ZIP</h3>
-                    <p className="text-xs text-slate-400 mt-1 mb-4">Sube un archivo .zip que contenga index.html en la raíz.</p>
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="px-6 py-2.5 rounded-full font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg transition-transform active:scale-95 cursor-pointer"
-                    >
-                      Seleccionar Archivo .ZIP
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {activeRunningGame.type === 'cartridge' && (
                 <div className="relative w-full h-full flex-1 flex items-stretch">
                   <iframe
@@ -754,6 +575,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     title={activeRunningGame.title}
                     className="w-full h-full border-0 bg-black flex-1"
                     allow="autoplay; fullscreen; gamepad"
+                    sandbox="allow-scripts allow-same-origin allow-pointer-lock"
                   />
                   <AnimatePresence>
                     {!cartridgeRomLoaded && (
@@ -835,7 +657,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               style={{ background: 'rgba(255,255,255,0.015)', borderRight: '1px solid rgba(255,255,255,0.05)' }}
             >
               {[
-                { icon: <FiGrid className="w-5 h-5" />, label: 'Biblioteca', action: () => setSelectedIndex(0), active: true },
+                { icon: <FiGrid className="w-5 h-5" />, label: 'Biblioteca', action: () => selectGame(0), active: true },
                 { icon: <FiAward className="w-5 h-5" />, label: 'Trofeos', action: () => setShowTrophies(true), active: false },
                 { icon: <FiTv className="w-5 h-5" />, label: 'Filtro CRT', action: () => setCrtEnabled(!crtEnabled), active: crtEnabled },
                 { icon: soundEnabled ? <FiVolume2 className="w-5 h-5" /> : <FiVolumeX className="w-5 h-5" />, label: 'Sonido', action: () => setSoundEnabled(!soundEnabled), active: soundEnabled },
@@ -940,56 +762,18 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
                         {/* Primary Launch Action Buttons */}
                         <div className="pt-2 flex flex-wrap items-center gap-3">
-                          {selectedGame.type === 'zip-loader' ? (
-                            <div className="flex items-center gap-3">
-                              <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept=".zip"
-                                className="hidden"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) handleZipFile(file);
-                                }}
-                              />
-                              <button
-                                onClick={() => fileInputRef.current?.click()}
-                                disabled={zipLoading}
-                                className="px-7 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
-                                style={{
-                                  background: '#FFFFFF',
-                                  color: '#0F172A',
-                                  boxShadow: '0 0 25px rgba(255,255,255,0.3)',
-                                }}
-                              >
-                                <FiUpload className="w-4 h-4 text-indigo-600" />
-                                <span>{zipLoading ? 'Extrayendo ZIP...' : 'Subir Archivo .ZIP'}</span>
-                              </button>
-
-                              {zipBlobEntries.length > 0 && !zipError && (
-                                <button
-                                  onClick={() => launchGame(selectedGame)}
-                                  className="px-7 py-3.5 rounded-full font-black text-sm flex items-center gap-2 text-white shadow-xl transition-transform hover:scale-105 active:scale-95 cursor-pointer"
-                                  style={{ background: selectedGame.accentColor }}
-                                >
-                                  <FiPlay className="w-4 h-4 fill-current" /> Jugar
-                                </button>
-                              )}
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => launchGame(selectedGame)}
-                              className="px-8 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
-                              style={{
-                                background: '#FFFFFF',
-                                color: '#0F172A',
-                                boxShadow: `0 0 30px ${selectedGame.accentColor}66`,
-                              }}
-                            >
-                              <FiPlay className="w-4 h-4 fill-current text-slate-900" />
-                              <span>JUGAR AHORA</span>
-                            </button>
-                          )}
+                          <button
+                            onClick={() => launchGame(selectedGame)}
+                            className="px-8 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                            style={{
+                              background: '#FFFFFF',
+                              color: '#0F172A',
+                              boxShadow: `0 0 30px ${selectedGame.accentColor}66`,
+                            }}
+                          >
+                            <FiPlay className="w-4 h-4 fill-current text-slate-900" />
+                            <span>JUGAR AHORA</span>
+                          </button>
 
                           <button
                             onClick={() => setShowGameInfo(v => !v)}
@@ -999,13 +783,6 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                             {showGameInfo ? 'Ocultar Detalles' : 'Detalles & Info'}
                           </button>
                         </div>
-
-                        {/* Error info if zip fails */}
-                        {selectedGame.type === 'zip-loader' && zipError && (
-                          <p className="text-xs text-red-400 flex items-center gap-1.5 pt-1">
-                            <FiX className="w-3.5 h-3.5" /> {zipError}
-                          </p>
-                        )}
 
                         {/* Expandable info */}
                         <AnimatePresence>
@@ -1080,7 +857,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
-                          setSelectedIndex(prev => (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length);
+                          selectGame(prev => (prev - 1 + CONSOLE_GAMES.length) % CONSOLE_GAMES.length);
                           if (soundEnabled) consoleAudio.playNavigate();
                         }}
                         className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
@@ -1091,7 +868,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                       </button>
                       <button
                         onClick={() => {
-                          setSelectedIndex(prev => (prev + 1) % CONSOLE_GAMES.length);
+                          selectGame(prev => (prev + 1) % CONSOLE_GAMES.length);
                           if (soundEnabled) consoleAudio.playNavigate();
                         }}
                         className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
@@ -1120,7 +897,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                           whileTap={{ scale: 0.96 }}
                           transition={{ type: 'spring', stiffness: 420, damping: 26 }}
                           onClick={() => {
-                            setSelectedIndex(idx);
+                            selectGame(idx);
                             if (soundEnabled) consoleAudio.playNavigate();
                           }}
                           onDoubleClick={() => launchGame(game)}
@@ -1349,7 +1126,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </div>
 
               <p className="text-xs text-slate-400 leading-relaxed px-1">
-                AP-Deck es una consola virtual interactiva con interfaz widescreen. Soporta motores WebAssembly en el navegador, carga de paquetes ZIP en memoria RAM local y mini-juegos en TypeScript.
+                AP-Deck es una consola virtual interactiva con interfaz widescreen. Soporta emulación WebAssembly (libretro), el motor RPG Maker / Pokémon Essentials y mini-juegos nativos en TypeScript — todo corre 100% local en tu navegador.
               </p>
 
               <button

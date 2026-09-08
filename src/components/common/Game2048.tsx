@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiAward, FiRotateCcw, FiZap, FiArrowUp, FiArrowDown, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiAward, FiRotateCcw } from 'react-icons/fi';
 
 const SIZE = 4;
 type Board = number[][];

@@ -1,65 +1,6 @@
 // High-Definition Stylized SVG Box Art & Cartridges (Clean & Professional Gaming Aesthetics)
 
 export const GAME_COVERS = {
-  zipLoader: `data:image/svg+xml;utf8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E1B4B" />
-      <stop offset="50%" stop-color="#312E81" />
-      <stop offset="100%" stop-color="#0F172A" />
-    </linearGradient>
-    <linearGradient id="holo" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#6366F1" />
-      <stop offset="50%" stop-color="#EC4899" />
-      <stop offset="100%" stop-color="#06B6D4" />
-    </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.4" />
-      <stop offset="100%" stop-color="#818CF8" stop-opacity="0" />
-    </radialGradient>
-  </defs>
-  <rect width="400" height="400" fill="url(#bg)" />
-  <circle cx="200" cy="180" r="140" fill="url(#glow)" />
-  
-  <!-- Cyber Cartridge Shell -->
-  <g transform="translate(80, 60)">
-    <rect x="0" y="0" width="240" height="260" rx="20" fill="#0B0F19" stroke="url(#holo)" stroke-width="4" />
-    <rect x="20" y="20" width="200" height="150" rx="12" fill="#181E2E" stroke="#334155" stroke-width="2" />
-    
-    <!-- Holographic Chip Lines -->
-    <path d="M 40 40 L 90 40 L 110 60 L 180 60" stroke="#6366F1" stroke-width="3" fill="none" opacity="0.8" />
-    <circle cx="180" cy="60" r="4" fill="#EC4899" />
-    <path d="M 40 140 L 100 140 L 120 120 L 180 120" stroke="#06B6D4" stroke-width="3" fill="none" opacity="0.8" />
-    <circle cx="40" cy="140" r="4" fill="#6366F1" />
-    
-    <!-- Upload Zip Icon Center -->
-    <circle cx="120" cy="95" r="36" fill="#1E1B4B" stroke="url(#holo)" stroke-width="3" />
-    <path d="M 120 75 L 120 110 M 105 90 L 120 75 L 135 90" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-    <rect x="106" y="112" width="28" height="5" rx="2.5" fill="#38BDF8" />
-    
-    <!-- Gold Contact Pins at Bottom -->
-    <g transform="translate(45, 230)">
-      <rect x="0" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="22" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="44" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="66" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="88" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="110" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-      <rect x="132" y="0" width="12" height="24" rx="2" fill="#F59E0B" />
-    </g>
-    
-    <!-- Cartridge Label -->
-    <rect x="25" y="185" width="190" height="32" rx="8" fill="#1E293B" />
-    <text x="120" y="206" font-family="'Inter', sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">ZIP GAME SLOT</text>
-  </g>
-  
-  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
-  <rect x="0" y="360" width="8" height="40" fill="#EF4444" />
-  <rect x="392" y="360" width="8" height="40" fill="#06B6D4" />
-  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#94A3B8" text-anchor="middle" letter-spacing="3">CARGAR DESDE ZIP</text>
-</svg>`)}`,
-
   retroArch: `data:image/svg+xml;utf8,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
   <defs>

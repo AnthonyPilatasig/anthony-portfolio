@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
   FiServer, FiMonitor, FiCpu, FiLayers, FiMapPin,
-  FiBookOpen, FiZap, FiRadio, FiShield, FiGithub, FiLinkedin
+  FiZap, FiShield, FiGithub, FiLinkedin
 } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
 import { portfolioData } from '../data/portfolio';
@@ -29,7 +29,7 @@ const staggerContainer = {
 
 export const AboutPage: React.FC = () => {
   const { t } = useTranslation();
-  const { personal, skills, manifesto } = portfolioData;
+  const { personal, skills } = portfolioData;
   const [vulnGameOpen, setVulnGameOpen] = useState(false);
 
   return (

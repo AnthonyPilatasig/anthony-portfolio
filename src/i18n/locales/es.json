@@ -31,7 +31,35 @@
   "lab": {
     "badge": "05 / El Laboratorio",
     "title": "Cosas que construí solo por diversión.",
-    "subtitle": "Un recorrido por los easter eggs y experimentos técnicos escondidos en este portafolio."
+    "subtitle": "Un recorrido por los easter eggs y experimentos técnicos escondidos en este portafolio.",
+    "consoleEyebrow": "Consola Virtual",
+    "consoleStatus": "En línea",
+    "consoleDesc": "Consola virtual interactiva de alto rendimiento. Ejecuta un motor RPG Maker / Pokémon Essentials en WebAssembly, emula consolas clásicas con núcleos libretro o disfruta mini-juegos nativos — todo corre 100% local en tu navegador.",
+    "consoleCta": "Abrir AP-Deck",
+    "consoleModes": "{{count}} modos disponibles",
+    "features": {
+      "rpgmaker": "Motor RPG Maker en WASM",
+      "wasm": "Emulación multi-consola",
+      "fullscreen": "Pantalla completa",
+      "mobile": "Compatible con móvil"
+    },
+    "cards": {
+      "rpgmaker": {
+        "title": "Motor RPG Maker & Pokémon Essentials",
+        "desc": "Lanza cualquier proyecto de RPG Maker XP / VX / Ace o Pokémon Essentials directamente en el navegador, gracias al núcleo mkxp-z compilado a WebAssembly y ejecutado 100% en el cliente.",
+        "tags": ["mkxp-z WASM", "RGSS Runtime", "100% Local"]
+      },
+      "wasm": {
+        "title": "Emulación WebAssembly Multi-Consola",
+        "desc": "Entorno con núcleos libretro de código abierto compilados a WebAssembly, con auto-detección de sistema: GBA, NDS, PS1, N64, SNES y Mega Drive, con guardado local en el navegador.",
+        "tags": ["Núcleos libretro", "Auto-Detección", "Zero Server"]
+      },
+      "native": {
+        "title": "Mini-Juegos Nativos Widescreen",
+        "desc": "Cyber-Encounter (J-RPG táctico), Retro Snake Neon DX y 2048 Logic Matrix, construidos en TypeScript y CSS moderno con soporte de teclado y mando.",
+        "tags": ["TypeScript Puro", "Web Audio API", "Gamepad API"]
+      }
+    }
   },
   "techShowcase": {
     "badge": "Stack & Infraestructura",

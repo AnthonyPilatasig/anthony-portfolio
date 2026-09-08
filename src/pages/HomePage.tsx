@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FiArrowRight, FiDownload, FiCopy, FiCheck, FiMonitor, FiServer,
   FiLayers, FiBox, FiTerminal, FiBookOpen, FiAward,
-  FiCpu, FiZap, FiCheckCircle, FiGithub, FiLinkedin
+  FiZap, FiGithub, FiLinkedin
 } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
 import { portfolioData } from '../data/portfolio';

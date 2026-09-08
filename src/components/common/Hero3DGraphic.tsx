@@ -33,7 +33,8 @@ const WebGLFallback = () => (
 // ─── Animated 3D Shape ────────────────────────────────────────────────────────
 const AnimatedShape = ({ isDark }: { isDark: boolean }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.Material & { distort: number }>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- drei's DistortMaterialImpl type isn't exported
+  const materialRef = useRef<any>(null);
   const [pulse, setPulse] = useState(0);
 
   useFrame((state) => {

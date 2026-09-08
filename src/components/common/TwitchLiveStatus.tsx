@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SiTwitch } from 'react-icons/si';
-import { FiTv, FiExternalLink, FiChevronDown, FiChevronUp, FiRadio } from 'react-icons/fi';
+import { FiTv, FiExternalLink, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 interface TwitchLiveStatusProps {
   channel?: string;

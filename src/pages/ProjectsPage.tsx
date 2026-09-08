@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers,
   FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle,
-  FiSettings, FiGitBranch, FiShield, FiLock, FiInfo, FiCheck
+  FiSettings, FiGitBranch, FiShield, FiLock, FiInfo, FiCheck, FiCopy
 } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
