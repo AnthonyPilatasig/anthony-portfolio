@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ConsoleDashboard } from '../components/common/ConsoleDashboard';
+import { SEO } from '../components/common/SEO';
 
 /**
  * ConsolePage — ruta dedicada /console
@@ -28,6 +29,10 @@ export const ConsolePage: React.FC = () => {
         overflow: 'hidden',
       }}
     >
+      <SEO
+        title="AP-Deck — Consola Virtual | Anthony Pilatasig"
+        description="Emulación WebAssembly multi-consola, motor RPG Maker / Pokémon Essentials y mini-juegos nativos, todo corriendo 100% local en el navegador."
+      />
       <ConsoleDashboard embeddedFullscreen />
     </div>
   );

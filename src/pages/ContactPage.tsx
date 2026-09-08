@@ -5,6 +5,7 @@ import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiCheckCircle, FiPhone,
 import { SiTwitch, SiWhatsapp } from 'react-icons/si';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
+import { SEO } from '../components/common/SEO';
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -56,6 +57,10 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
+      <SEO
+        title="Contacto — Anthony Pilatasig"
+        description="Hablemos de tu próximo proyecto de software. Contacto directo por correo, LinkedIn, GitHub o WhatsApp."
+      />
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}

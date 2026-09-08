@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
+import { SEO } from '../components/common/SEO';
 import type { IProject, ProjectCategory } from '../types/portfolio.types';
 
 export const ProjectsPage: React.FC = () => {
@@ -80,6 +81,10 @@ export const ProjectsPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
+      <SEO
+        title="Proyectos — Anthony Pilatasig | .NET 8, Angular, React Native"
+        description="Mi ISTPET (Google Play), Gacad ERP, Sistema de Titulación, RRHH, Scorecraft CDMI, AvialB SIAT y DebtManager — proyectos reales construidos con Clean Architecture y CQRS."
+      />
       {/* Page Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}

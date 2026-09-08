@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText, FiBookOpen, FiUsers } from 'react-icons/fi';
 import { portfolioData } from '../data/portfolio';
 import { RevealText } from '../components/common/RevealText';
+import { SEO } from '../components/common/SEO';
 import type { IExperience, IEducation } from '../types/portfolio.types';
 
 const fadeLeftVariant = {
@@ -34,6 +35,10 @@ export const ExperiencePage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
+      <SEO
+        title="Trayectoria & Experiencia — Anthony Pilatasig"
+        description="Liderazgo técnico en ISTPET, CDMI Scorecraft y SIAT Policía Nacional, además de formación académica y docencia en programación."
+      />
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}

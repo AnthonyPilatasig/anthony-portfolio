@@ -24,24 +24,19 @@ const CATEGORY_LABELS: Record<RadioStation['category'] | 'all', string> = {
   normal: 'Normal',
 };
 
+// Ordered with the most broadly-compatible streams first (plain MP3 over the standard
+// HTTPS port) since this is what plays by default — Ogg/Opus (LISTEN.moe) isn't supported
+// by Safari/iOS, and non-standard ports (japan-hits :3560) are commonly blocked by school/
+// office/mobile-carrier firewalls, so both are kept further down the list instead of default.
 const LIVE_STATIONS: RadioStation[] = [
   {
-    id: 'japan-hits',
-    name: 'Japan Hits & Anime Hits 24/7',
-    category: 'anime',
-    description: 'Top anime openings, J-Pop actual y clásicos de Japón',
-    streamUrl: 'https://kathy.torontocast.com:3560/stream',
-    tag: 'J-POP / ANIME',
-    source: 'Éxitos de Anime en Vivo',
-  },
-  {
-    id: 'listen-moe',
-    name: 'LISTEN.moe Anime Stream',
-    category: 'anime',
-    description: 'Emisión oficial de música de anime y doujin en alta calidad',
-    streamUrl: 'https://listen.moe/stream',
-    tag: 'ANIME OFFICIAL',
-    source: 'Música Anime 24/7',
+    id: 'nightwave-plaza',
+    name: 'Nightwave Plaza (Anime Vibe)',
+    category: 'lofi',
+    description: 'Anime aesthetic, vaporwave nostálgico y ambientación japonesa',
+    streamUrl: 'https://radio.plaza.one/mp3',
+    tag: 'ANIME VIBE',
+    source: 'Anime Aesthetic',
   },
   {
     id: 'gensokyo-radio',
@@ -51,15 +46,6 @@ const LIVE_STATIONS: RadioStation[] = [
     streamUrl: 'https://stream.gensokyoradio.net/1/',
     tag: 'ANIME / VGM',
     source: 'Videojuegos & Anime OSTs',
-  },
-  {
-    id: 'nightwave-plaza',
-    name: 'Nightwave Plaza (Anime Vibe)',
-    category: 'lofi',
-    description: 'Anime aesthetic, vaporwave nostálgico y ambientación japonesa',
-    streamUrl: 'https://radio.plaza.one/mp3',
-    tag: 'ANIME VIBE',
-    source: 'Anime Aesthetic',
   },
   {
     id: 'soma-groovesalad',
@@ -79,6 +65,24 @@ const LIVE_STATIONS: RadioStation[] = [
     tag: 'POP / INDIE',
     source: 'SomaFM · Poptron',
   },
+  {
+    id: 'listen-moe',
+    name: 'LISTEN.moe Anime Stream',
+    category: 'anime',
+    description: 'Emisión oficial de música de anime y doujin en alta calidad',
+    streamUrl: 'https://listen.moe/stream',
+    tag: 'ANIME OFFICIAL',
+    source: 'Música Anime 24/7',
+  },
+  {
+    id: 'japan-hits',
+    name: 'Japan Hits & Anime Hits 24/7',
+    category: 'anime',
+    description: 'Top anime openings, J-Pop actual y clásicos de Japón',
+    streamUrl: 'https://kathy.torontocast.com:3560/stream',
+    tag: 'J-POP / ANIME',
+    source: 'Éxitos de Anime en Vivo',
+  },
 ];
 
 export const GlobalAudioPlayer: React.FC = () => {
@@ -90,8 +94,17 @@ export const GlobalAudioPlayer: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSpotifyModal, setShowSpotifyModal] = useState(false);
   const [status, setStatus] = useState<'idle' | 'buffering' | 'playing' | 'error'>('idle');
+  // These are free third-party community streams with no uptime guarantee — one being
+  // down shouldn't read as "the player is broken", so failures auto-advance to the next
+  // station instead of dead-ending on a small error line.
+  const [fallbackState, setFallbackState] = useState<'idle' | 'retrying' | 'exhausted'>('idle');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const bufferTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triedStationsRef = useRef<Set<string>>(new Set());
+  // Mirrors `stationIndex` synchronously so the auto-fallback chain (which fires
+  // callbacks outside React's render cycle) never reads a stale index.
+  const stationIndexRef = useRef(0);
 
   const visibleStations = useMemo(
     () => (category === 'all' ? LIVE_STATIONS : LIVE_STATIONS.filter((s) => s.category === category)),
@@ -107,23 +120,54 @@ export const GlobalAudioPlayer: React.FC = () => {
     }
   }, [volume, isMuted]);
 
+  const clearBufferTimeout = () => {
+    if (bufferTimeoutRef.current) {
+      clearTimeout(bufferTimeoutRef.current);
+      bufferTimeoutRef.current = null;
+    }
+  };
+
+  useEffect(() => () => clearBufferTimeout(), []);
+  useEffect(() => { stationIndexRef.current = stationIndex; }, [stationIndex]);
+
   const startPlayback = async (url: string) => {
     if (!audioRef.current) return;
+    clearBufferTimeout();
     try {
       setStatus('buffering');
       if (audioRef.current.src !== url) {
         audioRef.current.src = url;
       }
       await audioRef.current.play();
-      setIsPlaying(true);
-      setStatus('playing');
+      // play() resolving only means playback *started* — some dead relays accept the
+      // connection but never actually send audio, so give it a window to confirm real
+      // playback (the onPlaying handler clears this) before writing the station off.
+      bufferTimeoutRef.current = setTimeout(() => handleStationFailure(), 9000);
     } catch {
+      handleStationFailure();
+    }
+  };
+
+  const handleStationFailure = () => {
+    clearBufferTimeout();
+    setIsPlaying(false);
+    triedStationsRef.current.add(LIVE_STATIONS[stationIndexRef.current].id);
+
+    if (triedStationsRef.current.size < LIVE_STATIONS.length) {
+      setFallbackState('retrying');
+      const nextIdx = (stationIndexRef.current + 1) % LIVE_STATIONS.length;
+      setStationIndex(nextIdx);
+      startPlayback(LIVE_STATIONS[nextIdx].streamUrl);
+    } else {
       setStatus('error');
-      setIsPlaying(false);
+      setFallbackState('exhausted');
     }
   };
 
   const stopPlayback = () => {
+    clearBufferTimeout();
+    triedStationsRef.current.clear();
+    setFallbackState('idle');
     if (!audioRef.current) return;
     audioRef.current.pause();
     setIsPlaying(false);
@@ -134,11 +178,21 @@ export const GlobalAudioPlayer: React.FC = () => {
     if (isPlaying) {
       stopPlayback();
     } else {
+      triedStationsRef.current.clear();
+      setFallbackState('idle');
       startPlayback(currentStation.streamUrl);
     }
   };
 
+  const retryAllStations = () => {
+    triedStationsRef.current.clear();
+    setFallbackState('idle');
+    startPlayback(currentStation.streamUrl);
+  };
+
   const selectStation = (idx: number) => {
+    triedStationsRef.current.clear();
+    setFallbackState('idle');
     setStationIndex(idx);
     const station = LIVE_STATIONS[idx];
     if (isPlaying || status === 'buffering') {
@@ -172,6 +226,9 @@ export const GlobalAudioPlayer: React.FC = () => {
         preload="none"
         onWaiting={() => setStatus('buffering')}
         onPlaying={() => {
+          clearBufferTimeout();
+          triedStationsRef.current.clear();
+          setFallbackState('idle');
           setStatus('playing');
           setIsPlaying(true);
         }}
@@ -179,10 +236,7 @@ export const GlobalAudioPlayer: React.FC = () => {
           if (status !== 'buffering') setStatus('idle');
           setIsPlaying(false);
         }}
-        onError={() => {
-          setStatus('error');
-          setIsPlaying(false);
-        }}
+        onError={handleStationFailure}
       />
 
       {/* Floating Capsule Player */}
@@ -317,9 +371,17 @@ export const GlobalAudioPlayer: React.FC = () => {
             {/* Play/Pause Button */}
             <button
               onClick={togglePlay}
-              className="w-9 h-9 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-accent-hover)] text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 shadow-md shadow-blue-500/20"
+              className="relative w-9 h-9 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-accent-hover)] text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 shadow-md shadow-blue-500/20"
               aria-label={isPlaying ? 'Pausar música' : 'Reproducir música'}
             >
+              {(status === 'buffering' || fallbackState === 'retrying') && (
+                <motion.span
+                  className="absolute inset-0 rounded-xl"
+                  style={{ border: '2px solid var(--theme-accent)' }}
+                  animate={{ scale: [1, 1.35], opacity: [0.6, 0] }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'easeOut' }}
+                />
+              )}
               {status === 'buffering' ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : isPlaying ? (
@@ -346,13 +408,38 @@ export const GlobalAudioPlayer: React.FC = () => {
                   </div>
                 )}
               </div>
-              <p className="text-[9px] text-[var(--theme-ink-muted)] truncate flex items-center gap-1">
-                <FiDisc className={`w-2.5 h-2.5 ${isPlaying ? 'animate-spin text-[var(--theme-accent)]' : ''}`} />
-                <span>
-                  {status === 'error' ? 'No se pudo conectar — prueba otra emisora' : currentStation.source}
-                </span>
+              <p className="text-[9px] text-[var(--theme-ink-muted)] truncate flex items-center gap-1 h-3.5 overflow-hidden">
+                <FiDisc className={`w-2.5 h-2.5 shrink-0 ${isPlaying ? 'animate-spin text-[var(--theme-accent)]' : ''}`} />
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={fallbackState !== 'idle' ? fallbackState : currentStation.id}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.18 }}
+                    className="truncate"
+                  >
+                    {fallbackState === 'retrying'
+                      ? 'Esa emisora no respondió — probando otra…'
+                      : fallbackState === 'exhausted'
+                      ? 'Ninguna emisora respondió ahora mismo'
+                      : currentStation.source}
+                  </motion.span>
+                </AnimatePresence>
               </p>
             </div>
+
+            {/* Retry-everything shortcut — only surfaces once every station has failed */}
+            {fallbackState === 'exhausted' && (
+              <button
+                onClick={retryAllStations}
+                className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg shrink-0 transition-colors"
+                style={{ background: 'color-mix(in srgb, var(--theme-accent) 15%, transparent)', color: 'var(--theme-accent)' }}
+                title="Reintentar todas las emisoras"
+              >
+                Reintentar
+              </button>
+            )}
 
             {/* Expand / Collapse Button */}
             <button

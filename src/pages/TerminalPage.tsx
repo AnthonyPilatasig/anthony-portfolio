@@ -1,5 +1,6 @@
 import React from 'react';
 import { TerminalConsole } from '../components/common/TerminalConsole';
+import { SEO } from '../components/common/SEO';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft, FiTerminal } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,10 @@ export const TerminalPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24 min-h-[85vh] flex flex-col">
+      <SEO
+        title="Terminal Interactiva — Anthony Pilatasig"
+        description="Emulador UNIX interactivo con comandos CLI, neofetch, easter eggs y detalles técnicos del portafolio."
+      />
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}

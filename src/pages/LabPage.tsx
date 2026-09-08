@@ -7,6 +7,7 @@ import {
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
 import { RevealText } from '../components/common/RevealText';
+import { SEO } from '../components/common/SEO';
 
 const MODE_COUNT = 5;
 
@@ -39,6 +40,7 @@ export const LabPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24 font-sans">
+      <SEO title={`${t('lab.title')} — Anthony Pilatasig`} description={t('lab.subtitle')} />
 
       {/* ─── Header ───────────────────────────────────────────────────────── */}
       <motion.div

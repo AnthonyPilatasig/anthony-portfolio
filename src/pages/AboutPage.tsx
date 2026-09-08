@@ -11,6 +11,7 @@ import { AudioVisualizer } from '../components/common/AudioVisualizer';
 import { GithubActivity } from '../components/common/GithubActivity';
 import { VulnHunterGame } from '../components/common/VulnHunterGame';
 import { RevealText } from '../components/common/RevealText';
+import { SEO } from '../components/common/SEO';
 
 const musicTasteSearchTerms = ['lofi hip hop', 'synthwave'];
 
@@ -34,6 +35,10 @@ export const AboutPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
+      <SEO
+        title="Sobre Mí — Anthony Pilatasig"
+        description="Full Stack Developer y Docente Técnico en Quito, Ecuador. Valores de ingeniería, afición al desarrollo de videojuegos en Java y docencia técnica en programación."
+      />
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -16 }}
