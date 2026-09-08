@@ -9,8 +9,8 @@
     "contact": "Contact"
   },
   "home": {
-    "profileBadge": "Professional Profile & Architecture",
-    "subtitle": "Full Stack Developer & Software Architect in Training",
+    "profileBadge": "Full Stack & Architecture",
+    "subtitle": "Full Stack Developer (.NET 8 / React / Angular) & Mobile Lead",
     "viewAll": "View all ({{count}})"
   },
   "hero": {
@@ -34,11 +34,11 @@
     "subtitle": "A tour of the easter eggs and technical experiments hidden inside this portfolio."
   },
   "techShowcase": {
-    "badge": "How I build it",
+    "badge": "Stack & Infrastructure",
     "title": "From pixel to container — the stack behind every system."
   },
   "hub": {
-    "badge": "Section Navigation",
+    "badge": "Navigation",
     "title": "Explore My Portfolio",
     "projectsDesc": "Mi ISTPET (Google Play), Gacad ERP, RRHH, Scorecraft CDMI, AvialB SIAT, and DebtManager.",
     "experienceDesc": "Experience at ISTPET, CDMI Scorecraft, SIAT National Police, and academic education.",
@@ -46,7 +46,7 @@
     "terminalDesc": "Interactive full-screen Unix terminal with CLI commands."
   },
   "skills": {
-    "badge": "Technical Signature & Capabilities",
+    "badge": "Capabilities & Stack",
     "title": "Technologies, Stack & Architecture Patterns",
     "subtitle": "Practical experience developing institutional web platforms, mobile apps published on Google Play, desktop tools, and decoupled backends.",
     "frontend": "Frontend & Mobile",
@@ -59,14 +59,14 @@
     "architectureDesc": "Separation of concerns with Clean Architecture & CQRS, relational modeling in SQL Server / MySQL, and Docker containers."
   },
   "projects": {
-    "badge": "Complete Software Catalog",
+    "badge": "Software Catalog",
     "title": "Projects & Systems",
     "subtitle": "Institutional systems, mobile apps in production, desktop utilities, and backend architectures.",
-    "catAll": "All",
-    "catWeb": "Web & Core (Gacad / RRHH)",
-    "catMobile": "Mobile (Mi ISTPET)",
-    "catDesktop": "Desktop & Games (DebtManager / RPG)",
-    "catArchitecture": "Architecture & Health (Scorecraft / SIAT)",
+    "catAll": "All Projects",
+    "catWeb": "Institutional Web & ERP",
+    "catMobile": "Mobile Apps (Google Play / Offline)",
+    "catDesktop": "Desktop & OOP Logic",
+    "catArchitecture": "Architecture & .NET Backend",
     "client": "Client / Context:",
     "featured": "FEATURED",
     "viewDetails": "View architecture & specifications →",
@@ -80,7 +80,7 @@
     "sectionStack": "Stack & Tech Signature"
   },
   "experience": {
-    "badge": "Curriculum Resume & Career",
+    "badge": "Experience & Career",
     "title": "Experience & CV",
     "subtitle": "Institutional development, technical higher education, and applied software projects.",
     "requestCv": "Download CV (PDF)",
@@ -91,7 +91,7 @@
     "philosophyDesc": "Writing readable code, separating concerns, and solving real problems without overcomplicating architecture."
   },
   "about": {
-    "badge": "Biography & Technical Philosophy",
+    "badge": "Biography & Focus",
     "title": "About Me & Development Approach",
     "subtitle": "Full Stack Developer & Software Engineering Student in Quito, Ecuador.",
     "mainTitle": "Structured software, technical teaching, and passion for code",

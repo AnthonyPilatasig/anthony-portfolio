@@ -9,8 +9,8 @@
     "contact": "Contacto"
   },
   "home": {
-    "profileBadge": "Perfil Profesional & Arquitectura",
-    "subtitle": "Full Stack Developer & Arquitecto de Software en Formación",
+    "profileBadge": "Full Stack & Arquitectura",
+    "subtitle": "Full Stack Developer (.NET 8 / React / Angular) & Mobile Lead",
     "viewAll": "Ver todos ({{count}})"
   },
   "hero": {
@@ -34,11 +34,11 @@
     "subtitle": "Un recorrido por los easter eggs y experimentos técnicos escondidos en este portafolio."
   },
   "techShowcase": {
-    "badge": "Cómo lo construyo",
+    "badge": "Stack & Infraestructura",
     "title": "Del pixel al contenedor — el stack detrás de cada sistema."
   },
   "hub": {
-    "badge": "Navegación por Secciones",
+    "badge": "Navegación",
     "title": "Explora mi Portafolio",
     "projectsDesc": "Mi ISTPET (Google Play), Gacad ERP, RRHH, Scorecraft CDMI, AvialB SIAT y DebtManager.",
     "experienceDesc": "Experiencia en ISTPET, CDMI Scorecraft, SIAT Policía Nacional y formación académica.",
@@ -46,7 +46,7 @@
     "terminalDesc": "Terminal Unix interactiva en pantalla completa con comandos CLI."
   },
   "skills": {
-    "badge": "Firma Técnica & Capacidades",
+    "badge": "Capacidades & Stack",
     "title": "Tecnologías, Stack & Patrones de Arquitectura",
     "subtitle": "Experiencia práctica en el desarrollo de aplicaciones web institucionales, apps móviles publicadas en Google Play, herramientas de escritorio y backends desacoplados.",
     "frontend": "Frontend & Mobile",
@@ -59,14 +59,14 @@
     "architectureDesc": "Separación de responsabilidades con Clean Architecture y CQRS, modelado relacional en SQL Server / MySQL y contenedores Docker."
   },
   "projects": {
-    "badge": "Catálogo Completo de Software",
+    "badge": "Catálogo de Software",
     "title": "Proyectos & Sistemas",
     "subtitle": "Sistemas institucionales, aplicaciones móviles en producción, herramientas de escritorio y arquitecturas backend.",
-    "catAll": "Todos",
-    "catWeb": "Web & Core (Gacad / RRHH)",
-    "catMobile": "Móvil (Mi ISTPET)",
-    "catDesktop": "Escritorio & Juegos (DebtManager / RPG)",
-    "catArchitecture": "Arquitectura & Salud (Scorecraft / SIAT)",
+    "catAll": "Todos los Proyectos",
+    "catWeb": "Web Institucional & ERP",
+    "catMobile": "Apps Móviles (Google Play / Offline)",
+    "catDesktop": "Escritorio & Lógica POO",
+    "catArchitecture": "Arquitectura & Backend .NET",
     "client": "Cliente / Contexto:",
     "featured": "DESTACADO",
     "viewDetails": "Ver arquitectura & especificaciones →",
@@ -80,7 +80,7 @@
     "sectionStack": "Stack & Firma Tecnológica"
   },
   "experience": {
-    "badge": "Resumen Curricular & Trayectoria",
+    "badge": "Experiencia & Trayectoria",
     "title": "Experiencia & CV",
     "subtitle": "Desarrollo institucional, docencia técnica superior y proyectos de software aplicados.",
     "requestCv": "Descargar CV (PDF)",
@@ -91,7 +91,7 @@
     "philosophyDesc": "Escribir código legible, separar responsabilidades y resolver problemas reales sin complicar de más las soluciones."
   },
   "about": {
-    "badge": "Biografía & Filosofía Técnica",
+    "badge": "Biografía & Enfoque",
     "title": "Sobre Mí & Enfoque de Desarrollo",
     "subtitle": "Desarrollador Full Stack & Estudiante de Ingeniería en Software en Quito, Ecuador.",
     "mainTitle": "Software estructurado, docencia técnica y pasión por el código",

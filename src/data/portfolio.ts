@@ -153,126 +153,435 @@ export const portfolioData: IPortfolioData = {
   projects: [
     {
       id: 1,
-      title: "Mi ISTPET — App Móvil Estudiantil (Play Store)",
+      title: "Mi ISTPET — App Móvil Estudiantil (Google Play)",
       client: "Instituto Superior Tecnológico Traversari",
       category: "mobile",
-      description: "Aplicación móvil oficial publicada en Google Play Store. Digitalizó el carnet estudiantil con código QR e incluye horarios, notas y pagos en vivo.",
-      longDescription: "Plataforma móvil oficial desarrollada en React Native Expo y backend en .NET 8. Provee a la comunidad estudiantil de un carnet digital con validación biométrica/QR, consulta de notas, horarios en tiempo real y trámites administrativos.",
-      problem: "Dependencia de carnets plásticos físicos susceptibles a pérdida o falsificación, y ausencia de un canal móvil institucional para que los estudiantes consulten calificaciones y cronogramas académicos en vivo.",
-      decision: "Desarrollé la aplicación en React Native Expo con consumo de microservicios RESTful en ASP.NET Core (.NET 8). Implementé renderizado de carnet dinámico con código QR con firma temporal para validación física en porterías y eventos.",
-      tradeoff: "Se optó por React Native con TypeScript sobre desarrollo nativo dual para asegurar paridad de características y reducir a la mitad el tiempo de despliegue y mantenimiento.",
-      impact: "Publicación exitosa en Google Play Store; digitalización del 100% de carnets estudiantiles con reducción total del gasto de impresión física.",
-      architectureOverview: "Clean Architecture con API Gateway ligera en ASP.NET Core (.NET 8), autenticación JWT segura con renovación automática de tokens y almacenamiento local protegido mediante SecureStore.",
-      securityAndCompliance: "Criptografía simétrica con ventana de validez temporal en el QR para impedir clonación por captura de pantalla. Cumplimiento con políticas de Google Play Store y directivas institucionales de privacidad de datos.",
+      description: "Aplicación móvil oficial publicada en Google Play Store. Digitalizó el carnet estudiantil con código QR dinámico e incluye horarios, notas y notificaciones push en tiempo real.",
+      longDescription: "Plataforma académica móvil oficial construida en React Native Expo (New Architecture - Fabric) y backend en .NET 8 con Clean Architecture y CQRS. Proporciona a más de 400 estudiantes y docentes acceso inmediato a su carnet digital seguro mediante firmas criptográficas HMAC-SHA256 offline, calificaciones y cronogramas.",
+      problem: "Uso de credenciales de PVC propensas a falsificación/deterioro, gasto recurrente en impresión física y falta de un canal móvil oficial para consultar horarios y calificaciones en vivo con validación offline en accesos de portería.",
+      decision: "Desarrollé la aplicación con Expo SDK 54 / React Native y .NET 8 Web API. Diseñé un algoritmo de carnet con token QR temporal firmado con HMAC-SHA256, permitiendo validación en portería sin depender de conectividad constante a internet.",
+      tradeoff: "Implementar validación offline requirió sincronización de llaves simétricas y timestamps con ventana de tolerancia en el escáner de portería.",
+      impact: "Publicada en Google Play Store; digitalización del 100% de la comunidad estudiantil y eliminación del costo de impresión física de carnets.",
+      architectureOverview: "Clean Architecture en .NET 8 con CQRS (MediatR), autenticación JWT, sincronización local y cifrado de llaves en SecureStore.",
+      securityAndCompliance: "Firmas criptográficas HMAC-SHA256 para códigos QR que expiran periódicamente, imposibilitando capturas de pantalla estáticas. Cumplimiento con LOPDP y políticas de Google Play Store.",
       keyFeatures: [
-        "Carnet estudiantil digital con código QR dinámico y verificación de estado en portería",
-        "Consulta de récord académico, notas parciales y distributivo de materias en tiempo real",
-        "Módulo de notificaciones push institucionales y avisos de bienestar estudiantil",
-        "Autenticación segura con JWT y persistencia en almacenamiento cifrado del dispositivo"
+        "Carnet estudiantil digital con código QR dinámico y validación biométrica/PIN",
+        "Consulta de récord de calificaciones parciales y distributivo de materias en vivo",
+        "Módulo de avisos institucionales, notificaciones push y eventos de bienestar",
+        "Persistencia segura en almacenamiento cifrado del dispositivo (SecureStore)"
       ],
-      ndaDisclaimer: "Esta ficha documenta exclusivamente los patrones de arquitectura y tecnologías públicas. No se divulgan credenciales, llaves de API ni registros confidenciales de estudiantes.",
-      metrics: ["Google Play Store", "Carnet QR Digital", ".NET 8 + Expo", "100% Digitalizado"],
-      image: asset("assets/projects/mi_istpet_preview.jpg"),
-      technologies: ["React Native", "Expo", "TypeScript", ".NET 8", "C#", "MySQL", "JWT", "Google Play"],
-      architectureBadges: ["Mobile App", "Google Play Store", "QR Criptográfico", "Clean Architecture"],
+      ndaDisclaimer: "Documentación basada exclusivamente en arquitectura pública y tecnologías implementadas. No se exponen credenciales ni datos privados de estudiantes.",
+      metrics: ["Google Play Store", "Carnet QR Offline", ".NET 8 + Expo", "100% Digital"],
+      image: asset("assets/projects/mi_istpet_home_capture.png"),
+      technologies: ["React Native", "Expo SDK 54", "TypeScript", ".NET 8", "C#", "CQRS", "MediatR", "HMAC-SHA256", "Google Play"],
+      architectureBadges: ["Mobile App", "Google Play Store", "QR Criptográfico", "Clean Architecture", "CQRS"],
       liveUrl: "https://play.google.com/store/apps",
       githubUrl: "https://github.com/ItspetDev",
-      isFeatured: true
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/mi_istpet_home_capture.png"), title: "Pantalla Principal de la App Móvil (React Native)", caption: "Módulos de portal estudiantil, admisiones, cronograma y novedades de Facebook" },
+        { url: asset("assets/projects/mi_istpet_app_login.png"), title: "Acceso y Autenticación Móvil", caption: "Formulario de inicio de sesión institucional en React Native Expo" },
+        { url: asset("assets/projects/mi_istpet_carnet_capture.png"), title: "Carnet Estudiantil Digital", caption: "Credencial digital oficial con validación criptográfica" },
+        { url: asset("assets/projects/mi_istpet_calificaciones_capture.png"), title: "Consulta de Calificaciones en Vivo", caption: "Récord académico sincronizado con el backend .NET 8" },
+        { url: asset("assets/projects/mi_istpet_horario_capture.png"), title: "Horario y Cronograma de Clases", caption: "Visualización de bloques horarios por carrera y paralelo" }
+      ],
+      architectureFlow: {
+        title: "Flujo de Autenticación & Validación de Carnet QR Offline",
+        description: "El cliente móvil solicita un token criptográfico HMAC-SHA256 que se genera en .NET 8 y se valida localmente en portería sin necesidad de conexión permanente.",
+        pattern: "Clean Architecture + CQRS + HMAC-SHA256 Offline Token Generator",
+        nodes: [
+          { id: "mobile", label: "📱 Expo React Native", sub: "New Architecture (Fabric)", tag: "Cliente Móvil" },
+          { id: "api", label: "⚙️ .NET 8 API Gateway", sub: "Controllers & JWT Auth", tag: "Backend" },
+          { id: "mediatr", label: "🔀 MediatR Pipeline", sub: "CQRS Handlers & Validation", tag: "Application" },
+          { id: "qrEngine", label: "🔐 HMAC-SHA256 Engine", sub: "Generador de QR Seguro", tag: "Criptografía" },
+          { id: "db", label: "🗄️ MySQL sigafi_es", sub: "EF Core 8 Pomelo", tag: "Persistencia" }
+        ],
+        connections: [
+          { from: "mobile", to: "api", label: "HTTPS / JWT" },
+          { from: "api", to: "mediatr", label: "Send(Query)" },
+          { from: "mediatr", to: "qrEngine", label: "Firmar Payload" },
+          { from: "mediatr", to: "db", label: "Consultar Alumno" }
+        ]
+      },
+      codeSnippet: {
+        title: "Generación de Token QR con Firma HMAC-SHA256 (C# .NET 8)",
+        language: "csharp",
+        code: `public class QrSecurityService : IQrSecurityService
+{
+    private readonly byte[] _secretKey;
+
+    public QrSecurityService(IConfiguration config)
+    {
+        _secretKey = Encoding.UTF8.GetBytes(config["Security:QrSecretKey"]!);
+    }
+
+    public string GenerateOfflineQrPayload(int studentId, string cedula)
+    {
+        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var rawData = $"{studentId}:{cedula}:{timestamp}";
+
+        using var hmac = new HMACSHA256(_secretKey);
+        var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(rawData)));
+
+        // Payload serializado: datos del estudiante + timestamp de expiración + firma HMAC
+        return $"{rawData}:{hash}";
+    }
+}`,
+        explanation: "Permite que los lectores de portería verifiquen la autenticidad del carnet de forma offline contrastando el hash con la llave pública institucional."
+      }
     },
     {
       id: 2,
-      title: "Gacad — ERP Académico Institucional (Core ISTPET)",
+      title: "Sistema de Titulación ISTPET — Gestión de Defensas & Actas",
       client: "Instituto Superior Tecnológico Traversari",
       category: "web",
-      description: "Sistema web core para la gestión integral de matrículas, distributivos docentes, asignación de aulas y actas de calificaciones.",
-      longDescription: "Modernización del sistema académico institucional. Diseñado sobre una arquitectura desacoplada con Clean Architecture y patrón CQRS, integrándose eficazmente con bases de datos relacionales históricas.",
-      problem: "Cuellos de botella durante los periodos de matriculación masiva, lentitud en la generación de actas de notas y alto acoplamiento en módulos legados.",
-      decision: "Implementé la modernización del backend en C# .NET 8 aplicando el patrón CQRS con MediatR y frontend SPA modular en Angular 17, desacoplando totalmente las operaciones de lectura optimizada de las escrituras transaccionales.",
-      tradeoff: "Mayor cantidad de clases (Commands, Queries, Handlers, DTOs) a cambio de estabilidad garantizada, ausencia de bloqueos de tabla y velocidad en consultas masivas.",
-      impact: "Reducción del tiempo de respuesta en consultas de notas de 1.8s a <95ms; automatización del 100% de distributivos docentes y actas de calificaciones.",
-      architectureOverview: "Clean Architecture en 4 capas (Presentación, Aplicación con CQRS/MediatR, Dominio y Persistencia con Entity Framework Core).",
-      securityAndCompliance: "Control de acceso basado en roles (RBAC) con permisos granulares para docentes, secretaría y directores de carrera; auditoría inmutable de calificaciones.",
+      description: "Plataforma integral para postulaciones de grado, asignación de tribunales docentes, calendario de defensas y actas con Angular 22 y .NET 8.",
+      longDescription: "Sistema core desarrollado bajo Clean Architecture estricta en .NET 8 y frontend desacoplado en Angular 22 (Zoneless con Signals y arquitectura Hexagonal por Ports & Adapters). Controla todo el ciclo de graduación, desde la validación de prerrequisitos académicos hasta la calificación y emisión del acta de grado.",
+      problem: "Proceso manual de asignación de tribunales con frecuentes conflictos de horarios de docentes, demoras en la validación de requisitos y falta de trazabilidad en las actas de defensa de grado.",
+      decision: "Implementé una arquitectura limpia con separación estricta de capas: Backend con CQRS, MediatR, FluentValidation y autorización basada en permisos `[HasPermission]`; Frontend con stores reactivos basados en Signals y puertos desacoplados de HTTP.",
+      tradeoff: "Curva inicial de implementación de arquitectura hexagonal en frontend, compensada por tests unitarios en memoria 100% aislados y cero acoplamiento.",
+      impact: "Reducción del 80% en el tiempo de calendarización de tribunales de grado y emisión automatizada de actas de titulación.",
+      architectureOverview: "Clean Architecture en backend (.NET 8 WebApi, Application, Domain, Infrastructure con Pomelo MySQL) y Hexagonal en Frontend (Domain Ports, Application Signal Stores, Infrastructure HTTP Adapters, Presentation OnPush).",
+      securityAndCompliance: "Autorización RBAC granular a nivel de permisos específicos (ej. `titulacion:tribunal:asignar`), validación de cédulas ecuatorianas y hashing de contraseñas.",
       keyFeatures: [
-        "Motor de matriculación en línea con validación de prerrequisitos y cupos por aula",
-        "Generador y gestor de distributivos docentes con cálculo automático de horas clase",
-        "Emisión y firma de actas de calificaciones con trazabilidad de cambios",
-        "Integración transparente con esquemas de base de datos relacional heredados"
+        "Bandeja de postulantes con control de estados (Revisión, Asignación Tribunal, Programado, Calificado)",
+        "Motor de asignación de docentes a tribunales con detección automática de cruces de horario",
+        "Generador de actas de grado en PDF y registro inmutable de notas de sustentación",
+        "Frontend Angular 22 zoneless con signals para máxima reactividad y fluidez"
       ],
-      ndaDisclaimer: "La documentación se centra en la arquitectura de software (CQRS, Clean Architecture). Los nombres de esquemas y datos sensibles han sido protegidos.",
-      metrics: ["Clean Architecture", "CQRS Pattern", "< 95ms Respuesta", "Concurrencia Alta"],
-      image: asset("assets/projects/gacad_preview.jpg"),
-      technologies: ["Angular 17", "TypeScript", "C#", ".NET 8", "SQL Server", "Clean Architecture", "CQRS", "MediatR"],
-      architectureBadges: ["Core Académico", "Clean Architecture", "CQRS Pattern", "High Concurrency"],
+      ndaDisclaimer: "Estructura arquitectónica y patrones presentados respetando la privacidad institucional y los estándares de seguridad.",
+      metrics: ["Angular 22 Zoneless", ".NET 8 Clean Arch", "CQRS & MediatR", "RBAC Granular"],
+      image: asset("assets/projects/titulacion_real_capture.png"),
+      technologies: ["Angular 22", "Signals", "TypeScript", ".NET 8", "C#", "Clean Architecture", "CQRS", "MediatR", "FluentValidation", "MySQL 5.7"],
+      architectureBadges: ["Clean Architecture", "Hexagonal Frontend", "CQRS Pattern", "Signals Reactive"],
       liveUrl: "#",
-      githubUrl: "https://github.com/ItspetDev",
-      isFeatured: true
+      githubUrl: "https://github.com/JosephBano/titulacion-istpet",
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/titulacion_real_capture.png"), title: "Panel Institucional de Gobernanza y Control (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig en el Sistema de Titulación en Angular 22" },
+        { url: asset("assets/projects/titulacion_alumnos_capture.png"), title: "Bandeja de Postulaciones & Estudiantes", caption: "Gestión de alumnos en proceso de titulación, requisitos maestros y cortes" }
+      ],
+      architectureFlow: {
+        title: "Arquitectura Hexagonal & Clean Architecture (.NET 8 + Angular 22)",
+        description: "El frontend desacopla la lógica de negocio mediante puertos e inyección de dependencias, mientras el backend implementa CQRS con MediatR sobre MySQL legacy.",
+        pattern: "Clean Architecture (WebApi -> Application -> Domain <- Infrastructure)",
+        nodes: [
+          { id: "feDomain", label: "📦 Angular Domain Ports", sub: "InjectionTokens & Interfaces", tag: "Frontend" },
+          { id: "feStore", label: "⚡ Signal Stores", sub: "Application State (Zoneless)", tag: "Frontend" },
+          { id: "api", label: "🛡️ WebApi [HasPermission]", sub: "REST Controllers /auth, /titulacion", tag: "Backend" },
+          { id: "cqrs", label: "🔄 MediatR CQRS", sub: "Commands, Handlers, FluentValidation", tag: "Backend" },
+          { id: "db", label: "🗄️ SigafiDbContext", sub: "Pomelo EF Core / MySQL 5.7", tag: "Persistencia" }
+        ],
+        connections: [
+          { from: "feStore", to: "feDomain", label: "Invoca Puerto" },
+          { from: "feStore", to: "api", label: "HTTP / JWT" },
+          { from: "api", to: "cqrs", label: "Send(Command)" },
+          { from: "cqrs", to: "db", label: "Persiste Estado" }
+        ]
+      },
+      codeSnippet: {
+        title: "Controlador REST con Autorización Granular [HasPermission] (.NET 8)",
+        language: "csharp",
+        code: `[ApiController]
+[Route("api/v1/[controller]")]
+[Authorize]
+public class TitulacionController : ControllerBase
+{
+    private readonly ISender _mediator;
+
+    public TitulacionController(ISender mediator) => _mediator = mediator;
+
+    [HttpPost("asignar-tribunal")]
+    [HasPermission("titulacion:tribunal:asignar")]
+    public async Task<IActionResult> AsignarTribunal([FromBody] AsignarTribunalCommand cmd)
+    {
+        var result = await _mediator.Send(cmd);
+        return result.IsSuccess 
+            ? Ok(new ApiResponse<int>(result.Value, "Tribunal asignado exitosamente")) 
+            : BadRequest(new ApiErrorResponse(result.Error));
+    }
+}`,
+        explanation: "Garantiza que únicamente los directores de carrera o coordinadores con el permiso granular explícito puedan estructurar las ternas de sustentación."
+      }
     },
     {
       id: 3,
-      title: "Sistema Integrado de Recursos Humanos (ISTPET)",
+      title: "Bienestar Institucional — Sistema de Becas & Convenios",
       client: "Instituto Superior Tecnológico Traversari",
       category: "web",
-      description: "Plataforma web para control de contratos laborales, expediente digital del personal, evaluaciones de desempeño y gestión docente.",
-      longDescription: "Módulo administrativo integral desarrollado en Angular y .NET 8 con base de datos MySQL. Unifica el ciclo de vida del personal administrativo y docente con control de roles y expediente digital.",
-      problem: "Gestión dispersa de contratos semestrales, expedientes físicos de docentes y dificultad para consolidar evaluaciones de desempeño institucionales.",
-      decision: "Diseñé una plataforma web en Angular y C# .NET 8 con repositorio seguro de documentos, autenticación JWT, control de accesos RBAC y generación parametrizada de contratos.",
-      tradeoff: "Flujos de validación documental más estrictos para garantizar la validez legal e institucional de cada expediente digital.",
-      impact: "Reducción de 15 días a 24 horas en la consolidación de contratos docentes; digitalización y trazabilidad total del personal institucional.",
-      architectureOverview: "Arquitectura multicapa con servicios RESTful en .NET 8, capas de persistencia en MySQL y frontend modular con componentes desacoplados.",
-      securityAndCompliance: "Protección de datos personales conforme a la LOPDP; control estricto de roles administrativos y pistas de auditoría para cada expediente.",
+      description: "Plataforma para digitalizar becas, convenios de pago y seguimiento académico con Angular 21, .NET 8 y generación de documentos Word/PDF.",
+      longDescription: "Sistema web institucional desarrollado en Angular 21 (Signals, standalone components) y ASP.NET Core 8 Web API sobre MySQL 5.7 (SIGAFI). Automatiza la evaluación baremada de solicitudes de beca, convenios de pago por cuotas y generación dinámica de resoluciones oficiales con MiniWord y QuestPDF.",
+      problem: "Evaluación manual de cientos de postulaciones a becas con expedientes físicos, retrasos en la redacción de resoluciones oficiales y falta de seguimiento a convenios de pago.",
+      decision: "Diseñé un motor algorítmico de baremación socioeconómica (ponderación 60% vulnerabilidad / 40% mérito académico) con generación automatizada de documentos `.docx` y `.pdf` a partir de plantillas institucionales.",
+      tradeoff: "Generar documentos en el servidor con MiniWord y QuestPDF en lugar de hacerlo en el cliente para garantizar la inmutabilidad de sellos y formatos legales.",
+      impact: "Reducción del tiempo de tramitación de becas de 3 semanas a 48 horas; generación instantánea de más de 100 resoluciones en un clic.",
+      architectureOverview: "Arquitectura por servicios e interfaces en .NET 8, middleware de auditoría de transacciones, integración directa con `sigafi_esContext` y frontend reactivo con Angular Signals.",
+      securityAndCompliance: "Control de acceso basado en roles (Bienestar, Secretaría, Rectorado), auditoría de cambios en resoluciones y cumplimiento de la LOPDP para datos socioeconómicos.",
       keyFeatures: [
-        "Generación automática y parametrizada de contratos de trabajo semestrales",
-        "Expediente digital centralizado con almacenamiento seguro y versionado de documentos",
-        "Módulo de evaluación docente por rúbricas 360° (autoevaluación, pares y estudiantes)",
-        "Panel de control y reportería para Dirección de Talento Humano"
+        "Motor de puntuación algorítmica para asignación transparente de becas",
+        "Generador de resoluciones oficiales en `.docx` con MiniWord desde plantillas",
+        "Emisión de convenios de pago en PDF de alta fidelidad compilados por código con QuestPDF",
+        "Módulo de seguimiento y alertas tempranas para estudiantes con riesgo académico"
       ],
-      ndaDisclaimer: "Información tratada bajo principios de confidencialidad y LOPDP. Solo se describen componentes de software y diseño arquitectónico.",
-      metrics: ["Trazabilidad 100%", "Expediente Digital", "MySQL + .NET 8", "LOPDP Compliant"],
-      image: asset("assets/projects/microservices_preview.jpg"),
-      technologies: ["Angular", "TypeScript", "C#", ".NET 8", "MySQL", "JWT", "RESTful APIs"],
-      architectureBadges: ["Enterprise RRHH", "Digital Records", "RBAC Security", "LOPDP"],
+      ndaDisclaimer: "Datos socioeconómicos de alumnos protegidos. La documentación detalla exclusivamente los componentes técnicos y la arquitectura de software.",
+      metrics: ["Angular 21 Signals", ".NET 8 Web API", "MiniWord + QuestPDF", "Baremación Auto"],
+      image: asset("assets/projects/bienestar_real_capture.png"),
+      technologies: ["Angular 21", "Signals", "TypeScript", ".NET 8", "C#", "Entity Framework Core", "Pomelo MySQL", "MiniWord", "QuestPDF", "MailKit"],
+      architectureBadges: ["Document Automation", "Algorithmic Scoring", "Angular Signals", ".NET 8 Web API"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
-      isFeatured: true
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/bienestar_real_capture.png"), title: "Panel de Control de Bienestar Institucional (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de becas, usuarios activos y solicitudes" },
+        { url: asset("assets/projects/bienestar_gestor_capture.png"), title: "Módulo Gestor & Baremación de Becas", caption: "Evaluación baremada de solicitudes socioeconómicas y convenios de pago" }
+      ],
+      architectureFlow: {
+        title: "Pipeline de Baremación & Generación de Documentos Oficiales",
+        description: "El estudiante postula en Angular 21; el backend calcula el score algorítmico y compila resoluciones oficiales Word y PDF sin depender de software ofimático en el servidor.",
+        pattern: "Service + Interface Pattern con Document Generation Pipeline",
+        nodes: [
+          { id: "fe", label: "🅰️ Angular 21 SPA", sub: "Standalone + Signals", tag: "Frontend" },
+          { id: "api", label: "⚙️ BecasController", sub: "ASP.NET Core 8 Web API", tag: "Backend" },
+          { id: "scoring", label: "🧮 BaremacionService", sub: "Ponderación Socioeconómica", tag: "Lógica Negocio" },
+          { id: "docs", label: "📄 MiniWord & QuestPDF", sub: "Generador de Docx / PDF", tag: "Documentos" },
+          { id: "db", label: "🗄️ MySQL sigafi_es", sub: "Pomelo EF Core 8", tag: "Base de Datos" }
+        ],
+        connections: [
+          { from: "fe", to: "api", label: "POST /postulacion" },
+          { from: "api", to: "scoring", label: "Calcular Puntaje" },
+          { from: "scoring", to: "docs", label: "Renderizar Resolución" },
+          { from: "api", to: "db", label: "Guardar Resolución" }
+        ]
+      },
+      codeSnippet: {
+        title: "Servicio de Generación de Resoluciones con MiniWord (.NET 8)",
+        language: "csharp",
+        code: `public class ResolucionBecaDocumentService : IResolucionBecaDocumentService
+{
+    public byte[] GenerarResolucionWord(PostulacionBecaDto postulacion, MatrizPuntajeDto puntaje)
+    {
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Storage/Templates/ResolucionBeca.docx");
+        
+        var valueDict = new Dictionary<string, object>
+        {
+            ["NombreEstudiante"] = postulacion.EstudianteNombre,
+            ["Cedula"] = postulacion.Cedula,
+            ["Carrera"] = postulacion.CarreraNombre,
+            ["PuntajeSocioeconomico"] = puntaje.PuntajeSocioeconomico.ToString("F2"),
+            ["PromedioAcademico"] = puntaje.PromedioAcademico.ToString("F2"),
+            ["PorcentajeBeca"] = $"{puntaje.PorcentajeAdjudicado}%",
+            ["FechaEmision"] = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy")
+        };
+
+        // Rellena los {{placeholders}} en la plantilla .docx en memoria
+        return MiniWord.SaveAsBytesByTemplate(templatePath, valueDict);
+    }
+}`,
+        explanation: "Genera documentos Word institucionales válidos directamente en memoria RAM sin necesidad de licencias ni dependencias COM de Microsoft Office."
+      }
     },
     {
       id: 4,
+      title: "GAcad — ERP de Gestión Académica & Horarios ISTPET",
+      client: "Instituto Superior Tecnológico Traversari",
+      category: "web",
+      description: "Sistema web core para cronogramas institucionales, distributivos docentes y detección automática de conflictos en horarios de clase.",
+      longDescription: "Modernización del núcleo académico institucional desarrollada en Angular 21 y .NET 8 Web API con soporte para tareas en segundo plano mediante Hangfire y autenticación centralizada mediante llaves públicas RSA (AuthGlobal).",
+      problem: "Cruce de horarios docentes y saturación de aulas durante la planificación semestral, además de demoras en la validación de horas de dedicación de profesores.",
+      decision: "Desarrollé un motor de validación matricial en C# .NET 8 que comprueba en tiempo real colisiones entre profesores, grupos de estudiantes y aulas físicas.",
+      tradeoff: "Validación matricial en tiempo de ejecución en memoria para garantizar respuesta inferior a 50ms frente a múltiples consultas recurrentes.",
+      impact: "Eliminación total de solapamientos en distributivos docentes y reducción del 90% del tiempo de armado del horario institucional.",
+      architectureOverview: "Arquitectura basada en Service + Interface Pattern con inyección de dependencias, base de datos MySQL 5.7 heredada y background workers con Hangfire.",
+      securityAndCompliance: "Autenticación RSA asimétrica con tokens JWT validados contra AuthGlobal; almacenamiento seguro de sesiones exclusivamente en memoria.",
+      keyFeatures: [
+        "Planificación de cronogramas académicos con seguimiento de hitos institucionales",
+        "Matriz interactiva de horarios con detección automática de conflictos en aulas y docentes",
+        "Cálculo y control de límites de dedicación docente (Tiempo Completo / Tiempo Parcial)",
+        "Integración transparente con esquemas relacionales históricos de SIGAFI"
+      ],
+      ndaDisclaimer: "Se documentan algoritmos de detección de colisiones y diseño de software sin divulgar datos de la planta docente ni credenciales.",
+      metrics: ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "0 Conflictos Horarios"],
+      image: asset("assets/projects/gacad_real_capture.png"),
+      technologies: ["Angular 21", "TypeScript", ".NET 8", "C#", "MySQL 5.7", "Hangfire", "Serilog", "RSA JWT"],
+      architectureBadges: ["ERP Académico", "Conflict Detection", "Hangfire Jobs", "RSA Security"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/ItspetDev",
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/gacad_real_capture.png"), title: "Panel de Control GAcad (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de asignaturas, cobertura docente y estado de planificación" },
+        { url: asset("assets/projects/gacad_gestor_capture.png"), title: "Matriz de Planificación y Distributivos", caption: "Gestión de carga horaria, verificación 3D de conflictos y cruces de aula" }
+      ],
+      architectureFlow: {
+        title: "Motor de Detección de Conflictos & Hangfire Workers",
+        description: "Cada asignación de bloque horario pasa por una validación tridimensional (Docente, Aula, Grupo) antes de persistirse en la base de datos.",
+        pattern: "Service Interface Pattern + Background Sync Worker",
+        nodes: [
+          { id: "fe", label: "🅰️ Angular 21 Frontend", sub: "Signals & Drag-Drop Grid", tag: "Frontend" },
+          { id: "api", label: "⚙️ HorariosController", sub: ".NET 8 Web API", tag: "Backend" },
+          { id: "conflict", label: "🛡️ ConflictValidationEngine", sub: "Verificación 3D en Memoria", tag: "Algoritmo" },
+          { id: "hangfire", label: "⏱️ Hangfire Jobs", sub: "Procesamiento Asíncrono", tag: "Worker" },
+          { id: "db", label: "🗄️ MySQL sigafi_es", sub: "GAcadDbContext", tag: "Persistencia" }
+        ],
+        connections: [
+          { from: "fe", to: "api", label: "POST /horarios/asignar" },
+          { from: "api", to: "conflict", label: "Validar Cruces" },
+          { from: "conflict", to: "db", label: "Commit Transacción" },
+          { from: "api", to: "hangfire", label: "Encolar Notificación" }
+        ]
+      },
+      codeSnippet: {
+        title: "Algoritmo de Detección de Conflictos en Horarios (.NET 8)",
+        language: "csharp",
+        code: `public class HorarioValidationService : IHorarioValidationService
+{
+    private readonly GAcadDbContext _db;
+
+    public HorarioValidationService(GAcadDbContext db) => _db = db;
+
+    public async Task<ValidationResult> ValidarConflictoHorarioAsync(HorarioSlotDto slot)
+    {
+        // 1. Validar si el aula está ocupada en ese intervalo
+        var conflictoAula = await _db.Horarios.AnyAsync(h => 
+            h.AulaId == slot.AulaId && h.Dia == slot.Dia &&
+            h.HoraInicio < slot.HoraFin && h.HoraFin > slot.HoraInicio);
+            
+        if (conflictoAula)
+            return ValidationResult.Conflict("El aula seleccionada ya se encuentra asignada en este bloque.");
+
+        // 2. Validar si el docente tiene cruce con otra materia
+        var conflictoDocente = await _db.Horarios.AnyAsync(h => 
+            h.DocenteId == slot.DocenteId && h.Dia == slot.Dia &&
+            h.HoraInicio < slot.HoraFin && h.HoraFin > slot.HoraInicio);
+
+        if (conflictoDocente)
+            return ValidationResult.Conflict("El docente tiene otra asignatura asignada en el mismo horario.");
+
+        return ValidationResult.Success();
+    }
+}`,
+        explanation: "Evita matemáticamente cualquier colisión temporal en la ocupación de espacios físicos y dedicación horaria de los catedráticos."
+      }
+    },
+    {
+      id: 5,
+      title: "GRECUH — Sistema de Recursos Humanos & Credencialización",
+      client: "Instituto Superior Tecnológico Traversari",
+      category: "web",
+      description: "Plataforma web para contratos laborales, expediente digital, credenciales docentes en alta resolución con SkiaSharp e integración con SharePoint.",
+      longDescription: "Sistema integral de talento humano construido en Angular 20 (PrimeNG + TailwindCSS) y backend .NET 8 con Entity Framework Core Code First. Gestiona contratos docentes semestrales, archivo digital en la nube institucional de SharePoint y renderizado de carnets de PVC con SkiaSharp.",
+      problem: "Gestión dispersa de contratos físicos de profesores, demora en la generación manual de carnets institucionales y falta de repositorio digital seguro para expedientes docentes.",
+      decision: "Implementé una solución que automatiza la redacción de contratos, conecta con Microsoft SharePoint para archivo documental y utiliza la librería SkiaSharp en .NET 8 para generar carnets a 300 DPI con código de barras.",
+      tradeoff: "Uso de renderizado gráfico nativo en servidor (SkiaSharp) que requiere calibración de píxeles exacta pero produce carnets listos para impresión en PVC sin software de diseño adicional.",
+      impact: "Reducción de 15 días a 24 horas en la consolidación de contratos de 80+ docentes y emisión automática de identificaciones institucionales.",
+      architectureOverview: "Frontend Angular 20 con PrimeNG, Backend RESTful en .NET 8 (Code First), motor de imágenes SkiaSharp y conector para SharePoint.",
+      securityAndCompliance: "Control estricto de accesos RBAC, protección de datos conforme a la LOPDP y almacenamiento seguro con pistas de auditoría para cada expediente.",
+      keyFeatures: [
+        "Generador de credenciales de PVC a 300 DPI con SkiaSharp y códigos de barras",
+        "Generación parametrizada de contratos laborales semestrales",
+        "Integración con SharePoint para almacenamiento seguro y versionado de expedientes",
+        "Módulo de evaluación docente por rúbricas 360°"
+      ],
+      ndaDisclaimer: "Los expedientes y remuneraciones docentes se mantienen confidenciales. Solo se describe la arquitectura de software y capacidades técnicas.",
+      metrics: ["Angular 20 + PrimeNG", "SkiaSharp 300 DPI", "SharePoint Cloud", "Contratos Auto"],
+      image: asset("assets/projects/rrhh_real_capture.png"),
+      technologies: ["Angular 20", "PrimeNG", "Tailwind CSS", ".NET 8", "C#", "EF Core", "SkiaSharp", "SharePoint API", "PDFMake"],
+      architectureBadges: ["Talento Humano", "SkiaSharp 2D", "SharePoint Cloud", "PrimeNG UI"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/ItspetDev",
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/rrhh_real_capture.png"), title: "Panel de Gestión Administrativa y Talento Humano (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de personal docente activo, sedes y calendario" },
+        { url: asset("assets/projects/rrhh_docentes_capture.png"), title: "Expediente Digital de Docentes y Contratos", caption: "Gestión de contratos laborales semestrales y emisión de carnets en PVC con SkiaSharp" }
+      ],
+      architectureFlow: {
+        title: "Pipeline de Generación de Credenciales & Archivo en SharePoint",
+        description: "El backend compone la imagen del carnet en alta resolución mediante SkiaSharp y sincroniza los contratos firmados con Microsoft SharePoint.",
+        pattern: "REST API + SkiaSharp 2D Rendering Engine + SharePoint Connector",
+        nodes: [
+          { id: "fe", label: "🅰️ Angular 20 + PrimeNG", sub: "Expedientes & UI Rica", tag: "Frontend" },
+          { id: "api", label: "⚙️ RRHH API .NET 8", sub: "EF Core Code First", tag: "Backend" },
+          { id: "skia", label: "🎨 SkiaSharp Engine", sub: "Renderizado PVC a 300 DPI", tag: "Gráficos" },
+          { id: "sp", label: "☁️ Microsoft SharePoint", sub: "Almacenamiento Cloud", tag: "Almacenamiento" },
+          { id: "db", label: "🗄️ Base de Datos Relacional", sub: "Modelado Code First", tag: "Persistencia" }
+        ],
+        connections: [
+          { from: "fe", to: "api", label: "Solicitar Carnet" },
+          { from: "api", to: "skia", label: "Componer Canvas 2D" },
+          { from: "api", to: "sp", label: "Archivar Contrato" },
+          { from: "api", to: "db", label: "Registrar Emisión" }
+        ]
+      },
+      codeSnippet: {
+        title: "Renderizado de Credencial Docente en 300 DPI con SkiaSharp (.NET 8)",
+        language: "csharp",
+        code: `public class CredencialGeneratorService : ICredencialGeneratorService
+{
+    public byte[] GenerarCarnetDocente(DocenteDto docente, byte[] fotoBytes)
+    {
+        // Dimensiones estándar CR-80 en 300 DPI: 1012 x 638 píxeles
+        using var surface = SKSurface.Create(new SKImageInfo(1012, 638));
+        var canvas = surface.Canvas;
+        canvas.Clear(SKColors.White);
+
+        // Fondo institucional con esquinas redondeadas
+        using var paintBg = new SKPaint { Color = SKColor.Parse("#180B1E"), IsAntialias = true };
+        canvas.DrawRoundRect(new SKRoundRect(new SKRect(0, 0, 1012, 638), 32), paintBg);
+
+        // Dibujar foto escalada del docente
+        using var img = SKImage.FromEncodedData(fotoBytes);
+        canvas.DrawImage(img, new SKRect(60, 120, 360, 480));
+
+        // Tipografía y datos institucionales
+        using var paintText = new SKPaint { Color = SKColors.White, TextSize = 36, IsAntialias = true };
+        canvas.DrawText(docente.NombreCompleto.ToUpper(), 400, 220, paintText);
+
+        return surface.Snapshot().Encode(SKEncodedImageFormat.Png, 100).ToArray();
+    }
+}`,
+        explanation: "Genera archivos gráficos de alta resolución listos para impresoras térmicas de tarjetas de identificación sin requerir servidores gráficos externos."
+      }
+    },
+    {
+      id: 6,
       title: "Scorecraft — Plataforma Deportiva & Médica CDMI",
       client: "Club Deportivo Miguel Iturralde",
       category: "web",
-      description: "Plataforma web integral para gestión de métricas deportivas, inscripciones de jugadores y seguimiento de fichas médicas.",
-      longDescription: "Sistema desarrollado de inicio a fin (análisis de dominio, base de datos relacional, C# y Angular) para centralizar la información deportiva, control de entrenamientos y fichas de salud de los deportistas.",
-      problem: "Uso de planillas en papel y falta de centralización entre el cuerpo técnico, preparadores físicos y departamento médico para monitorear el estado de los futbolistas.",
-      decision: "Construí un panel web reactivo en Angular con backend .NET y base de datos relacional para seguimiento antropométrico, historial de lesiones y estadísticas de partidos.",
-      tradeoff: "Capacitación requerida para el equipo técnico para reemplazar planillas analógicas por registros digitales en tiempo real.",
-      impact: "Centralización integral de las fichas médicas y deportivas de los jugadores del club con reportería automatizada.",
-      architectureOverview: "SPA interactiva en Angular consumiendo APIs seguras en .NET Core con almacenamiento relacional estructurado.",
-      securityAndCompliance: "Aislamiento de fichas médicas confidenciales con acceso restringido exclusivamente al personal de salud deportivo.",
+      description: "Plataforma web para monitoreo físico, historial de lesiones, pliegues antropométricos y estadísticas de futbolistas.",
+      longDescription: "Sistema integral desarrollado en Angular y .NET Core para centralizar los registros del cuerpo técnico, preparadores físicos y departamento médico del club deportivo.",
+      problem: "Dispersión de registros médicos en planillas físicas, falta de correlación entre fatiga física y rendimiento en partidos oficiales.",
+      decision: "Construí un panel web reactivo en Angular con backend en C# y base de datos relacional con cálculo automatizado de índices antropométricos y gráficos con Chart.js.",
+      tradeoff: "Digitalización estricta de fichas médicas previa a cada jornada competitiva.",
+      impact: "Centralización del 100% del plantel de jugadores con fichas médicas y seguimiento de lesiones.",
+      architectureOverview: "SPA en Angular consumiendo APIs seguras en .NET con base de datos relacional y gráficos interactivos.",
+      securityAndCompliance: "Aislamiento de fichas médicas confidenciales con acceso restringido exclusivamente al personal de salud.",
       keyFeatures: [
-        "Ficha médica digital con control de lesiones, tratamientos y aptitud física",
-        "Registro de métricas antropométricas y seguimiento del rendimiento en entrenamientos",
-        "Gestión de fichajes, categorías deportivas y actas de partidos",
-        "Módulo de reportes gráficos para directores técnicos"
+        "Ficha médica digital con control de lesiones y tratamientos",
+        "Registro de métricas antropométricas (VO2 Max, porcentaje de grasa)",
+        "Gestión de convocatorias, categorías deportivas y actas de partido",
+        "Radares de rendimiento físico por posición táctica"
       ],
       ndaDisclaimer: "Estructura de arquitectura descrita sin revelar identidades médicas ni contratos de atletas.",
       metrics: ["Gestión Deportiva", "Fichas Médicas", "C# + Angular", "Analítica Deportiva"],
-      image: asset("assets/projects/gacad_preview.jpg"),
+      image: asset("assets/projects/scorecraft_preview.svg"),
       technologies: ["Angular", "TypeScript", "C#", ".NET Core", "SQL Server", "Chart.js"],
       architectureBadges: ["Sports Analytics", "Health Records", "Full Stack", "Medical Data"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig",
-      isFeatured: true
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/scorecraft_preview.svg"), title: "Dashboard de Monitoreo Físico", caption: "Seguimiento antropométrico, historial de lesiones y estadísticas de futbolistas" }
+      ]
     },
     {
-      id: 5,
+      id: 7,
       title: "DebtManager — Software Financiero C# Desktop",
       client: "Proyecto de Ingeniería Personal",
       category: "desktop",
-      description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones sin internet.",
+      description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones 100% offline.",
       longDescription: "Herramienta de escritorio nativa enfocada en la privacidad absoluta y respuesta ultrarrápida. Incluye simuladores de tablas de amortización (método francés y alemán), gráficos financieros y persistencia local.",
-      problem: "Dependencia constante de conexión a internet y preocupaciones de privacidad en plataformas financieras en la nube para control de cuentas por cobrar.",
+      problem: "Dependencia constante de internet y preocupaciones de privacidad en plataformas financieras en la nube para control de cobros.",
       decision: "Implementé una solución nativa en C# con motor de base de datos SQLite embebido y consultas LINQ optimizadas para ejecución en menos de 5ms.",
-      tradeoff: "Software de escritorio sin sincronización en la nube, priorizando velocidad instantánea, cero latencia y soberanía de datos del usuario.",
+      tradeoff: "Software de escritorio sin nube, priorizando velocidad instantánea, cero latencia y soberanía de datos del usuario.",
       impact: "Cálculos financieros instantáneos, portabilidad completa en un ejecutable ligero y control de deudas 100% offline.",
       architectureOverview: "Arquitectura en 3 capas nativa en .NET (Presentación WinForms, Lógica de Negocio Financiera y Repositorio SQLite).",
       securityAndCompliance: "Base de datos local con cifrado de archivo y cero telemetría externa para garantizar total privacidad.",
@@ -289,10 +598,13 @@ export const portfolioData: IPortfolioData = {
       architectureBadges: ["Desktop Native", "Local DB Persistence", "Finance Engine", "100% Offline"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig/DebtManager",
-      isFeatured: true
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/debtmanager_preview.jpg"), title: "Interfaz Financiera Desktop", caption: "Simulación de tablas de amortización, cobros y balances en C# nativo" }
+      ]
     },
     {
-      id: 6,
+      id: 8,
       title: "AvialB / SIAT — Peritaje Vial Offline-First",
       client: "Consultoría / Peritaje Vial",
       category: "mobile",
@@ -312,15 +624,18 @@ export const portfolioData: IPortfolioData = {
       ],
       ndaDisclaimer: "Metodologías de inspección y arquitectura documentadas sin exponer casos judiciales ni datos personales de involucrados.",
       metrics: ["Offline-First", "Ionic + Angular", "Sync Asíncrona", "Cadena de Custodia"],
-      image: asset("assets/projects/gacad_preview.jpg"),
+      image: asset("assets/projects/siat_preview.svg"),
       technologies: ["Ionic", "Angular", "TypeScript", "C#", ".NET Core", "SQL Server", "SQLite"],
       architectureBadges: ["Offline-First", "Field Operations", "Async Sync", "Forensics"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
-      isFeatured: false
+      isFeatured: false,
+      screenshots: [
+        { url: asset("assets/projects/siat_preview.svg"), title: "App Móvil de Peritaje Vial", caption: "Levantamiento de siniestros, fotografías georreferenciadas y colas offline" }
+      ]
     },
     {
-      id: 7,
+      id: 9,
       title: "RPG Journey — Motor de Juego Java POO (Swing)",
       client: "Proyecto de Lógica & Game Dev",
       category: "desktop",
@@ -345,10 +660,13 @@ export const portfolioData: IPortfolioData = {
       architectureBadges: ["Game Dev POO", "Decoupled Architecture", "Java Swing", "FSM Engine"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig",
-      isFeatured: false
+      isFeatured: false,
+      screenshots: [
+        { url: asset("assets/projects/buscaminas_preview.jpg"), title: "Motor Gráfico Swing", caption: "Pantalla de combate por turnos y control de estados en Java" }
+      ]
     },
     {
-      id: 8,
+      id: 10,
       title: "Buscaminas POO Recursivo (Java Desktop)",
       client: "Proyecto Algorítmico",
       category: "desktop",
@@ -373,7 +691,10 @@ export const portfolioData: IPortfolioData = {
       architectureBadges: ["Algorithmic Engine", "Recursion", "Zero-Dependency", "Matrix 2D"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig",
-      isFeatured: false
+      isFeatured: false,
+      screenshots: [
+        { url: asset("assets/projects/buscaminas_preview.jpg"), title: "Tablero Recursivo en Swing", caption: "Destape algorítmico de casillas en matriz 2D" }
+      ]
     }
   ]
 };

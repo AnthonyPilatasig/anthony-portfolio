@@ -103,10 +103,7 @@ export const HomePage: React.FC = () => {
                 <span className="badge py-1">Docente Técnico Superior</span>
                 <span className="badge py-1">Quito, Ecuador (UTC-5)</span>
               </div>
-              <h1
-                className="text-4xl sm:text-5xl md:text-6xl leading-[1.08] text-[var(--theme-ink)] tracking-tight font-semibold"
-                style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
-              >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.08] text-[var(--theme-ink)] tracking-tight">
                 <RevealText text={personal.name} stagger={18} />
               </h1>
               <p className="text-sm font-mono text-[var(--theme-accent)] font-medium">
@@ -472,10 +469,7 @@ export const HomePage: React.FC = () => {
         className="py-20"
       >
         <span className="section-index">08 / {t('contact.badge')}</span>
-        <h2
-          className="text-3xl md:text-4xl text-[var(--theme-ink)] tracking-tight mt-2 mb-6"
-          style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
-        >
+        <h2 className="text-3xl sm:text-4xl font-bold text-[var(--theme-ink)] tracking-tight mt-2 mb-6">
           ¿Construimos algo extraordinario juntos?
         </h2>
         <p className="text-sm font-light text-[var(--theme-ink-muted)] max-w-xl mb-6">

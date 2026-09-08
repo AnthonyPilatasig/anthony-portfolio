@@ -1,5 +1,33 @@
 export type ProjectCategory = 'all' | 'web' | 'mobile' | 'desktop' | 'architecture';
 
+export interface IProjectScreenshot {
+  url: string;
+  title: string;
+  caption: string;
+}
+
+export interface IProjectArchitectureNode {
+  id: string;
+  label: string;
+  sub: string;
+  tag?: string;
+}
+
+export interface IProjectArchitectureFlow {
+  title: string;
+  description: string;
+  pattern: string;
+  nodes: IProjectArchitectureNode[];
+  connections?: { from: string; to: string; label?: string }[];
+}
+
+export interface IProjectCodeSnippet {
+  title: string;
+  language: string;
+  code: string;
+  explanation: string;
+}
+
 export interface IProject {
   id: number;
   title: string;
@@ -22,6 +50,9 @@ export interface IProject {
   liveUrl?: string;
   githubUrl?: string;
   isFeatured?: boolean;
+  screenshots?: IProjectScreenshot[];
+  architectureFlow?: IProjectArchitectureFlow;
+  codeSnippet?: IProjectCodeSnippet;
 }
 
 export interface IExperience {

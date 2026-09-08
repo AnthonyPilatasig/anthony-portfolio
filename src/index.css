@@ -3,42 +3,46 @@
 
 @theme {
   /* Typography tokens */
-  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Color primitives */
-  --color-accent-blue: #1B4FE8;
-  --color-accent-blue-dark: #4B7BFF;
-  --color-ink: #0D0D0D;
-  --color-ink-muted: #6B7280;
-  --color-bg-base: #FAFAF8;
+  --color-accent-blue: #2563EB;
+  --color-accent-blue-dark: #3B82F6;
+  --color-ink: #0F172A;
+  --color-ink-muted: #64748B;
+  --color-bg-base: #F8FAFC;
   --color-surface-base: #FFFFFF;
-  --color-border-base: #E5E7EB;
-  --color-border-strong-base: #D1D5DB;
+  --color-border-base: #E2E8F0;
+  --color-border-strong-base: #CBD5E1;
 }
 
 :root {
-  --theme-bg: #FAFAF8;
+  --theme-bg: #F8FAFC;
   --theme-surface: #FFFFFF;
-  --theme-ink: #0D0D0D;
-  --theme-ink-muted: #6B7280;
-  --theme-accent: #1B4FE8;
-  --theme-accent-hover: #1440CC;
-  --theme-border: #E5E7EB;
-  --theme-border-strong: #D1D5DB;
+  --theme-surface-glass: rgba(255, 255, 255, 0.85);
+  --theme-ink: #0F172A;
+  --theme-ink-muted: #64748B;
+  --theme-accent: #2563EB;
+  --theme-accent-hover: #1D4ED8;
+  --theme-accent-glow: rgba(37, 99, 235, 0.15);
+  --theme-border: #E2E8F0;
+  --theme-border-strong: #CBD5E1;
   color-scheme: light;
 }
 
 html.dark {
-  --theme-bg: #0A0A0A;
-  --theme-surface: #111111;
-  --theme-ink: #F5F5F5;
-  --theme-ink-muted: #9CA3AF;
-  --theme-accent: #4B7BFF;
-  --theme-accent-hover: #6B8FFF;
-  --theme-border: #1F1F1F;
-  --theme-border-strong: #2A2A2A;
+  --theme-bg: #090A0F;
+  --theme-surface: #111420;
+  --theme-surface-glass: rgba(17, 20, 32, 0.85);
+  --theme-ink: #F8FAFC;
+  --theme-ink-muted: #94A3B8;
+  --theme-accent: #38BDF8;
+  --theme-accent-hover: #0EA5E9;
+  --theme-accent-glow: rgba(56, 189, 248, 0.18);
+  --theme-border: #1E2336;
+  --theme-border-strong: #2B324D;
   color-scheme: dark;
 }
 
@@ -47,7 +51,10 @@ body {
   color: var(--theme-ink);
   font-family: var(--font-sans);
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────── */
@@ -55,131 +62,152 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: var(--theme-border-strong);
-  border-radius: 3px;
+  border-radius: 9999px;
 }
 
-/* ─── Accesibilidad ──────────────────────────────────── */
+/* ─── Accesibilidad & Foco ───────────────────────────── */
 *:focus-visible {
   outline: 2px solid var(--theme-accent);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--theme-accent) 15%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 20%, transparent);
   color: var(--theme-ink);
 }
 
-/* ─── Componentes editoriales ────────────────────────── */
+/* ─── Design Tokens & Componentes UI ─────────────────── */
 
-/* Firma visual: índice de sección (01 /, 02 /, etc.) */
+/* Eyebrow de sección (01 /, 02 /, etc.) */
 .section-index {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: var(--theme-accent);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  display: block;
-  margin-bottom: 1rem;
+  display: inline-block;
+  margin-bottom: 0.75rem;
 }
 
-/* Editorial card — limpia, sin glassmorphism */
+/* Editorial & Bento card */
 .editorial-card {
   background: var(--theme-surface);
   border: 1px solid var(--theme-border);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: 18px;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .editorial-card:hover {
   border-color: var(--theme-border-strong);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), 0 0 20px var(--theme-accent-glow);
+  transform: translateY(-2px);
 }
 
 html.dark .editorial-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 24px var(--theme-accent-glow);
 }
 
-/* Badge neutro */
+/* Badge Neutro */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
   border: 1px solid var(--theme-border-strong);
   color: var(--theme-ink-muted);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.06em;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  background: color-mix(in srgb, var(--theme-surface) 60%, transparent);
+  backdrop-blur: 4px;
   transition: all 0.2s ease;
 }
 
-/* Badge con acento azul */
+/* Badge con Acento Primario */
 .badge-accent {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent);
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 35%, transparent);
   color: var(--theme-accent);
-  background: color-mix(in srgb, var(--theme-accent) 6%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 8%, transparent);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.06em;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-/* Botón primario azul */
+/* Botón Primario */
 .btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.25rem;
+  padding: 0.65rem 1.35rem;
   background: var(--theme-accent);
   color: #FFFFFF;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  border-radius: 6px;
-  border: none;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 12px;
+  border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 10px var(--theme-accent-glow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .btn-primary:hover {
   background: var(--theme-accent-hover);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 18px var(--theme-accent-glow);
+  transform: translateY(-1.5px);
 }
 
-/* Botón secundario bordeado */
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón Secundario */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.25rem;
-  background: transparent;
+  padding: 0.65rem 1.35rem;
+  background: var(--theme-surface);
   color: var(--theme-ink);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-radius: 12px;
   border: 1px solid var(--theme-border-strong);
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .btn-secondary:hover {
   border-color: var(--theme-accent);
   color: var(--theme-accent);
-  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--theme-accent) 4%, var(--theme-surface));
+  transform: translateY(-1.5px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
 }
 
 /* Divisor editorial */
@@ -187,15 +215,6 @@ html.dark .editorial-card:hover {
   border: 0;
   height: 1px;
   background: var(--theme-border);
-}
-
-/* Línea de acento (elemento decorativo mínimo) */
-.accent-line {
-  display: block;
-  width: 2rem;
-  height: 2px;
-  background: var(--theme-accent);
-  margin-bottom: 1.5rem;
 }
 
 /* ─── Project Reel / Marquee ─────────────────────────── */
@@ -222,7 +241,7 @@ html.dark .editorial-card:hover {
   .project-reel-track { animation: none; }
 }
 
-/* ─── Custom cursor editorial ────────────────────────── */
+/* ─── Custom cursor ──────────────────────────────────── */
 .cursor-dot {
   position: fixed;
   top: 0;
@@ -241,23 +260,18 @@ html.dark .editorial-card:hover {
 .cursor-dot--active {
   width: 32px;
   height: 32px;
-  opacity: 0.12;
+  opacity: 0.15;
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
   .cursor-dot { display: none; }
 }
 
-/* ─── Game Boy battle hit feedback ───────────────────── */
-@keyframes wiggle {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px) rotate(-2deg); }
-  75% { transform: translateX(3px) rotate(2deg); }
-}
-
-/* ─── Optimizaciones para dispositivos móviles de bajos recursos ─── */
+/* ─── Hardware Acceleration & Smooth Rendering ──────── */
 .editorial-card,
-.project-card {
+.project-card,
+.btn-primary,
+.btn-secondary {
   content-visibility: auto;
   contain-intrinsic-size: 1px 240px;
   transform: translateZ(0);
@@ -265,9 +279,7 @@ html.dark .editorial-card:hover {
 }
 
 @media (pointer: coarse) {
-  /* Eliminar efectos de hover pegajosos en pantallas táctiles */
   .editorial-card:hover {
     transform: none;
   }
 }
-
