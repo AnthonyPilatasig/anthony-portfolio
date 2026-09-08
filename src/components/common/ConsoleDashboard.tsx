@@ -151,8 +151,8 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     badge: 'TACTICAL J-RPG',
     platform: 'TypeScript State Engine',
     genre: 'Turn-Based Battle',
-    playtime: '6h 15m',
-    trophies: '8/8 Trofeos',
+    playtime: 'Sin cronómetro',
+    trophies: 'Solo por diversión',
     bgGradient: 'from-cyan-950 via-slate-900 to-[#050811]',
     accentColor: '#06B6D4',
     description: 'Sistema de combate táctico por turnos estilo J-RPG contra el monolito de deuda técnica con mecánicas de refactorización y escudos de arquitectura.',
@@ -166,8 +166,8 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     badge: 'CLASSIC ARCADE',
     platform: '8-Bit Matrix Engine',
     genre: 'Arcade Classic',
-    playtime: '12h 05m',
-    trophies: '5/5 Trofeos',
+    playtime: '', // reemplazado en vivo por el récord real guardado en este navegador
+    trophies: 'Récord local',
     bgGradient: 'from-emerald-950 via-teal-950 to-[#050811]',
     accentColor: '#10B981',
     description: 'Recreación retro de la clásica serpiente con física de rejilla matemática, sintetizador sonoro Chiptune y selector de dificultad.',
@@ -181,8 +181,8 @@ const CONSOLE_GAMES: ConsoleGame[] = [
     badge: 'PUZZLE LOGIC',
     platform: 'Binary Array Grid',
     genre: 'Math Puzzle',
-    playtime: '9h 30m',
-    trophies: '10/10 Trofeos',
+    playtime: '', // reemplazado en vivo por el récord real guardado en este navegador
+    trophies: 'Récord local',
     bgGradient: 'from-amber-950 via-orange-950 to-[#050811]',
     accentColor: '#F59E0B',
     description: 'Desliza y fusiona potencias de dos hasta alcanzar el bloque 2048 en una matriz algorítmica optimizada.',
@@ -215,6 +215,11 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
   const [showGameInfo, setShowGameInfo] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const shelfRef = useRef<HTMLDivElement>(null);
+  const [booted, setBooted] = useState(false);
+  // Real high scores this browser has actually saved — no invented stats.
+  const [snakeBest, setSnakeBest] = useState(() => Number(localStorage.getItem('snake-best') ?? 0));
+  const [matrixBest, setMatrixBest] = useState(() => Number(localStorage.getItem('2048-best') ?? 0));
 
   // Cartridge loader state
   const [cartridgeRomLoaded, setCartridgeRomLoaded] = useState(false);
@@ -305,6 +310,9 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     if (soundEnabled) consoleAudio.playBack();
     setActiveRunningGame(null);
     setCartridgeRomLoaded(false);
+    // Pick up any new high score the player just set before returning to the shelf.
+    setSnakeBest(Number(localStorage.getItem('snake-best') ?? 0));
+    setMatrixBest(Number(localStorage.getItem('2048-best') ?? 0));
     const orientation = screen.orientation as ScreenOrientation & { unlock?: () => void };
     orientation?.unlock?.();
     if (document.fullscreenElement) document.exitFullscreen().catch(() => { /* already exited */ });
@@ -372,9 +380,23 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
 
+  // One-time "power on" boot flourish when the console first mounts
+  useEffect(() => {
+    const t = setTimeout(() => setBooted(true), 550);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Keep the horizontal cartridge shelf following keyboard / gamepad selection
+  useEffect(() => {
+    const shelf = shelfRef.current;
+    if (!shelf) return;
+    const card = shelf.querySelector<HTMLElement>(`[data-cartridge-idx="${selectedIndex}"]`);
+    card?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [selectedIndex]);
+
   const rootClasses = embeddedFullscreen
-    ? 'fixed inset-0 w-screen h-screen z-[9999] bg-[#050811] flex flex-col overflow-hidden select-none'
-    : `relative w-full bg-[#050811] flex flex-col overflow-hidden select-none ${isFullscreen ? 'fixed inset-0 z-50 rounded-none w-screen h-screen' : 'min-h-[90vh] rounded-[28px] shadow-2xl'}`;
+    ? 'fixed inset-0 h-[100dvh] w-[100dvw] z-[9999] bg-[#050811] flex flex-col overflow-hidden select-none'
+    : `relative w-full bg-[#050811] flex flex-col overflow-hidden select-none ${isFullscreen ? 'fixed inset-0 z-50 rounded-none h-[100dvh] w-[100dvw]' : 'h-[85dvh] max-h-[820px] rounded-[28px] shadow-2xl'}`;
 
   return (
     <div ref={containerRef} className={rootClasses} style={{ fontFamily: "'Inter', 'SF Pro Display', system-ui, sans-serif" }}>
@@ -390,6 +412,26 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         <div className="absolute inset-0 bg-[#050811]/60" />
       </div>
 
+      {/* ─── Power-On Boot Flourish (plays once per session) ───────────────── */}
+      <AnimatePresence>
+        {!booted && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="absolute inset-0 z-[60] bg-[#050811] flex items-center justify-center pointer-events-none"
+          >
+            <motion.div
+              initial={{ scaleX: 0.2, opacity: 0 }}
+              animate={{ scaleX: [0.2, 1, 1], opacity: [0, 1, 0] }}
+              transition={{ duration: 0.55, times: [0, 0.55, 1], ease: 'easeInOut' }}
+              className="h-[2px] w-2/3 max-w-xs"
+              style={{ background: `linear-gradient(90deg, transparent, ${selectedGame.accentColor}, transparent)` }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ─── TOP AP-DECK OS STATUS BAR ─────────────────────────────────────── */}
       <div
         className="relative z-30 flex items-center justify-between px-4 sm:px-6 py-3"
@@ -402,38 +444,46 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         {/* Left: User Profile & Status */}
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-lg ring-2 ring-blue-500/40"
+            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-lg shrink-0"
             style={{
-              background: `linear-gradient(135deg, #3B82F6, #1D4ED8)`,
+              background: 'linear-gradient(135deg, var(--theme-accent, #38BDF8), var(--theme-accent-hover, #0EA5E9))',
+              boxShadow: '0 0 0 2px color-mix(in srgb, var(--theme-accent, #38BDF8) 40%, transparent)',
             }}
           >
             AP
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-white text-sm">Anthony</span>
-              <span
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
-                style={{ background: 'rgba(59,130,246,0.18)', color: '#93C5FD' }}
-              >
-                Nivel 99
-              </span>
+              <span className="w-1 h-1 rounded-full bg-emerald-400 shrink-0" />
+              <span className="text-emerald-400 text-[11px] font-medium">En línea</span>
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-slate-400">
-              <span className="text-amber-400 flex items-center gap-1 font-semibold">
-                <FiAward className="w-3 h-3" /> 65 Trofeos
+            <div className="flex items-center gap-2.5 text-[11px] text-slate-400">
+              <span className="hidden sm:flex items-center gap-1 font-medium shrink-0" title="Zona horaria del desarrollador">
+                🇪🇨 Quito, EC
               </span>
-              <span className="w-1 h-1 rounded-full bg-emerald-400" />
-              <span className="text-emerald-400 font-medium">En línea</span>
+              <span className="hidden sm:block w-1 h-1 rounded-full bg-slate-600 shrink-0" />
+              <a
+                href="https://twitch.tv/anthony_pilatasig"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1 font-semibold hover:underline min-w-0"
+                style={{ color: '#B197FC' }}
+                title="Streams de game dev y arquitectura en Twitch"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#9146FF] animate-pulse shrink-0" />
+                <span className="truncate hidden sm:inline">twitch.tv/anthony_pilatasig</span>
+                <span className="sm:hidden">Twitch</span>
+              </a>
             </div>
           </div>
         </div>
 
         {/* Center: System Console Brand */}
-        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]">
+        <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] shrink-0">
           <Gamepad2 className="w-4 h-4 text-[var(--theme-accent, #38BDF8)]" />
           <span className="font-bold text-sm text-white tracking-wider">AP-DECK OS</span>
-          <span className="text-[10px] text-slate-400 font-mono">v2.5</span>
+          <span className="text-[10px] text-slate-400 font-mono">v3.0</span>
         </div>
 
         {/* Right: Controller, Sound, Time & Exit */}
@@ -456,8 +506,8 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="p-2 rounded-full transition-colors"
             style={{
-              background: soundEnabled ? 'rgba(99,102,241,0.18)' : 'rgba(255,255,255,0.05)',
-              color: soundEnabled ? '#818CF8' : '#475569'
+              background: soundEnabled ? 'color-mix(in srgb, var(--theme-accent, #38BDF8) 20%, transparent)' : 'rgba(255,255,255,0.05)',
+              color: soundEnabled ? 'var(--theme-accent, #38BDF8)' : '#475569'
             }}
             title="Efectos de sonido de la consola"
           >
@@ -465,8 +515,9 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           </button>
 
           <span
-            className="font-bold text-white text-xs px-3 py-1.5 rounded-full tracking-wider"
+            className="hidden sm:inline font-bold text-white text-xs px-3 py-1.5 rounded-full tracking-wider"
             style={{ background: 'rgba(255,255,255,0.06)' }}
+            title="Hora local — Quito, Ecuador (UTC-5)"
           >
             {currentTime}
           </span>
@@ -548,7 +599,10 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 <button
                   onClick={() => setCrtEnabled(!crtEnabled)}
                   className="p-2 rounded-full transition-colors cursor-pointer"
-                  style={{ background: crtEnabled ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.05)', color: crtEnabled ? '#818CF8' : '#94A3B8' }}
+                  style={{
+                    background: crtEnabled ? 'color-mix(in srgb, var(--theme-accent, #38BDF8) 22%, transparent)' : 'rgba(255,255,255,0.05)',
+                    color: crtEnabled ? 'var(--theme-accent, #38BDF8)' : '#94A3B8',
+                  }}
                   title="Filtro CRT Scanlines"
                 >
                   <FiTv className="w-4 h-4" />
@@ -658,7 +712,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
             >
               {[
                 { icon: <FiGrid className="w-5 h-5" />, label: 'Biblioteca', action: () => selectGame(0), active: true },
-                { icon: <FiAward className="w-5 h-5" />, label: 'Trofeos', action: () => setShowTrophies(true), active: false },
+                { icon: <FiAward className="w-5 h-5" />, label: 'Récords', action: () => setShowTrophies(true), active: false },
                 { icon: <FiTv className="w-5 h-5" />, label: 'Filtro CRT', action: () => setCrtEnabled(!crtEnabled), active: crtEnabled },
                 { icon: soundEnabled ? <FiVolume2 className="w-5 h-5" /> : <FiVolumeX className="w-5 h-5" />, label: 'Sonido', action: () => setSoundEnabled(!soundEnabled), active: soundEnabled },
               ].map((btn, i) => (
@@ -696,9 +750,9 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </button>
             </div>
 
-            {/* Main Stage: Hero Showcase + Cartridge Shelf */}
-            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
-              <div className="flex-1 flex flex-col justify-between p-4 sm:p-6 lg:p-8 gap-4 sm:gap-6">
+            {/* Main Stage: Hero Showcase + Cartridge Shelf — sized to always fit, never scrolls */}
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              <div className="flex-1 flex flex-col min-h-0 justify-between p-3 sm:p-5 lg:p-7 gap-3 sm:gap-4">
 
                 {/* ── Panoramic Hero Showcase Banner ───────────────────────── */}
                 <AnimatePresence mode="wait">
@@ -708,12 +762,11 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -15, scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-                    className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-2xl"
+                    className="relative flex-1 min-h-0 rounded-[20px] sm:rounded-[28px] overflow-hidden shadow-2xl"
                     style={{
                       background: `linear-gradient(135deg, ${selectedGame.accentColor}22 0%, #0A0E1A 100%)`,
                       border: `1px solid ${selectedGame.accentColor}40`,
                       boxShadow: `0 20px 50px -15px ${selectedGame.accentColor}33`,
-                      minHeight: 240,
                     }}
                   >
                     {/* Background Backdrop Glow */}
@@ -725,10 +778,10 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     />
 
                     {/* Main Showcase Layout (2-Column: Details Left + Big Capsule Right) */}
-                    <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div className="relative z-10 h-full overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
 
                       {/* Left: Info & Launch Buttons */}
-                      <div className="space-y-4 max-w-xl">
+                      <div className="space-y-2.5 sm:space-y-3 max-w-xl">
                         {/* Badges */}
                         <div className="flex flex-wrap items-center gap-2">
                           <span
@@ -746,25 +799,32 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                         </div>
 
                         {/* Title */}
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.05]">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-white tracking-tight leading-[1.05]">
                           {selectedGame.title}
                         </h2>
 
-                        {/* Stats Row */}
-                        <div className="flex items-center gap-5 text-xs text-slate-300 pt-1">
+                        {/* Stats Row — real saved high scores where they exist, honest labels elsewhere */}
+                        <div className="flex items-center gap-5 text-xs text-slate-300">
                           <span className="flex items-center gap-1.5 text-amber-300 font-bold">
-                            <FiAward className="w-4 h-4" /> {selectedGame.trophies}
+                            <FiAward className="w-4 h-4" />
+                            {selectedGame.id === 'retro-snake'
+                              ? `Récord en este navegador: ${snakeBest} pts`
+                              : selectedGame.id === 'matrix-2048'
+                              ? `Récord en este navegador: ${matrixBest}`
+                              : selectedGame.trophies}
                           </span>
-                          <span className="flex items-center gap-1.5 text-blue-300 font-bold">
-                            <FiClock className="w-4 h-4" /> {selectedGame.playtime}
-                          </span>
+                          {selectedGame.playtime && (
+                            <span className="flex items-center gap-1.5 text-blue-300 font-bold">
+                              <FiClock className="w-4 h-4" /> {selectedGame.playtime}
+                            </span>
+                          )}
                         </div>
 
                         {/* Primary Launch Action Buttons */}
-                        <div className="pt-2 flex flex-wrap items-center gap-3">
+                        <div className="pt-1 flex flex-wrap items-center gap-3">
                           <button
                             onClick={() => launchGame(selectedGame)}
-                            className="px-8 py-3.5 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                            className="px-7 py-3 rounded-full font-black text-sm flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
                             style={{
                               background: '#FFFFFF',
                               color: '#0F172A',
@@ -777,7 +837,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
                           <button
                             onClick={() => setShowGameInfo(v => !v)}
-                            className="px-5 py-3.5 rounded-full font-semibold text-xs text-white transition-colors hover:bg-white/15"
+                            className="px-5 py-3 rounded-full font-semibold text-xs text-white transition-colors hover:bg-white/15"
                             style={{ background: 'rgba(255,255,255,0.08)' }}
                           >
                             {showGameInfo ? 'Ocultar Detalles' : 'Detalles & Info'}
@@ -816,10 +876,12 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                       {/* Right: Big Stylized Box Art Showcase Capsule */}
                       <div className="hidden md:flex flex-col items-center justify-center shrink-0">
                         <motion.div
+                          initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
                           whileHover={{ scale: 1.05, rotate: 1 }}
                           transition={{ type: 'spring', stiffness: 300 }}
                           onClick={() => launchGame(selectedGame)}
-                          className="w-48 lg:w-56 h-48 lg:h-56 rounded-[22px] overflow-hidden shadow-2xl cursor-pointer relative ring-2 ring-white/20"
+                          className="w-36 lg:w-44 xl:w-52 h-36 lg:h-44 xl:h-52 rounded-[22px] overflow-hidden shadow-2xl cursor-pointer relative ring-2 ring-white/20"
                           style={{
                             boxShadow: `0 20px 40px -10px ${selectedGame.accentColor}88`,
                           }}
@@ -842,11 +904,11 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                   </motion.div>
                 </AnimatePresence>
 
-                {/* ── Cartridge Shelf Row (AP-Deck OS Style) ───────────────────────── */}
-                <div className="space-y-3.5">
+                {/* ── Cartridge Shelf Row (horizontal carousel, never wraps) ───────── */}
+                <div className="space-y-2 sm:space-y-2.5 shrink-0">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-extrabold text-white tracking-wide uppercase">
+                      <span className="text-xs sm:text-sm font-extrabold text-white tracking-wide uppercase">
                         Tu Biblioteca de Cartuchos
                       </span>
                       <span className="text-xs text-slate-400 px-2.5 py-0.5 rounded-full bg-white/[0.05]">
@@ -880,78 +942,84 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     </div>
                   </div>
 
-                  {/* 3D Physical Cartridges Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 pb-2">
-                    {CONSOLE_GAMES.map((game, idx) => {
-                      const isSel = idx === selectedIndex;
-                      return (
-                        <motion.div
-                          key={game.id}
-                          layout
-                          initial={false}
-                          animate={{
-                            scale: isSel ? 1.06 : 1,
-                            y: isSel ? -6 : 0,
-                          }}
-                          whileHover={{ scale: isSel ? 1.08 : 1.04, y: -8 }}
-                          whileTap={{ scale: 0.96 }}
-                          transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-                          onClick={() => {
-                            selectGame(idx);
-                            if (soundEnabled) consoleAudio.playNavigate();
-                          }}
-                          onDoubleClick={() => launchGame(game)}
-                          className="cursor-pointer rounded-[20px] relative overflow-hidden aspect-square group shadow-xl"
-                          style={{
-                            border: isSel ? `3px solid ${game.accentColor}` : '2px solid rgba(255,255,255,0.08)',
-                            boxShadow: isSel
-                              ? `0 0 0 1px ${game.accentColor}, 0 20px 40px -10px ${game.accentColor}99`
-                              : '0 8px 24px rgba(0,0,0,0.5)',
-                          }}
-                        >
-                          {/* Cartridge Cover Image */}
-                          <img
-                            src={game.coverArt}
-                            alt={game.title}
-                            className="w-full h-full object-cover transition-all duration-300"
-                            style={{
-                              filter: isSel ? 'none' : 'saturate(0.7) brightness(0.75)',
+                  {/* Horizontal Cartridge Carousel — swipe/scroll sideways, page never scrolls vertically */}
+                  <div className="relative">
+                    <div
+                      ref={shelfRef}
+                      className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory pb-1 pt-1 px-1 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                    >
+                      {CONSOLE_GAMES.map((game, idx) => {
+                        const isSel = idx === selectedIndex;
+                        return (
+                          <motion.div
+                            key={game.id}
+                            data-cartridge-idx={idx}
+                            initial={false}
+                            animate={{
+                              scale: isSel ? 1.06 : 1,
+                              y: isSel ? -4 : 0,
                             }}
-                          />
-
-                          {/* Top Cartridge Notch & Gold Contact Hint */}
-                          <div className="absolute top-0 inset-x-0 h-2 bg-black/40 backdrop-blur-sm pointer-events-none" />
-
-                          {/* Selection Glowing Indicator Pill */}
-                          {isSel && (
-                            <motion.span
-                              layoutId="shelf-active-badge"
-                              className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-black text-white shadow-lg tracking-wider"
-                              style={{ background: game.accentColor }}
-                            >
-                              EN FOCO
-                            </motion.span>
-                          )}
-
-                          {/* Bottom Card Title Overlay on Selection */}
-                          <div
-                            className="absolute inset-x-0 bottom-0 p-3 pt-6 flex flex-col justify-end transition-opacity"
+                            whileHover={{ scale: isSel ? 1.08 : 1.04, y: -6 }}
+                            whileTap={{ scale: 0.96 }}
+                            transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                            onClick={() => {
+                              selectGame(idx);
+                              if (soundEnabled) consoleAudio.playNavigate();
+                            }}
+                            onDoubleClick={() => launchGame(game)}
+                            className="cursor-pointer shrink-0 snap-center w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[18px] relative overflow-hidden group shadow-xl"
                             style={{
-                              background: isSel
-                                ? 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)'
-                                : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
+                              border: isSel ? `3px solid ${game.accentColor}` : '2px solid rgba(255,255,255,0.08)',
+                              boxShadow: isSel
+                                ? `0 0 0 1px ${game.accentColor}, 0 16px 32px -10px ${game.accentColor}99`
+                                : '0 8px 24px rgba(0,0,0,0.5)',
                             }}
                           >
-                            <p className="text-white text-xs font-bold leading-tight line-clamp-1 drop-shadow-md">
-                              {game.title}
-                            </p>
-                            <span className="text-[10px] text-slate-300 font-medium line-clamp-1">
-                              {game.badge}
-                            </span>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                            {/* Cartridge Cover Image */}
+                            <img
+                              src={game.coverArt}
+                              alt={game.title}
+                              className="w-full h-full object-cover transition-all duration-300"
+                              style={{
+                                filter: isSel ? 'none' : 'saturate(0.7) brightness(0.75)',
+                              }}
+                            />
+
+                            {/* Top Cartridge Notch & Gold Contact Hint */}
+                            <div className="absolute top-0 inset-x-0 h-1.5 bg-black/40 backdrop-blur-sm pointer-events-none" />
+
+                            {/* Selection Glowing Indicator Pill */}
+                            {isSel && (
+                              <motion.span
+                                layoutId="shelf-active-badge"
+                                className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-full text-[8px] font-black text-white shadow-lg tracking-wider"
+                                style={{ background: game.accentColor }}
+                              >
+                                EN FOCO
+                              </motion.span>
+                            )}
+
+                            {/* Bottom Card Title Overlay on Selection */}
+                            <div
+                              className="absolute inset-x-0 bottom-0 p-2 pt-5 flex flex-col justify-end transition-opacity"
+                              style={{
+                                background: isSel
+                                  ? 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)'
+                                  : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
+                              }}
+                            >
+                              <p className="text-white text-[10px] sm:text-xs font-bold leading-tight line-clamp-1 drop-shadow-md">
+                                {game.title}
+                              </p>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Edge fades hinting there's more to scroll sideways */}
+                    <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-[#050811] to-transparent" />
+                    <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-[#050811] to-transparent" />
                   </div>
                 </div>
 
@@ -963,7 +1031,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
 
       {/* ─── BOTTOM CONTROLLER FOOTER BAR ─────────────────────────────────── */}
       <div
-        className="relative z-30 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between text-xs"
+        className="relative z-30 px-4 sm:px-6 py-2 sm:py-2.5 flex flex-wrap items-center justify-between text-xs shrink-0"
         style={{
           background: 'rgba(5, 8, 17, 0.92)',
           backdropFilter: 'blur(20px)',
@@ -1006,8 +1074,9 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           <span>Toca una tarjeta · Doble toque para jugar</span>
         </div>
 
-        <div className="text-slate-500 text-[11px] font-mono">
-          Anthony Pilatasig · AP-Deck Virtual Gaming Lab
+        <div className="text-slate-500 text-[11px] font-mono flex items-center gap-1.5">
+          <span>Hecho en Quito, Ecuador</span>
+          <span aria-hidden>🇪🇨</span>
         </div>
       </div>
 
@@ -1036,8 +1105,8 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                   <FiAward className="w-6 h-6 text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-lg">Trofeos & Logros</h3>
-                  <p className="text-xs text-slate-400">Progreso desbloqueado en AP-Deck</p>
+                  <h3 className="text-white font-bold text-lg">Récords & Biblioteca</h3>
+                  <p className="text-xs text-slate-400">Progreso real guardado en este navegador</p>
                 </div>
               </div>
               <div className="space-y-2.5 pt-2">
@@ -1051,7 +1120,11 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                       <span className="text-xs font-semibold text-slate-200 truncate">{game.title}</span>
                     </div>
                     <span className="text-xs font-bold shrink-0" style={{ color: game.accentColor }}>
-                      {game.trophies}
+                      {game.id === 'retro-snake'
+                        ? `${snakeBest} pts`
+                        : game.id === 'matrix-2048'
+                        ? `${matrixBest}`
+                        : game.trophies}
                     </span>
                   </div>
                 ))}
@@ -1104,7 +1177,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                   className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
                 >
                   <span className="flex items-center gap-2.5 text-sm text-slate-200">
-                    <FiTv className="w-4 h-4 text-indigo-400" /> Filtro CRT Scanlines
+                    <FiTv className="w-4 h-4" style={{ color: 'var(--theme-accent, #38BDF8)' }} /> Filtro CRT Scanlines
                   </span>
                   <span className={`text-xs font-bold ${crtEnabled ? 'text-emerald-400' : 'text-slate-500'}`}>
                     {crtEnabled ? 'ACTIVADO' : 'DESACTIVADO'}

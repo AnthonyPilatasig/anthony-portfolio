@@ -21,8 +21,8 @@ export const ConsolePage: React.FC = () => {
       style={{
         position: 'fixed',
         inset: 0,
-        width: '100vw',
-        height: '100vh',
+        width: '100dvw',
+        height: '100dvh',
         background: '#050811',
         zIndex: 9999,
         overflow: 'hidden',
