@@ -155,12 +155,14 @@ export const RetroPixelPlayer: React.FC = () => {
             >
               <div className="rounded-[4px] overflow-hidden border border-[#1e293b] bg-black shadow-inner">
                 <iframe
+                  credentialless=""
                   title="Reproductor Spotify AnthonWorld"
                   src={embedUrl}
                   width="100%"
                   height="152"
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   loading="lazy"
                   className="rounded-[4px]"
                 />
