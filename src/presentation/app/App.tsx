@@ -5,9 +5,7 @@ import { SEO } from '@presentation/components/ui/SEO';
 import { MouseSpotlight } from '@presentation/components/ui/MouseSpotlight';
 import { CustomCursor } from '@presentation/components/ui/CustomCursor';
 import { ScrollToTop } from '@presentation/components/ui/ScrollToTop';
-// The audio player is being actively reworked outside this refactor, so it's left
-// in its original location for now instead of moving into presentation/features.
-import { GlobalAudioPlayer } from '../../components/common/GlobalAudioPlayer';
+import { GlobalAudioPlayer } from '@presentation/features/audio-player/GlobalAudioPlayer';
 import { AppRouter } from './routes/AppRouter';
 
 function App() {

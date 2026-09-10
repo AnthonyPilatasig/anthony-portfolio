@@ -1,3 +1,42 @@
+export interface CassetteStation {
+  id: string;
+  side: string;
+  name: string;
+  genre: string;
+  streamUrl: string;
+}
+
+export const CASSETTE_STATIONS: CassetteStation[] = [
+  {
+    id: 'lofi-synth',
+    side: 'LADO A',
+    name: 'Nightwave Plaza',
+    genre: 'Lo-Fi & Synthwave',
+    streamUrl: 'https://radio.plaza.one/mp3',
+  },
+  {
+    id: 'anime-vgm',
+    side: 'LADO B',
+    name: 'Gensokyo Radio',
+    genre: 'Anime & Gaming VGM',
+    streamUrl: 'https://stream.gensokyoradio.net/1/',
+  },
+  {
+    id: 'chill-ambient',
+    side: 'LADO C',
+    name: 'Groove Salad',
+    genre: 'Ambient Chill',
+    streamUrl: 'https://ice1.somafm.com/groovesalad-128-mp3',
+  },
+  {
+    id: 'indie-pop',
+    side: 'LADO D',
+    name: 'PopTron',
+    genre: 'Indie & Synth Pop',
+    streamUrl: 'https://ice2.somafm.com/poptron-128-mp3',
+  },
+];
+
 // Anthony's official Spotify Playlist (Liked Songs / Favorites)
 export const ANTHONY_SPOTIFY_PLAYLIST_ID = '4QIxKoffJwBltogNu8cGU8';
 export const ANTHONY_SPOTIFY_PLAYLIST_NAME = 'AnthonWorld';

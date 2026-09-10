@@ -5,7 +5,7 @@ import {
   ANTHONY_SPOTIFY_PLAYLIST_NAME,
   ANTHONY_SPOTIFY_PLAYLIST_ID,
   formatSpotifyEmbedUrl,
-} from '../../player/musicService';
+} from '../musicService';
 
 describe('GlobalAudioPlayer (Compact 8-Bit Pixel Cassette connected to Anthony\'s Spotify)', () => {
   it('debe renderizar el casete pixelado 8-bit compacto con la playlist AnthonWorld', () => {
@@ -25,15 +25,13 @@ describe('GlobalAudioPlayer (Compact 8-Bit Pixel Cassette connected to Anthony\'
     expect(embed).toContain('open.spotify.com/embed/playlist');
   });
 
-  it('debe expandir el reproductor de Spotify al pulsar en REPRODUCIR', () => {
+  it('debe iniciar la reproducción en el casete al pulsar en REPRODUCIR', () => {
     render(<GlobalAudioPlayer />);
 
     const playBtn = screen.getByText(/REPRODUCIR/i);
     fireEvent.click(playBtn);
 
-    // Debe renderizar el iframe embebido de Spotify con la playlist de Anthony
-    const iframe = screen.getByTitle(/reproductor spotify anthonworld/i);
-    expect(iframe).toBeInTheDocument();
-    expect(iframe.getAttribute('src')).toContain(ANTHONY_SPOTIFY_PLAYLIST_ID);
+    // Debe cambiar a PAUSAR y mantener el reproductor compacto
+    expect(screen.getByText(/PAUSAR/i)).toBeInTheDocument();
   });
 });

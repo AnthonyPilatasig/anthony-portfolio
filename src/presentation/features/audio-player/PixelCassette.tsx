@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 
 interface PixelCassetteProps {
   playlistName: string;
+  subtitle?: string;
+  sideLabel?: string;
   isPlaying: boolean;
   tapeCounter: number;
 }
@@ -36,6 +38,8 @@ const PixelSpool8Bit: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
 
 export const PixelCassette: React.FC<PixelCassetteProps> = ({
   playlistName,
+  subtitle,
+  sideLabel,
   isPlaying,
   tapeCounter,
 }) => {
@@ -75,7 +79,7 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
             <span className="text-slate-600">C-60 • HQ</span>
           </div>
           <span className="text-emerald-700 font-bold">
-            LIKED SONGS ♫
+            {sideLabel ? `${sideLabel} · LIKED SONGS ♫` : 'LIKED SONGS ♫'}
           </span>
         </div>
 
@@ -85,7 +89,7 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
             {playlistName || 'AnthonWorld'}
           </p>
           <p className="font-mono text-[8px] text-slate-600 truncate">
-            Anthony Pilatasig • Spotify Library
+            {subtitle || 'Anthony Pilatasig • Spotify Library'}
           </p>
         </div>
 

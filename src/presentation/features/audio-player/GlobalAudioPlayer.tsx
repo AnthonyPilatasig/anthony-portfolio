@@ -1,5 +1,5 @@
 import React from 'react';
-import { RetroPixelPlayer } from '../player/RetroPixelPlayer';
+import { RetroPixelPlayer } from './RetroPixelPlayer';
 
 /**
  * GlobalAudioPlayer — Compact 8-Bit Pixel Cassette Player with Background Music
