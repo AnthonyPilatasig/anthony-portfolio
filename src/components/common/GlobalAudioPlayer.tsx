@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   FiPlay, FiPause, FiVolume2, FiVolumeX, FiMusic, FiChevronUp, FiChevronDown,
-  FiDisc, FiExternalLink, FiSkipForward, FiSkipBack
+  FiExternalLink, FiSkipForward, FiSkipBack
 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -31,27 +31,27 @@ const CATEGORY_LABELS: Record<RadioStation['category'] | 'all', string> = {
 const LIVE_STATIONS: RadioStation[] = [
   {
     id: 'nightwave-plaza',
-    name: 'Nightwave Plaza (Anime Vibe)',
+    name: 'Nightwave Plaza',
     category: 'lofi',
-    description: 'Anime aesthetic, vaporwave nostálgico y ambientación japonesa',
+    description: 'Vaporwave nostálgico y synth ambiental para programar',
     streamUrl: 'https://radio.plaza.one/mp3',
-    tag: 'ANIME VIBE',
-    source: 'Anime Aesthetic',
+    tag: 'VAPORWAVE',
+    source: 'Nightwave Plaza',
   },
   {
     id: 'gensokyo-radio',
-    name: 'Gensokyo Anime & Gaming Radio',
+    name: 'Gensokyo Radio',
     category: 'gaming',
-    description: 'Bandas sonoras de videojuegos anime, Touhou y arreglos orquestales',
+    description: 'Bandas sonoras de videojuegos y arreglos orquestales',
     streamUrl: 'https://stream.gensokyoradio.net/1/',
-    tag: 'ANIME / VGM',
-    source: 'Videojuegos & Anime OSTs',
+    tag: 'VGM / OST',
+    source: 'Gensokyo Radio',
   },
   {
     id: 'soma-groovesalad',
     name: 'Groove Salad · Ambient Chill',
     category: 'normal',
-    description: 'Downtempo y ambient relajante, sin temática anime — sonido neutro para trabajar',
+    description: 'Downtempo y ambient relajante — sonido neutro para trabajar',
     streamUrl: 'https://ice1.somafm.com/groovesalad-128-mp3',
     tag: 'CHILL / AMBIENT',
     source: 'SomaFM · Groove Salad',
@@ -60,30 +60,59 @@ const LIVE_STATIONS: RadioStation[] = [
     id: 'soma-poptron',
     name: 'Poptron · Indie Pop',
     category: 'normal',
-    description: 'Synth pop e indie underground, sonido mainstream sin temática anime',
+    description: 'Synth pop e indie underground, sonido mainstream',
     streamUrl: 'https://ice2.somafm.com/poptron-128-mp3',
     tag: 'POP / INDIE',
     source: 'SomaFM · Poptron',
   },
   {
     id: 'listen-moe',
-    name: 'LISTEN.moe Anime Stream',
+    name: 'LISTEN.moe',
     category: 'anime',
-    description: 'Emisión oficial de música de anime y doujin en alta calidad',
+    description: 'Emisión oficial de música japonesa y doujin en alta calidad',
     streamUrl: 'https://listen.moe/stream',
-    tag: 'ANIME OFFICIAL',
-    source: 'Música Anime 24/7',
+    tag: 'J-POP',
+    source: 'LISTEN.moe',
   },
   {
     id: 'japan-hits',
-    name: 'Japan Hits & Anime Hits 24/7',
+    name: 'Japan Hits 24/7',
     category: 'anime',
-    description: 'Top anime openings, J-Pop actual y clásicos de Japón',
+    description: 'J-Pop actual y clásicos de Japón',
     streamUrl: 'https://kathy.torontocast.com:3560/stream',
-    tag: 'J-POP / ANIME',
-    source: 'Éxitos de Anime en Vivo',
+    tag: 'J-POP',
+    source: 'Japan Hits',
   },
 ];
+
+// Purely decorative "FM" reading mapped from the station's position in the list —
+// gives the tuning dial something plausible to point at.
+const frequencyFor = (idx: number) =>
+  (88.1 + (idx / Math.max(LIVE_STATIONS.length - 1, 1)) * 19.8).toFixed(1);
+
+// Two small cassette reels that spin while audio is playing — sits in place of a plain
+// equalizer icon to nod at the "old cassette" look without a heavy skeuomorphic skin.
+const CassetteReels: React.FC<{ playing: boolean }> = ({ playing }) => (
+  <div className="flex items-center gap-[3px] shrink-0" aria-hidden="true">
+    {[0, 1].map((i) => (
+      <motion.svg
+        key={i}
+        width="11"
+        height="11"
+        viewBox="0 0 10 10"
+        animate={playing ? { rotate: 360 } : { rotate: 0 }}
+        transition={playing ? { duration: 1.6, repeat: Infinity, ease: 'linear' } : { duration: 0.3 }}
+      >
+        <circle cx="5" cy="5" r="4.2" fill="none" stroke="var(--theme-accent)" strokeWidth="1" opacity="0.5" />
+        <circle cx="5" cy="5" r="1.3" fill="var(--theme-accent)" />
+        <line x1="5" y1="1.1" x2="5" y2="2.4" stroke="var(--theme-accent)" strokeWidth="1" opacity="0.7" />
+        <line x1="5" y1="7.6" x2="5" y2="8.9" stroke="var(--theme-accent)" strokeWidth="1" opacity="0.7" />
+        <line x1="1.1" y1="5" x2="2.4" y2="5" stroke="var(--theme-accent)" strokeWidth="1" opacity="0.7" />
+        <line x1="7.6" y1="5" x2="8.9" y2="5" stroke="var(--theme-accent)" strokeWidth="1" opacity="0.7" />
+      </motion.svg>
+    ))}
+  </div>
+);
 
 export const GlobalAudioPlayer: React.FC = () => {
   const [category, setCategory] = useState<RadioStation['category'] | 'all'>('all');
@@ -284,8 +313,33 @@ export const GlobalAudioPlayer: React.FC = () => {
                   </button>
                 </div>
 
+                {/* Retro Tuning Dial — purely decorative FM reading that slides to match the station */}
+                <div className="relative rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 pt-2.5 pb-2 overflow-hidden">
+                  <div className="flex items-end justify-between h-5 px-0.5">
+                    {LIVE_STATIONS.map((s, i) => (
+                      <span
+                        key={s.id}
+                        className="w-px bg-[var(--theme-border-strong)]"
+                        style={{ height: i % 2 === 0 ? '100%' : '55%' }}
+                      />
+                    ))}
+                  </div>
+                  <motion.div
+                    className="absolute bottom-[18px] w-0.5 h-6 rounded-full bg-[var(--theme-accent)] shadow-[0_0_6px_var(--theme-accent-glow)]"
+                    animate={{
+                      left: `calc(${(stationIndex / Math.max(LIVE_STATIONS.length - 1, 1)) * 100}% - 1px)`,
+                    }}
+                    transition={{ type: 'spring', stiffness: 220, damping: 24 }}
+                  />
+                  <div className="flex items-center justify-between mt-1 text-[8px] font-mono text-[var(--theme-ink-muted)]">
+                    <span>88.1 FM</span>
+                    <span className="text-[var(--theme-accent)] font-bold">{frequencyFor(stationIndex)} FM</span>
+                    <span>107.9 FM</span>
+                  </div>
+                </div>
+
                 <p className="text-[9px] text-[var(--theme-ink-muted)] leading-relaxed">
-                  Por defecto suena anime/gaming — cambia a <strong className="text-[var(--theme-ink)]">"Normal"</strong> si prefieres algo sin esa temática.
+                  Emisoras en vivo 24/7 de distintos géneros — usa los filtros para encontrar tu estilo.
                 </p>
 
                 {/* Station List */}
@@ -368,15 +422,24 @@ export const GlobalAudioPlayer: React.FC = () => {
 
           {/* Compact Player Bar (Always Visible) */}
           <div className="flex items-center gap-3 p-2.5 px-3.5 min-w-[300px]">
-            {/* Play/Pause Button */}
+            {/* Play/Pause Button — styled like a radio tuning knob with tick marks */}
             <button
               onClick={togglePlay}
-              className="relative w-9 h-9 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-accent-hover)] text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 shadow-md shadow-blue-500/20"
+              className="relative w-10 h-10 rounded-full bg-[var(--theme-accent)] hover:bg-[var(--theme-accent-hover)] text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 shadow-md shadow-blue-500/20"
               aria-label={isPlaying ? 'Pausar música' : 'Reproducir música'}
             >
+              {/* Decorative dial-tick ring */}
+              <span
+                className="absolute -inset-[3px] rounded-full pointer-events-none"
+                style={{
+                  background: 'repeating-conic-gradient(var(--theme-border-strong) 0deg 2deg, transparent 2deg 18deg)',
+                  WebkitMaskImage: 'radial-gradient(circle, transparent 62%, black 64%, black 100%)',
+                  maskImage: 'radial-gradient(circle, transparent 62%, black 64%, black 100%)',
+                }}
+              />
               {(status === 'buffering' || fallbackState === 'retrying') && (
                 <motion.span
-                  className="absolute inset-0 rounded-xl"
+                  className="absolute inset-0 rounded-full"
                   style={{ border: '2px solid var(--theme-accent)' }}
                   animate={{ scale: [1, 1.35], opacity: [0.6, 0] }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'easeOut' }}
@@ -389,6 +452,12 @@ export const GlobalAudioPlayer: React.FC = () => {
               ) : (
                 <FiPlay className="w-4 h-4 translate-x-0.5" />
               )}
+              {/* Live LED indicator */}
+              <span
+                className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-[var(--theme-surface)] transition-colors ${
+                  isPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-[var(--theme-border-strong)]'
+                }`}
+              />
             </button>
 
             {/* Current Track Info & Waves */}
@@ -409,7 +478,7 @@ export const GlobalAudioPlayer: React.FC = () => {
                 )}
               </div>
               <p className="text-[9px] text-[var(--theme-ink-muted)] truncate flex items-center gap-1 h-3.5 overflow-hidden">
-                <FiDisc className={`w-2.5 h-2.5 shrink-0 ${isPlaying ? 'animate-spin text-[var(--theme-accent)]' : ''}`} />
+                <CassetteReels playing={isPlaying} />
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={fallbackState !== 'idle' ? fallbackState : currentStation.id}
@@ -471,7 +540,7 @@ export const GlobalAudioPlayer: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <FiMusic className="w-5 h-5 text-[var(--theme-accent)]" />
                   <h3 className="text-sm font-bold text-[var(--theme-ink)] uppercase tracking-wider">
-                    Anime & Gaming Soundtracks
+                    Bandas Sonoras Favoritas
                   </h3>
                 </div>
                 <button
@@ -483,13 +552,13 @@ export const GlobalAudioPlayer: React.FC = () => {
               </div>
 
               <p className="text-xs text-[var(--theme-ink-muted)] font-light">
-                Playlist oficial con los openings más populares de anime (Demon Slayer, Jujutsu Kaisen, Your Name, NieR y Persona 5).
+                Playlist personal con música de videojuegos y anime para programar de fondo.
               </p>
 
               {/* Spotify Embed Player */}
               <div className="rounded-xl overflow-hidden border border-[var(--theme-border)]">
                 <iframe
-                  title="Spotify Anime & Gaming Playlist"
+                  title="Spotify Playlist"
                   src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6XceWZz1N4M?utm_source=generator&theme=0"
                   width="100%"
                   height="152"

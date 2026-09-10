@@ -53,7 +53,7 @@ function App() {
           <AppRouter />
         </main>
 
-        {/* Global Persistent Audio Player (Anime Radio, VGM, Lofi) */}
+        {/* Global Persistent Audio Player (Live Radio: Lofi, VGM, Chill) */}
         <GlobalAudioPlayer />
 
         {/* Global Footer */}

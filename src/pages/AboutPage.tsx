@@ -107,13 +107,19 @@ export const AboutPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Passions: Anime, Gaming, AI, Game Dev & Music */}
-          <div className="editorial-card p-5 rounded-xl space-y-3 mt-4 border border-[var(--theme-border-strong)]">
+          {/* Passions: Game Dev, Streaming & Music — kept understated on purpose */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.4 }}
+            className="editorial-card p-5 rounded-xl space-y-3 mt-4 border border-[var(--theme-border)]"
+          >
             <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-2">
               <h4 className="text-xs font-mono font-bold text-[var(--theme-ink)] uppercase tracking-wider flex items-center gap-2">
-                🎮 Pasiones Creativas, Gaming &amp; Anime
+                🎮 Fuera del Código
               </h4>
-              <a 
+              <a
                 href={`${import.meta.env.BASE_URL}laboratorio`}
                 className="text-[10px] font-mono text-[var(--theme-accent)] hover:underline"
               >
@@ -121,17 +127,21 @@ export const AboutPage: React.FC = () => {
               </a>
             </div>
             <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">
-              Fuera del backend empresarial, disfruto del desarrollo de videojuegos en Java y Unity (como mi proyecto <strong>RPG Journey</strong>), la emulación WebAssembly, el universo de <em>Sword Art Online</em>, <em>Zenless Zone Zero</em>, <em>Genshin Impact</em>, <em>Resident Evil</em>, streaming ocasional en <strong>Twitch</strong>, y las bandas sonoras orquestales de <em>NieR:Automata</em>, <em>Persona 5</em> y Studio Ghibli.
+              Fuera del backend empresarial, disfruto del desarrollo de videojuegos en Java y Unity (como mi proyecto <strong>RPG Journey</strong>), la emulación retro y streaming ocasional en <strong>Twitch</strong>. También soy aficionado al anime y a las bandas sonoras de videojuegos, algo que se nota en el reproductor de radio del sitio.
             </p>
             <div className="flex flex-wrap gap-1.5 pt-1">
-              <span className="badge-accent">RPG Engine Dev</span>
-              <span className="badge-accent">Sword Art Online</span>
-              <span className="badge-accent">Twitch Streaming</span>
-              <span className="badge-accent">WebAssembly Emulation</span>
-              <span className="badge-accent">Anime Soundtracks</span>
-              <span className="badge-accent">Pixel Art &amp; Sprites</span>
+              {['RPG Engine Dev', 'Twitch Streaming', 'Emulación Retro', 'Pixel Art & Sprites'].map((tag) => (
+                <motion.span
+                  key={tag}
+                  className="badge-accent"
+                  whileHover={{ y: -1, scale: 1.03 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                >
+                  {tag}
+                </motion.span>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
         {vulnGameOpen && <VulnHunterGame onClose={() => setVulnGameOpen(false)} />}
