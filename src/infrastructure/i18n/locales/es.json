@@ -125,7 +125,7 @@
     "mainTitle": "Software estructurado, docencia técnica y pasión por el código",
     "bio1": "Soy Anthony Pilatasig, desarrollador full stack y docente técnico en el ISTPET. Me formé como Tecnólogo Superior en Desarrollo de Software y actualmente curso la carrera de Ingeniería en Software en la Universidad Politécnica Salesiana.",
     "bio2": "En mi trabajo diario desarrollo soluciones que atienden a usuarios reales: desde 'Mi ISTPET' (app móvil oficial publicada en Google Play) y la modernización modular de 'Gacad' con Clean Architecture y CQRS, hasta herramientas especializadas como Scorecraft para métricas deportivas y AvialB para peritaje de tránsito.",
-    "bio3": "En la docencia me apasiona guiar a estudiantes en los fundamentos de la Programación Orientada a Objetos, algoritmos y control de versiones con Git. Fuera del código de producción, disfruto programar juegos de rol por turnos en Java, el anime, y compartir streams de desarrollo en Twitch.",
+    "bio3": "En la docencia me gusta guiar a estudiantes en los fundamentos de la Programación Orientada a Objetos, algoritmos y control de versiones con Git. Fuera del código de producción, programo juegos de rol por turnos en Java, comparto streams de desarrollo en Twitch y soy aficionado al anime.",
     "valuesTitle": "Valores de Código",
     "valuesDesc": "Código legible, modularidad real, pruebas y respeto por el tiempo del usuario final.",
     "securityTitle": "Enfoque de Seguridad",

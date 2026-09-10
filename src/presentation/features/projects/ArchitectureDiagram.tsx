@@ -1,7 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiLayers, FiPlay, FiCheckCircle, FiCpu, FiSmartphone, FiDatabase, FiCode } from 'react-icons/fi';
 import confetti from 'canvas-confetti';
+
+const STEP_DURATION = 1100;
+
+// Progress rail for the layer currently highlighted by "Simular Ciclo de Petición" —
+// remounts (via the `key` the caller passes) on every step, so its own fill animation
+// stays in lockstep with the setTimeout chain driving the simulation. anime.js is
+// imported dynamically so it only ships once someone actually runs the simulation.
+const StepProgressRail: React.FC = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    let reverted = false;
+    let animRef: { revert: () => void } | null = null;
+    import('animejs').then(({ animate }) => {
+      if (reverted || !ref.current) return;
+      animRef = animate(ref.current, {
+        scaleX: [0, 1],
+        duration: STEP_DURATION * 0.92,
+        ease: 'inOutQuad',
+      });
+    });
+    return () => {
+      reverted = true;
+      animRef?.revert();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="absolute top-0 left-0 right-0 h-1 origin-left bg-[var(--theme-accent)]"
+      style={{ transform: 'scaleX(0)' }}
+    />
+  );
+};
 
 interface LayerInfo {
   id: string;
@@ -171,7 +207,7 @@ export const ArchitectureDiagram: React.FC = () => {
             });
           } catch { /* silent */ }
         }
-      }, idx * 1100);
+      }, idx * STEP_DURATION);
     });
   };
 
@@ -223,9 +259,7 @@ export const ArchitectureDiagram: React.FC = () => {
                   : 'bg-[var(--theme-bg)] border-[var(--theme-border)] hover:border-[var(--theme-border-strong)]'
               }`}
             >
-              {isSimCurrent && (
-                <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--theme-accent)] animate-pulse" />
-              )}
+              {isSimCurrent && <StepProgressRail key={simStep} />}
               <div className="flex items-center justify-between gap-2">
                 <div
                   className="p-2 rounded-lg"

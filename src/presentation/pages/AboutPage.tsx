@@ -6,12 +6,12 @@ import {
   FiZap, FiShield, FiGithub, FiLinkedin
 } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
-import { portfolioData } from '../data/portfolio';
-import { AudioVisualizer } from '../components/common/AudioVisualizer';
-import { GithubActivity } from '../components/common/GithubActivity';
-import { VulnHunterGame } from '../components/common/VulnHunterGame';
-import { RevealText } from '../components/common/RevealText';
-import { SEO } from '../components/common/SEO';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { AudioVisualizer } from '@presentation/features/about/AudioVisualizer';
+import { GithubActivity } from '@presentation/features/about/GithubActivity';
+import { VulnHunterGame } from '@presentation/features/about/VulnHunterGame';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { SEO } from '@presentation/components/ui/SEO';
 
 const musicTasteSearchTerms = ['lofi hip hop', 'synthwave'];
 
@@ -30,7 +30,7 @@ const staggerContainer = {
 
 export const AboutPage: React.FC = () => {
   const { t } = useTranslation();
-  const { personal, skills } = portfolioData;
+  const { personal, skills } = getPortfolioData();
   const [vulnGameOpen, setVulnGameOpen] = useState(false);
 
   return (
@@ -157,6 +157,8 @@ export const AboutPage: React.FC = () => {
               <img
                 src={personal.avatar}
                 alt={personal.name}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/80 via-transparent to-transparent" />

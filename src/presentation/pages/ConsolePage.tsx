@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { ConsoleDashboard } from '../components/common/ConsoleDashboard';
-import { SEO } from '../components/common/SEO';
+import { ConsoleDashboard } from '@presentation/features/console/ConsoleDashboard';
+import { SEO } from '@presentation/components/ui/SEO';
 
 /**
  * ConsolePage — ruta dedicada /console

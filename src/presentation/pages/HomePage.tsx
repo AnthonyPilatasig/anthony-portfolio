@@ -8,15 +8,16 @@ import {
   FiZap, FiGithub, FiLinkedin
 } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
-import { portfolioData } from '../data/portfolio';
-import { CountUp } from '../components/common/CountUp';
-import { RevealText } from '../components/common/RevealText';
-import { Magnetic } from '../components/common/Magnetic';
-import { ProjectReel } from '../components/common/ProjectReel';
-import { AnimeGridCanvas } from '../components/common/AnimeGridCanvas';
-import { ArchitectureDiagram } from '../components/common/ArchitectureDiagram';
-import { TwitchLiveStatus } from '../components/common/TwitchLiveStatus';
-import type { IProject } from '../types/portfolio.types';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { mergeLocalizedEntries } from '@application/useCases/portfolio/mergeLocalizedEntries';
+import { CountUp } from '@presentation/components/ui/CountUp';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { Magnetic } from '@presentation/components/ui/Magnetic';
+import { ProjectReel } from '@presentation/features/projects/ProjectReel';
+import { AnimeGridCanvas } from '@presentation/components/ui/AnimeGridCanvas';
+import { ArchitectureDiagram } from '@presentation/features/projects/ArchitectureDiagram';
+import { TwitchLiveStatus } from '@presentation/features/about/TwitchLiveStatus';
+import type { IProject } from '@domain/entities/portfolio.entity';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -53,13 +54,13 @@ const STACK_CARDS = [
 
 export const HomePage: React.FC = () => {
   const { t } = useTranslation();
+  const portfolioData = getPortfolioData();
   const { personal, manifesto, teachingHighlights } = portfolioData;
 
-  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
-  const projects: IProject[] = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find(ti => ti.id === p.id) || {};
-    return { ...p, ...tr };
-  });
+  const projects = mergeLocalizedEntries<IProject>(
+    portfolioData.projects,
+    t('projectsData', { returnObjects: true })
+  );
   const featured = projects.filter(p => p.isFeatured).slice(0, 5);
 
   const [copied, setCopied] = useState(false);
@@ -203,6 +204,8 @@ export const HomePage: React.FC = () => {
                 <img
                   src={personal.avatar}
                   alt={personal.name}
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/80 via-transparent to-transparent" />

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FiGithub, FiLinkedin, FiMail, FiCopy, FiCheck, FiDownload } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
-import { portfolioData } from '../../data/portfolio';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
 
 export const Footer: React.FC = () => {
-  const { personal } = portfolioData;
+  const { personal } = getPortfolioData();
   const [copied, setCopied] = useState(false);
 
   const handleCopyEmail = async () => {
@@ -26,6 +26,8 @@ export const Footer: React.FC = () => {
             <img
               src={personal.avatar}
               alt={personal.name}
+              loading="lazy"
+              decoding="async"
               className="w-9 h-9 rounded-full object-cover border border-[var(--theme-border-strong)]"
             />
             <div>

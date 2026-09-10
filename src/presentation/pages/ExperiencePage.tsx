@@ -2,10 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText, FiBookOpen, FiUsers } from 'react-icons/fi';
-import { portfolioData } from '../data/portfolio';
-import { RevealText } from '../components/common/RevealText';
-import { SEO } from '../components/common/SEO';
-import type { IExperience, IEducation } from '../types/portfolio.types';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { mergeLocalizedEntries } from '@application/useCases/portfolio/mergeLocalizedEntries';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { SEO } from '@presentation/components/ui/SEO';
+import type { IExperience, IEducation } from '@domain/entities/portfolio.entity';
 
 const fadeLeftVariant = {
   hidden: { opacity: 0, x: -30 },
@@ -19,19 +20,18 @@ const fadeUpVariant = {
 
 export const ExperiencePage: React.FC = () => {
   const { t } = useTranslation();
+  const portfolioData = getPortfolioData();
   const { teachingHighlights } = portfolioData;
-  
-  const translatedExp = t('experienceData', { returnObjects: true }) as Partial<IExperience>[];
-  const experience: IExperience[] = portfolioData.experience.map(e => {
-    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem) => tItem.id === e.id) || {};
-    return { ...e, ...tr };
-  });
 
-  const translatedEdu = t('educationData', { returnObjects: true }) as Partial<IEducation>[];
-  const education: IEducation[] = portfolioData.education.map(e => {
-    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem) => tItem.id === e.id) || {};
-    return { ...e, ...tr };
-  });
+  const experience = mergeLocalizedEntries<IExperience>(
+    portfolioData.experience,
+    t('experienceData', { returnObjects: true })
+  );
+
+  const education = mergeLocalizedEntries<IEducation>(
+    portfolioData.education,
+    t('educationData', { returnObjects: true })
+  );
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">

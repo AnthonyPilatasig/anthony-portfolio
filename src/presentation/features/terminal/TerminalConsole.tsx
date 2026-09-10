@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { portfolioData } from '../../data/portfolio';
-import { SnakeGame } from './SnakeGame';
-import { Game2048 } from './Game2048';
-import type { IProject, IExperience, IEducation } from '../../types/portfolio.types';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { mergeLocalizedEntries } from '@application/useCases/portfolio/mergeLocalizedEntries';
+import { SnakeGame } from '@presentation/features/console/SnakeGame';
+import { Game2048 } from '@presentation/features/console/Game2048';
+import type { IProject, IExperience, IEducation } from '@domain/entities/portfolio.entity';
 
 type OSTheme = 'macos' | 'windows' | 'linux';
 
@@ -45,24 +46,22 @@ interface TerminalConsoleProps {
 
 export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = false }) => {
   const { t } = useTranslation();
+  const portfolioData = getPortfolioData();
 
-  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
-  const projects: IProject[] = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem) => tItem.id === p.id) || {};
-    return { ...p, ...tr };
-  });
+  const projects = mergeLocalizedEntries<IProject>(
+    portfolioData.projects,
+    t('projectsData', { returnObjects: true })
+  );
 
-  const translatedExp = t('experienceData', { returnObjects: true }) as Partial<IExperience>[];
-  const experience: IExperience[] = portfolioData.experience.map(e => {
-    const tr = (Array.isArray(translatedExp) ? translatedExp : []).find((tItem) => tItem.id === e.id) || {};
-    return { ...e, ...tr };
-  });
+  const experience = mergeLocalizedEntries<IExperience>(
+    portfolioData.experience,
+    t('experienceData', { returnObjects: true })
+  );
 
-  const translatedEdu = t('educationData', { returnObjects: true }) as Partial<IEducation>[];
-  const education: IEducation[] = portfolioData.education.map(e => {
-    const tr = (Array.isArray(translatedEdu) ? translatedEdu : []).find((tItem) => tItem.id === e.id) || {};
-    return { ...e, ...tr };
-  });
+  const education = mergeLocalizedEntries<IEducation>(
+    portfolioData.education,
+    t('educationData', { returnObjects: true })
+  );
 
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([]);

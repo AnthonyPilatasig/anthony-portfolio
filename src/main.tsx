@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import Lenis from 'lenis';
 import './index.css';
-import './i18n/config';
-import App from './App.tsx';
+import '@infrastructure/i18n/config';
+import App from './presentation/app/App.tsx';
 
 // Smooth scroll con Lenis (Studio Freight)
 const lenis = new Lenis({

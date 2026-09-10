@@ -1,4 +1,4 @@
-import type { IPortfolioData } from '../types/portfolio.types';
+import type { IPortfolioData } from '@domain/entities/portfolio.entity';
 
 // BrowserRouter puts each page on its own URL path, so plain relative paths ("./assets/...")
 // resolve differently per route. import.meta.env.BASE_URL is absolute and always correct.
@@ -9,8 +9,8 @@ export const portfolioData: IPortfolioData = {
     name: "Anthony David Pilatasig Macas",
     title: "Full Stack Developer & Mobile Lead",
     subtitle: "Especializado en .NET 8, Angular, React Native y bases de datos relacionales",
-    bio: "Desarrollador Full Stack con +3 años de experiencia construyendo aplicaciones web, móviles y de escritorio en el ecosistema .NET (C#), Angular y React Native. En el ISTPET lidero el desarrollo de la app oficial 'Mi ISTPET' (publicada en Google Play) y la modernización de los sistemas académicos y de recursos humanos. Además, imparto clases prácticas de programación y comparto mi afición por la lógica de videojuegos, el anime y el streaming en Twitch.",
-    tagline: "Desarrollando software institucional que resuelve problemas reales; explorando lógica de videojuegos, código limpio y streaming.",
+    bio: "Desarrollador Full Stack con más de tres años de experiencia construyendo aplicaciones web, móviles y de escritorio sobre .NET (C#), Angular y React Native. En el ISTPET lidero el desarrollo de la app oficial «Mi ISTPET» y la modernización de los sistemas académicos y de recursos humanos de la institución. Combino ese trabajo con la docencia técnica y, en el tiempo libre, con proyectos personales de lógica y videojuegos.",
+    tagline: "Software institucional pensado para durar, y lógica de videojuegos por gusto propio en el tiempo libre.",
     location: "Quito, Ecuador (UTC-5)",
     email: "antpila3848@gmail.com",
     phone: "+593 98 358 8715",
@@ -18,29 +18,29 @@ export const portfolioData: IPortfolioData = {
     linkedin: "https://linkedin.com/in/anthony-pilatasig",
     twitch: "https://twitch.tv/anthony_pilatasig",
     status: "Disponible para Proyectos & Desafíos Full Stack",
-    avatar: asset("assets/anthony_profile.png"),
-    avatarReal: asset("assets/anthony_real.jpg"),
+    avatar: asset("assets/anthony_profile.webp"),
+    avatarReal: asset("assets/anthony_real.webp"),
   },
   manifesto: [
     {
       number: "01",
       title: "Código con Sentido Práctico",
-      description: "La mejor arquitectura es la que resuelve el problema real de forma simple y mantenible, sin sobreingeniería innecesaria ni complicaciones artificiales."
+      description: "La mejor arquitectura es la que resuelve el problema real de forma simple y mantenible, sin añadir complejidad que nadie pidió."
     },
     {
       number: "02",
       title: "Rendimiento & Experiencia de Usuario",
-      description: "En web y móvil, cada milisegundo cuenta. Optimizar consultas, reducir re-renders y prever el funcionamiento offline cuando falla la conexión."
+      description: "En web y móvil, la fluidez se nota. Cuido las consultas, los re-renders y el comportamiento cuando falla la conexión."
     },
     {
       number: "03",
-      title: "Pasión por la Lógica y los Detalles",
-      description: "Tanto al programar un motor de combate RPG en Java como al diseñar un módulo de inscripciones en .NET 8, la clave está en el control estricto de estados y excepciones."
+      title: "Atención a la Lógica y los Detalles",
+      description: "Tanto en un motor de combate RPG en Java como en un módulo de inscripciones en .NET 8, cuido el control de estados y excepciones con el mismo criterio."
     },
     {
       number: "04",
       title: "Aprender y Compartir en Comunidad",
-      description: "Dar clases de programación refuerza los fundamentos y el hábito de escribir código limpio y legible para que cualquier compañero de equipo pueda entenderlo."
+      description: "Dar clases de programación me obliga a volver a los fundamentos y a escribir código legible, pensado para que cualquier compañero de equipo pueda entenderlo."
     }
   ],
   teachingHighlights: [
@@ -83,11 +83,11 @@ export const portfolioData: IPortfolioData = {
       period: "Mayo 2024 - Presente",
       description: "Lidero el desarrollo de las aplicaciones institucionales clave, incluyendo la app móvil oficial y la modernización de los sistemas core de la institución.",
       achievements: [
-        "Desarrollé y publiqué en Google Play Store la app móvil 'Mi ISTPET' (React Native Expo | .NET 8), digitalizando al 100% el carnet estudiantil con código QR y consultas en vivo.",
-        "Modernicé el ERP Académico Institucional (Gacad) con C#, Angular y Clean Architecture/CQRS sobre bases de datos legacy para matrículas y distributivos docentes.",
-        "Implementé el Sistema Integrado de Recursos Humanos en Angular y .NET 8 con MySQL para contratos y expedientes digitales.",
+        "Desarrollé y publiqué en Google Play Store la app móvil «Mi ISTPET» (React Native Expo | .NET 8), que digitalizó el carnet estudiantil con código QR y consultas en vivo.",
+        "Modernicé el ERP Académico Institucional (Gacad) con C#, Angular y Clean Architecture/CQRS sobre bases de datos heredadas, para matrículas y distributivos docentes.",
+        "Implementé el Sistema Integrado de Recursos Humanos en Angular y .NET 8 con MySQL, para contratos y expedientes digitales.",
         "Desarrollé la Bolsa de Empleo institucional, AMMI Online y la automatización del reglamento de becas (Bienestar Institucional).",
-        "Configuré pipelines CI/CD en Azure DevOps con Git Flow y especificación de APIs RESTful en Swagger."
+        "Configuré pipelines CI/CD en Azure DevOps con Git Flow y documenté las APIs RESTful con Swagger."
       ],
       technologies: [".NET 8", "C#", "Angular", "React Native", "Expo", "Clean Architecture", "CQRS", "MySQL", "Azure DevOps"]
     },
@@ -111,8 +111,8 @@ export const portfolioData: IPortfolioData = {
       period: "2023 - 2024",
       description: "Desarrollo de soluciones web y móviles para gestión deportiva y peritaje vial de campo.",
       achievements: [
-        "Scorecraft (CDMI): Creé de forma integral la plataforma en C# y Angular para centralizar métricas deportivas, inscripciones y fichas médicas.",
-        "AvialB / SIAT: Diseñé un ecosistema offline-first (Ionic, Angular, C#) con sincronización asíncrona local-servidor para levantamiento de accidentes en campo sin internet."
+        "Scorecraft (CDMI): Diseñé y desarrollé la plataforma en C# y Angular para centralizar métricas deportivas, inscripciones y fichas médicas.",
+        "AvialB / SIAT: Diseñé un ecosistema offline-first (Ionic, Angular, C#) con sincronización asíncrona local-servidor para el levantamiento de accidentes en campo sin conexión."
       ],
       technologies: ["C#", ".NET Core", "Angular", "Ionic", "Offline-First", "SQL Server"]
     },
@@ -157,13 +157,13 @@ export const portfolioData: IPortfolioData = {
       client: "Instituto Superior Tecnológico Traversari",
       category: "mobile",
       description: "Aplicación móvil oficial publicada en Google Play Store. Digitalizó el carnet estudiantil con código QR dinámico e incluye horarios, notas y notificaciones push en tiempo real.",
-      longDescription: "Plataforma académica móvil oficial construida en React Native Expo (New Architecture - Fabric) y backend en .NET 8 con Clean Architecture y CQRS. Proporciona a más de 400 estudiantes y docentes acceso inmediato a su carnet digital seguro mediante firmas criptográficas HMAC-SHA256 offline, calificaciones y cronogramas.",
+      longDescription: "Plataforma académica móvil oficial construida en React Native Expo (New Architecture - Fabric) y backend en .NET 8 con Clean Architecture y CQRS. Da a la comunidad estudiantil y docente acceso a su carnet digital seguro mediante firmas criptográficas HMAC-SHA256 offline, calificaciones y cronogramas.",
       problem: "Uso de credenciales de PVC propensas a falsificación/deterioro, gasto recurrente en impresión física y falta de un canal móvil oficial para consultar horarios y calificaciones en vivo con validación offline en accesos de portería.",
       decision: "Desarrollé la aplicación con Expo SDK 54 / React Native y .NET 8 Web API. Diseñé un algoritmo de carnet con token QR temporal firmado con HMAC-SHA256, permitiendo validación en portería sin depender de conectividad constante a internet.",
       tradeoff: "Implementar validación offline requirió sincronización de llaves simétricas y timestamps con ventana de tolerancia en el escáner de portería.",
-      impact: "Publicada en Google Play Store; digitalización del 100% de la comunidad estudiantil y eliminación del costo de impresión física de carnets.",
+      impact: "Publicada en Google Play Store; reemplazó el carnet físico de PVC para la comunidad estudiantil y redujo el gasto recurrente en impresión.",
       architectureOverview: "Clean Architecture en .NET 8 con CQRS (MediatR), autenticación JWT, sincronización local y cifrado de llaves en SecureStore.",
-      securityAndCompliance: "Firmas criptográficas HMAC-SHA256 para códigos QR que expiran periódicamente, imposibilitando capturas de pantalla estáticas. Cumplimiento con LOPDP y políticas de Google Play Store.",
+      securityAndCompliance: "Firmas criptográficas HMAC-SHA256 para códigos QR que expiran periódicamente, dificultando el uso de capturas de pantalla estáticas. Cumple con la LOPDP y las políticas de Google Play Store.",
       keyFeatures: [
         "Carnet estudiantil digital con código QR dinámico y validación biométrica/PIN",
         "Consulta de récord de calificaciones parciales y distributivo de materias en vivo",
@@ -171,19 +171,19 @@ export const portfolioData: IPortfolioData = {
         "Persistencia segura en almacenamiento cifrado del dispositivo (SecureStore)"
       ],
       ndaDisclaimer: "Documentación basada exclusivamente en arquitectura pública y tecnologías implementadas. No se exponen credenciales ni datos privados de estudiantes.",
-      metrics: ["Google Play Store", "Carnet QR Offline", ".NET 8 + Expo", "100% Digital"],
-      image: asset("assets/projects/mi_istpet_home_capture.png"),
+      metrics: ["Google Play Store", "Carnet QR Offline", ".NET 8 + Expo", "Carnet Digital"],
+      image: asset("assets/projects/mi_istpet_home_capture.webp"),
       technologies: ["React Native", "Expo SDK 54", "TypeScript", ".NET 8", "C#", "CQRS", "MediatR", "HMAC-SHA256", "Google Play"],
       architectureBadges: ["Mobile App", "Google Play Store", "QR Criptográfico", "Clean Architecture", "CQRS"],
       liveUrl: "https://play.google.com/store/apps",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/mi_istpet_home_capture.png"), title: "Pantalla Principal de la App Móvil (React Native)", caption: "Módulos de portal estudiantil, admisiones, cronograma y novedades de Facebook" },
-        { url: asset("assets/projects/mi_istpet_app_login.png"), title: "Acceso y Autenticación Móvil", caption: "Formulario de inicio de sesión institucional en React Native Expo" },
-        { url: asset("assets/projects/mi_istpet_carnet_capture.png"), title: "Carnet Estudiantil Digital", caption: "Credencial digital oficial con validación criptográfica" },
-        { url: asset("assets/projects/mi_istpet_calificaciones_capture.png"), title: "Consulta de Calificaciones en Vivo", caption: "Récord académico sincronizado con el backend .NET 8" },
-        { url: asset("assets/projects/mi_istpet_horario_capture.png"), title: "Horario y Cronograma de Clases", caption: "Visualización de bloques horarios por carrera y paralelo" }
+        { url: asset("assets/projects/mi_istpet_home_capture.webp"), title: "Pantalla Principal de la App Móvil (React Native)", caption: "Módulos de portal estudiantil, admisiones, cronograma y novedades de Facebook" },
+        { url: asset("assets/projects/mi_istpet_app_login.webp"), title: "Acceso y Autenticación Móvil", caption: "Formulario de inicio de sesión institucional en React Native Expo" },
+        { url: asset("assets/projects/mi_istpet_carnet_capture.webp"), title: "Carnet Estudiantil Digital", caption: "Credencial digital oficial con validación criptográfica" },
+        { url: asset("assets/projects/mi_istpet_calificaciones_capture.webp"), title: "Consulta de Calificaciones en Vivo", caption: "Récord académico sincronizado con el backend .NET 8" },
+        { url: asset("assets/projects/mi_istpet_horario_capture.webp"), title: "Horario y Cronograma de Clases", caption: "Visualización de bloques horarios por carrera y paralelo" }
       ],
       architectureFlow: {
         title: "Flujo de Autenticación & Validación de Carnet QR Offline",
@@ -239,8 +239,8 @@ export const portfolioData: IPortfolioData = {
       longDescription: "Sistema core desarrollado bajo Clean Architecture estricta en .NET 8 y frontend desacoplado en Angular 22 (Zoneless con Signals y arquitectura Hexagonal por Ports & Adapters). Controla todo el ciclo de graduación, desde la validación de prerrequisitos académicos hasta la calificación y emisión del acta de grado.",
       problem: "Proceso manual de asignación de tribunales con frecuentes conflictos de horarios de docentes, demoras en la validación de requisitos y falta de trazabilidad en las actas de defensa de grado.",
       decision: "Implementé una arquitectura limpia con separación estricta de capas: Backend con CQRS, MediatR, FluentValidation y autorización basada en permisos `[HasPermission]`; Frontend con stores reactivos basados en Signals y puertos desacoplados de HTTP.",
-      tradeoff: "Curva inicial de implementación de arquitectura hexagonal en frontend, compensada por tests unitarios en memoria 100% aislados y cero acoplamiento.",
-      impact: "Reducción del 80% en el tiempo de calendarización de tribunales de grado y emisión automatizada de actas de titulación.",
+      tradeoff: "Curva inicial de implementación de arquitectura hexagonal en frontend, compensada por tests unitarios aislados y bajo acoplamiento entre capas.",
+      impact: "Redujo de forma notable el tiempo de calendarización de tribunales de grado y automatizó la emisión de actas de titulación.",
       architectureOverview: "Clean Architecture en backend (.NET 8 WebApi, Application, Domain, Infrastructure con Pomelo MySQL) y Hexagonal en Frontend (Domain Ports, Application Signal Stores, Infrastructure HTTP Adapters, Presentation OnPush).",
       securityAndCompliance: "Autorización RBAC granular a nivel de permisos específicos (ej. `titulacion:tribunal:asignar`), validación de cédulas ecuatorianas y hashing de contraseñas.",
       keyFeatures: [
@@ -251,15 +251,15 @@ export const portfolioData: IPortfolioData = {
       ],
       ndaDisclaimer: "Estructura arquitectónica y patrones presentados respetando la privacidad institucional y los estándares de seguridad.",
       metrics: ["Angular 22 Zoneless", ".NET 8 Clean Arch", "CQRS & MediatR", "RBAC Granular"],
-      image: asset("assets/projects/titulacion_real_capture.png"),
+      image: asset("assets/projects/titulacion_real_capture.webp"),
       technologies: ["Angular 22", "Signals", "TypeScript", ".NET 8", "C#", "Clean Architecture", "CQRS", "MediatR", "FluentValidation", "MySQL 5.7"],
       architectureBadges: ["Clean Architecture", "Hexagonal Frontend", "CQRS Pattern", "Signals Reactive"],
       liveUrl: "#",
       githubUrl: "https://github.com/JosephBano/titulacion-istpet",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/titulacion_real_capture.png"), title: "Panel Institucional de Gobernanza y Control (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig en el Sistema de Titulación en Angular 22" },
-        { url: asset("assets/projects/titulacion_alumnos_capture.png"), title: "Bandeja de Postulaciones & Estudiantes", caption: "Gestión de alumnos en proceso de titulación, requisitos maestros y cortes" }
+        { url: asset("assets/projects/titulacion_real_capture.webp"), title: "Panel Institucional de Gobernanza y Control (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig en el Sistema de Titulación en Angular 22" },
+        { url: asset("assets/projects/titulacion_alumnos_capture.webp"), title: "Bandeja de Postulaciones & Estudiantes", caption: "Gestión de alumnos en proceso de titulación, requisitos maestros y cortes" }
       ],
       architectureFlow: {
         title: "Arquitectura Hexagonal & Clean Architecture (.NET 8 + Angular 22)",
@@ -314,7 +314,7 @@ public class TitulacionController : ControllerBase
       problem: "Evaluación manual de cientos de postulaciones a becas con expedientes físicos, retrasos en la redacción de resoluciones oficiales y falta de seguimiento a convenios de pago.",
       decision: "Diseñé un motor algorítmico de baremación socioeconómica (ponderación 60% vulnerabilidad / 40% mérito académico) con generación automatizada de documentos `.docx` y `.pdf` a partir de plantillas institucionales.",
       tradeoff: "Generar documentos en el servidor con MiniWord y QuestPDF en lugar de hacerlo en el cliente para garantizar la inmutabilidad de sellos y formatos legales.",
-      impact: "Reducción del tiempo de tramitación de becas de 3 semanas a 48 horas; generación instantánea de más de 100 resoluciones en un clic.",
+      impact: "Redujo considerablemente el tiempo de tramitación de becas y permitió generar las resoluciones oficiales en un clic en lugar de redactarlas a mano.",
       architectureOverview: "Arquitectura por servicios e interfaces en .NET 8, middleware de auditoría de transacciones, integración directa con `sigafi_esContext` y frontend reactivo con Angular Signals.",
       securityAndCompliance: "Control de acceso basado en roles (Bienestar, Secretaría, Rectorado), auditoría de cambios en resoluciones y cumplimiento de la LOPDP para datos socioeconómicos.",
       keyFeatures: [
@@ -325,15 +325,15 @@ public class TitulacionController : ControllerBase
       ],
       ndaDisclaimer: "Datos socioeconómicos de alumnos protegidos. La documentación detalla exclusivamente los componentes técnicos y la arquitectura de software.",
       metrics: ["Angular 21 Signals", ".NET 8 Web API", "MiniWord + QuestPDF", "Baremación Auto"],
-      image: asset("assets/projects/bienestar_real_capture.png"),
+      image: asset("assets/projects/bienestar_real_capture.webp"),
       technologies: ["Angular 21", "Signals", "TypeScript", ".NET 8", "C#", "Entity Framework Core", "Pomelo MySQL", "MiniWord", "QuestPDF", "MailKit"],
       architectureBadges: ["Document Automation", "Algorithmic Scoring", "Angular Signals", ".NET 8 Web API"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/bienestar_real_capture.png"), title: "Panel de Control de Bienestar Institucional (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de becas, usuarios activos y solicitudes" },
-        { url: asset("assets/projects/bienestar_gestor_capture.png"), title: "Módulo Gestor & Baremación de Becas", caption: "Evaluación baremada de solicitudes socioeconómicas y convenios de pago" }
+        { url: asset("assets/projects/bienestar_real_capture.webp"), title: "Panel de Control de Bienestar Institucional (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de becas, usuarios activos y solicitudes" },
+        { url: asset("assets/projects/bienestar_gestor_capture.webp"), title: "Módulo Gestor & Baremación de Becas", caption: "Evaluación baremada de solicitudes socioeconómicas y convenios de pago" }
       ],
       architectureFlow: {
         title: "Pipeline de Baremación & Generación de Documentos Oficiales",
@@ -389,8 +389,8 @@ public class TitulacionController : ControllerBase
       longDescription: "Modernización del núcleo académico institucional desarrollada en Angular 21 y .NET 8 Web API con soporte para tareas en segundo plano mediante Hangfire y autenticación centralizada mediante llaves públicas RSA (AuthGlobal).",
       problem: "Cruce de horarios docentes y saturación de aulas durante la planificación semestral, además de demoras en la validación de horas de dedicación de profesores.",
       decision: "Desarrollé un motor de validación matricial en C# .NET 8 que comprueba en tiempo real colisiones entre profesores, grupos de estudiantes y aulas físicas.",
-      tradeoff: "Validación matricial en tiempo de ejecución en memoria para garantizar respuesta inferior a 50ms frente a múltiples consultas recurrentes.",
-      impact: "Eliminación total de solapamientos en distributivos docentes y reducción del 90% del tiempo de armado del horario institucional.",
+      tradeoff: "Validación matricial en tiempo de ejecución en memoria para mantener una respuesta rápida frente a consultas recurrentes.",
+      impact: "Eliminó los solapamientos en los distributivos docentes y redujo notablemente el tiempo de armado del horario institucional.",
       architectureOverview: "Arquitectura basada en Service + Interface Pattern con inyección de dependencias, base de datos MySQL 5.7 heredada y background workers con Hangfire.",
       securityAndCompliance: "Autenticación RSA asimétrica con tokens JWT validados contra AuthGlobal; almacenamiento seguro de sesiones exclusivamente en memoria.",
       keyFeatures: [
@@ -400,16 +400,16 @@ public class TitulacionController : ControllerBase
         "Integración transparente con esquemas relacionales históricos de SIGAFI"
       ],
       ndaDisclaimer: "Se documentan algoritmos de detección de colisiones y diseño de software sin divulgar datos de la planta docente ni credenciales.",
-      metrics: ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "0 Conflictos Horarios"],
-      image: asset("assets/projects/gacad_real_capture.png"),
+      metrics: ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "Sin Solapamientos"],
+      image: asset("assets/projects/gacad_real_capture.webp"),
       technologies: ["Angular 21", "TypeScript", ".NET 8", "C#", "MySQL 5.7", "Hangfire", "Serilog", "RSA JWT"],
       architectureBadges: ["ERP Académico", "Conflict Detection", "Hangfire Jobs", "RSA Security"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/gacad_real_capture.png"), title: "Panel de Control GAcad (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de asignaturas, cobertura docente y estado de planificación" },
-        { url: asset("assets/projects/gacad_gestor_capture.png"), title: "Matriz de Planificación y Distributivos", caption: "Gestión de carga horaria, verificación 3D de conflictos y cruces de aula" }
+        { url: asset("assets/projects/gacad_real_capture.webp"), title: "Panel de Control GAcad (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de asignaturas, cobertura docente y estado de planificación" },
+        { url: asset("assets/projects/gacad_gestor_capture.webp"), title: "Matriz de Planificación y Distributivos", caption: "Gestión de carga horaria, verificación 3D de conflictos y cruces de aula" }
       ],
       architectureFlow: {
         title: "Motor de Detección de Conflictos & Hangfire Workers",
@@ -459,7 +459,7 @@ public class TitulacionController : ControllerBase
         return ValidationResult.Success();
     }
 }`,
-        explanation: "Evita matemáticamente cualquier colisión temporal en la ocupación de espacios físicos y dedicación horaria de los catedráticos."
+        explanation: "Evita colisiones en la ocupación de espacios físicos y en la dedicación horaria de los catedráticos."
       }
     },
     {
@@ -472,7 +472,7 @@ public class TitulacionController : ControllerBase
       problem: "Gestión dispersa de contratos físicos de profesores, demora en la generación manual de carnets institucionales y falta de repositorio digital seguro para expedientes docentes.",
       decision: "Implementé una solución que automatiza la redacción de contratos, conecta con Microsoft SharePoint para archivo documental y utiliza la librería SkiaSharp en .NET 8 para generar carnets a 300 DPI con código de barras.",
       tradeoff: "Uso de renderizado gráfico nativo en servidor (SkiaSharp) que requiere calibración de píxeles exacta pero produce carnets listos para impresión en PVC sin software de diseño adicional.",
-      impact: "Reducción de 15 días a 24 horas en la consolidación de contratos de 80+ docentes y emisión automática de identificaciones institucionales.",
+      impact: "Redujo considerablemente el tiempo de consolidación de contratos docentes y automatizó la emisión de identificaciones institucionales.",
       architectureOverview: "Frontend Angular 20 con PrimeNG, Backend RESTful en .NET 8 (Code First), motor de imágenes SkiaSharp y conector para SharePoint.",
       securityAndCompliance: "Control estricto de accesos RBAC, protección de datos conforme a la LOPDP y almacenamiento seguro con pistas de auditoría para cada expediente.",
       keyFeatures: [
@@ -483,15 +483,15 @@ public class TitulacionController : ControllerBase
       ],
       ndaDisclaimer: "Los expedientes y remuneraciones docentes se mantienen confidenciales. Solo se describe la arquitectura de software y capacidades técnicas.",
       metrics: ["Angular 20 + PrimeNG", "SkiaSharp 300 DPI", "SharePoint Cloud", "Contratos Auto"],
-      image: asset("assets/projects/rrhh_real_capture.png"),
+      image: asset("assets/projects/rrhh_real_capture.webp"),
       technologies: ["Angular 20", "PrimeNG", "Tailwind CSS", ".NET 8", "C#", "EF Core", "SkiaSharp", "SharePoint API", "PDFMake"],
       architectureBadges: ["Talento Humano", "SkiaSharp 2D", "SharePoint Cloud", "PrimeNG UI"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/rrhh_real_capture.png"), title: "Panel de Gestión Administrativa y Talento Humano (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de personal docente activo, sedes y calendario" },
-        { url: asset("assets/projects/rrhh_docentes_capture.png"), title: "Expediente Digital de Docentes y Contratos", caption: "Gestión de contratos laborales semestrales y emisión de carnets en PVC con SkiaSharp" }
+        { url: asset("assets/projects/rrhh_real_capture.webp"), title: "Panel de Gestión Administrativa y Talento Humano (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de personal docente activo, sedes y calendario" },
+        { url: asset("assets/projects/rrhh_docentes_capture.webp"), title: "Expediente Digital de Docentes y Contratos", caption: "Gestión de contratos laborales semestrales y emisión de carnets en PVC con SkiaSharp" }
       ],
       architectureFlow: {
         title: "Pipeline de Generación de Credenciales & Archivo en SharePoint",
@@ -551,7 +551,7 @@ public class TitulacionController : ControllerBase
       problem: "Dispersión de registros médicos en planillas físicas, falta de correlación entre fatiga física y rendimiento en partidos oficiales.",
       decision: "Construí un panel web reactivo en Angular con backend en C# y base de datos relacional con cálculo automatizado de índices antropométricos y gráficos con Chart.js.",
       tradeoff: "Digitalización estricta de fichas médicas previa a cada jornada competitiva.",
-      impact: "Centralización del 100% del plantel de jugadores con fichas médicas y seguimiento de lesiones.",
+      impact: "Centralizó el plantel de jugadores con fichas médicas y seguimiento de lesiones en un solo lugar.",
       architectureOverview: "SPA en Angular consumiendo APIs seguras en .NET con base de datos relacional y gráficos interactivos.",
       securityAndCompliance: "Aislamiento de fichas médicas confidenciales con acceso restringido exclusivamente al personal de salud.",
       keyFeatures: [
@@ -577,14 +577,14 @@ public class TitulacionController : ControllerBase
       title: "DebtManager — Software Financiero C# Desktop",
       client: "Proyecto de Ingeniería Personal",
       category: "desktop",
-      description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones 100% offline.",
-      longDescription: "Herramienta de escritorio nativa enfocada en la privacidad absoluta y respuesta ultrarrápida. Incluye simuladores de tablas de amortización (método francés y alemán), gráficos financieros y persistencia local.",
+      description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones, totalmente offline.",
+      longDescription: "Herramienta de escritorio nativa enfocada en la privacidad del usuario y en una respuesta rápida. Incluye simuladores de tablas de amortización (método francés y alemán), gráficos financieros y persistencia local.",
       problem: "Dependencia constante de internet y preocupaciones de privacidad en plataformas financieras en la nube para control de cobros.",
-      decision: "Implementé una solución nativa en C# con motor de base de datos SQLite embebido y consultas LINQ optimizadas para ejecución en menos de 5ms.",
-      tradeoff: "Software de escritorio sin nube, priorizando velocidad instantánea, cero latencia y soberanía de datos del usuario.",
-      impact: "Cálculos financieros instantáneos, portabilidad completa en un ejecutable ligero y control de deudas 100% offline.",
+      decision: "Implementé una solución nativa en C# con motor de base de datos SQLite embebido y consultas LINQ optimizadas para una respuesta prácticamente instantánea.",
+      tradeoff: "Software de escritorio sin nube, priorizando velocidad y soberanía de los datos del usuario sobre la conveniencia de sincronizar en la nube.",
+      impact: "Cálculos financieros ágiles, portabilidad en un ejecutable ligero y control de deudas totalmente offline.",
       architectureOverview: "Arquitectura en 3 capas nativa en .NET (Presentación WinForms, Lógica de Negocio Financiera y Repositorio SQLite).",
-      securityAndCompliance: "Base de datos local con cifrado de archivo y cero telemetría externa para garantizar total privacidad.",
+      securityAndCompliance: "Base de datos local con cifrado de archivo y sin telemetría externa, priorizando la privacidad del usuario.",
       keyFeatures: [
         "Generador de tablas de amortización con métodos francés, alemán y directo",
         "Control de cobros, vencimientos y cálculo automático de intereses",
@@ -592,15 +592,15 @@ public class TitulacionController : ControllerBase
         "Módulo de respaldo y restauración integral de la base de datos local"
       ],
       ndaDisclaimer: "Software desarrollado de forma autónoma con código disponible en GitHub.",
-      metrics: ["< 5ms Respuesta", "100% Offline", "Cifrado SQLite", "Cero Dependencias"],
-      image: asset("assets/projects/debtmanager_preview.jpg"),
+      metrics: ["Respuesta Instantánea", "Totalmente Offline", "Cifrado SQLite", "Cero Dependencias"],
+      image: asset("assets/projects/debtmanager_preview.webp"),
       technologies: ["C#", ".NET Desktop", "SQLite", "LINQ", "Windows Forms"],
-      architectureBadges: ["Desktop Native", "Local DB Persistence", "Finance Engine", "100% Offline"],
+      architectureBadges: ["Desktop Native", "Local DB Persistence", "Finance Engine", "Totalmente Offline"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig/DebtManager",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/debtmanager_preview.jpg"), title: "Interfaz Financiera Desktop", caption: "Simulación de tablas de amortización, cobros y balances en C# nativo" }
+        { url: asset("assets/projects/debtmanager_preview.webp"), title: "Interfaz Financiera Desktop", caption: "Simulación de tablas de amortización, cobros y balances en C# nativo" }
       ]
     },
     {
@@ -613,11 +613,11 @@ public class TitulacionController : ControllerBase
       problem: "Pérdida de conectividad celular en sitios de siniestros viales y lentitud en la transcripción de partes periciales tomados en papel.",
       decision: "Diseñé una arquitectura Offline-First con base de datos local en el dispositivo y sincronización en segundo plano mediante colas de trabajo cuando se detecta conexión.",
       tradeoff: "Desarrollo de lógica personalizada de resolución de conflictos y encolamiento asíncrono para garantizar la integridad de las evidencias periciales.",
-      impact: "Digitalización de informes periciales directamente en el lugar del siniestro con georreferenciación y reducción del 70% en tiempos de entrega.",
+      impact: "Digitalización de informes periciales directamente en el lugar del siniestro con georreferenciación, reduciendo de forma notable los tiempos de entrega.",
       architectureOverview: "Cliente híbrido Ionic/Angular con SQLite local y backend de sincronización asíncrona en C# .NET.",
       securityAndCompliance: "Inmutabilidad de marcas de tiempo y coordenadas GPS para asegurar la cadena de custodia legal de las pruebas periciales.",
       keyFeatures: [
-        "Modo de trabajo 100% desconectado con persistencia local garantizada",
+        "Modo de trabajo totalmente desconectado, con persistencia local",
         "Captura de fotografías de daños vehiculares con geolocalización y marcas temporales",
         "Calculadora de velocidades de impacto y trayectorias basada en huellas de frenado",
         "Sincronización automática por lotes al restablecerse la conectividad"
@@ -655,14 +655,14 @@ public class TitulacionController : ControllerBase
       ],
       ndaDisclaimer: "Proyecto personal de código abierto con demostración algorítmica.",
       metrics: ["POO Pura & Swing", "Polimorfismo Dinámico", "Custom Painting", "LIFO Stacks"],
-      image: asset("assets/projects/buscaminas_preview.jpg"),
+      image: asset("assets/projects/buscaminas_preview.webp"),
       technologies: ["Java", "Swing", "POO Avanzada", "Polimorfismo", "Estructuras de Datos"],
       architectureBadges: ["Game Dev POO", "Decoupled Architecture", "Java Swing", "FSM Engine"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig",
       isFeatured: false,
       screenshots: [
-        { url: asset("assets/projects/buscaminas_preview.jpg"), title: "Motor Gráfico Swing", caption: "Pantalla de combate por turnos y control de estados en Java" }
+        { url: asset("assets/projects/buscaminas_preview.webp"), title: "Motor Gráfico Swing", caption: "Pantalla de combate por turnos y control de estados en Java" }
       ]
     },
     {
@@ -685,15 +685,15 @@ public class TitulacionController : ControllerBase
         "Cero dependencias externas: corre en cualquier JVM estándar"
       ],
       ndaDisclaimer: "Código didáctico libre de dependencias propietarias.",
-      metrics: ["< 1ms Latencia", "Recursión en Matrices", "Swing Nativo", "Zero-Dependency"],
-      image: asset("assets/projects/buscaminas_preview.jpg"),
+      metrics: ["Respuesta Instantánea", "Recursión en Matrices", "Swing Nativo", "Zero-Dependency"],
+      image: asset("assets/projects/buscaminas_preview.webp"),
       technologies: ["Java", "Swing", "Recursividad", "Matrices 2D", "Event-Driven"],
       architectureBadges: ["Algorithmic Engine", "Recursion", "Zero-Dependency", "Matrix 2D"],
       liveUrl: "#",
       githubUrl: "https://github.com/AnthonyPilatasig",
       isFeatured: false,
       screenshots: [
-        { url: asset("assets/projects/buscaminas_preview.jpg"), title: "Tablero Recursivo en Swing", caption: "Destape algorítmico de casillas en matriz 2D" }
+        { url: asset("assets/projects/buscaminas_preview.webp"), title: "Tablero Recursivo en Swing", caption: "Destape algorítmico de casillas en matriz 2D" }
       ]
     }
   ]

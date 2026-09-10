@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IProject } from '../../types/portfolio.types';
+import type { IProject } from '@domain/entities/portfolio.entity';
 
 interface ProjectReelProps {
   projects: IProject[];
@@ -22,8 +22,9 @@ export const ProjectReel: React.FC<ProjectReelProps> = ({ projects }) => {
             <img
               src={p.image}
               alt={p.title}
-              className="w-full h-full object-cover opacity-80 dark:opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
               loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover opacity-80 dark:opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-transparent to-transparent opacity-90" />
             <span className="absolute bottom-2 left-3 right-3 text-[10px] font-mono text-[var(--theme-ink)] truncate">

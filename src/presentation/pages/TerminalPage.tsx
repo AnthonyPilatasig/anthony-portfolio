@@ -1,6 +1,6 @@
 import React from 'react';
-import { TerminalConsole } from '../components/common/TerminalConsole';
-import { SEO } from '../components/common/SEO';
+import { TerminalConsole } from '@presentation/features/terminal/TerminalConsole';
+import { SEO } from '@presentation/components/ui/SEO';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft, FiTerminal } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';

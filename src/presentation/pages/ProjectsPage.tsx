@@ -6,19 +6,19 @@ import {
   FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle,
   FiSettings, FiGitBranch, FiShield, FiLock, FiInfo, FiCheck, FiCopy
 } from 'react-icons/fi';
-import { portfolioData } from '../data/portfolio';
-import { RevealText } from '../components/common/RevealText';
-import { SEO } from '../components/common/SEO';
-import type { IProject, ProjectCategory } from '../types/portfolio.types';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { mergeLocalizedEntries } from '@application/useCases/portfolio/mergeLocalizedEntries';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { SEO } from '@presentation/components/ui/SEO';
+import type { IProject, ProjectCategory } from '@domain/entities/portfolio.entity';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
-  
-  const translatedProjects = t('projectsData', { returnObjects: true }) as Partial<IProject>[];
-  const projects: IProject[] = portfolioData.projects.map(p => {
-    const tr = (Array.isArray(translatedProjects) ? translatedProjects : []).find((tItem) => tItem.id === p.id) || {};
-    return { ...p, ...tr };
-  });
+
+  const projects = mergeLocalizedEntries<IProject>(
+    getPortfolioData().projects,
+    t('projectsData', { returnObjects: true })
+  );
 
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
@@ -143,6 +143,8 @@ export const ProjectsPage: React.FC = () => {
                 <img
                   src={project.image}
                   alt={project.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover opacity-90 group-hover/item:opacity-100 group-hover/item:scale-105 transition-all duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/90 via-transparent to-transparent opacity-80" />
@@ -321,6 +323,7 @@ export const ProjectsPage: React.FC = () => {
                         <img
                           src={selectedProject.image}
                           alt={selectedProject.title}
+                          decoding="async"
                           className="w-full h-full object-cover"
                         />
                         <button 
@@ -571,9 +574,10 @@ export const ProjectsPage: React.FC = () => {
                     <div className="space-y-4">
                       {/* Featured Screenshot Display */}
                       <div className="w-full rounded-2xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border-strong)] relative group">
-                        <img 
-                          src={selectedProject.screenshots[activeScreenshotIdx]?.url || selectedProject.image} 
+                        <img
+                          src={selectedProject.screenshots[activeScreenshotIdx]?.url || selectedProject.image}
                           alt={selectedProject.screenshots[activeScreenshotIdx]?.title || selectedProject.title}
+                          decoding="async"
                           className="w-full max-h-[500px] object-contain mx-auto bg-black/40"
                         />
                         <button
@@ -614,7 +618,7 @@ export const ProjectsPage: React.FC = () => {
                                   : 'border-[var(--theme-border)] opacity-70 hover:opacity-100'
                               }`}
                             >
-                              <img src={s.url} alt={s.title} className="w-full h-full object-cover" />
+                              <img src={s.url} alt={s.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                               <span className="absolute bottom-0 inset-x-0 bg-black/70 text-[9px] font-mono text-white px-1 truncate text-center">
                                 #{idx + 1} {s.title}
                               </span>
@@ -626,7 +630,7 @@ export const ProjectsPage: React.FC = () => {
                   ) : (
                     <div className="p-8 rounded-2xl bg-[var(--theme-bg)] border border-[var(--theme-border)] text-center space-y-3">
                       <div className="w-full max-w-lg mx-auto rounded-xl overflow-hidden border border-[var(--theme-border)] aspect-video">
-                        <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+                        <img src={selectedProject.image} alt={selectedProject.title} decoding="async" className="w-full h-full object-cover" />
                       </div>
                       <p className="text-xs text-[var(--theme-ink-muted)]">
                         Captura principal de la interfaz del proyecto.
@@ -756,6 +760,7 @@ export const ProjectsPage: React.FC = () => {
             <img
               src={zoomedImage}
               alt="Vista ampliada"
+              decoding="async"
               className="max-w-full max-h-[90vh] object-contain rounded-xl border border-white/20 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />

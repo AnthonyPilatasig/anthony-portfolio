@@ -6,21 +6,31 @@ Este documento describe las decisiones de diseño de software, patrones de desar
 
 ## 🎯 Principios de Arquitectura
 
-El proyecto adopta los principios de **Clean Code**, **Design Tokens DTCG (W3C)** y **Modular Feature Architecture**:
+El código en `src/` está organizado en capas al estilo **Clean Architecture**, adaptado a un frontend React/Vite. La regla de dependencia va en un solo sentido — hacia adentro — y se aplica con alias de import dedicados (`@domain`, `@application`, `@infrastructure`, `@presentation`, configurados en `vite.config.ts` y `tsconfig.app.json`):
 
-1. **Separación de Responsabilidades:**
-   - `src/data/`: Centraliza el catálogo de información (proyectos, experiencia, skills, datos personales).
-   - `src/types/`: Interfaces TypeScript estrictas.
-   - `src/features/`: Módulos de interfaz autocontenidos (Hero, Skills, Projects, Experience, Hub).
-   - `src/components/common/`: Componentes universales independientes (TerminalConsole, SEO).
+```
+presentation  →  application  →  domain
+      ↓               ↓
+infrastructure ───────┘
+```
 
-2. **Arquetipo Visual Dual:**
+1. **`src/domain/`** — Entidades y tipos puros, sin dependencias de React ni de ninguna librería externa (`entities/portfolio.entity.ts`, `entities/github.entity.ts`, `entities/music-preview.entity.ts`). Es el núcleo: nada aquí sabe que existe la UI ni la red.
+
+2. **`src/application/useCases/`** — Casos de uso: orquestan lógica de negocio framework-agnostic y dependen de `domain/` y de los puertos definidos en `infrastructure/`, nunca de React directamente. Ejemplos: `portfolio/mergeLocalizedEntries.ts` (fusiona el contenido en español con los overrides de i18n — antes reimplementado en 4 páginas distintas), `github/getRecentGithubActivity.ts`, `music/getMusicPreviewTracks.ts`.
+
+3. **`src/infrastructure/`** — Adaptadores hacia el mundo exterior: `api/` (clientes HTTP crudos a GitHub e iTunes), `i18n/` (configuración de i18next y los locales), `data/` (el catálogo de datos del portafolio y de la consola, hoy estático pero aislado como si fuera un repositorio), `emulator/` (adaptador sobre el paquete `nostalgist`, para que solo un archivo conozca esa librería).
+
+4. **`src/presentation/`** — Todo lo específico de React: `pages/` (una por ruta), `layout/` (Navbar, Footer), `app/` (composición de la app y el router), `components/ui/` (átomos reutilizables sin dueño de feature: `RevealText`, `SEO`, `CountUp`, etc.) y `features/` (componentes que pertenecen a una sola sección: `about/`, `projects/`, `console/`, `terminal/`).
+
+> **Nota:** el reproductor de audio (`src/components/player/` y `src/components/common/GlobalAudioPlayer.tsx`) quedó fuera de este reordenamiento a propósito — está en desarrollo activo en paralelo y se migrará a `presentation/features/audio-player/` en un pase posterior para no chocar con esos cambios.
+
+5. **Arquetipo Visual Dual:**
    - **Bento Grid + Linear Look:** Organización modular de información con tarjetas de vidrio (`luxury-glass`), bordes dorados de precisión y jerarquía tipográfica monospaciada.
    - **Virtual Unix CLI Shell:** Terminal embebida con interprete de comandos en tiempo real que simula una consola de comandos Unix.
 
-3. **Optimización de Renderizado & Rendimiento:**
+6. **Optimización de Renderizado & Rendimiento:**
    - Transiciones declarativas con `framer-motion` para reducir recalculado de layout.
-   - Assets gráficos locales optimizados en `public/assets/projects/`.
+   - Cada página se carga con `React.lazy`; imágenes grandes convertidas a WebP y con `loading="lazy"`.
    - Bundle split y minificación con Rollup / Vite.
 
 ---

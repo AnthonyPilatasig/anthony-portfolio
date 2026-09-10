@@ -6,8 +6,8 @@ import {
   FiCpu, FiZap, FiMonitor, FiExternalLink
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
-import { RevealText } from '../components/common/RevealText';
-import { SEO } from '../components/common/SEO';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { SEO } from '@presentation/components/ui/SEO';
 
 const MODE_COUNT = 5;
 

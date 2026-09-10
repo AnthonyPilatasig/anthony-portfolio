@@ -2,14 +2,14 @@ import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const HomePage = React.lazy(() => import('../pages/HomePage').then(m => ({ default: m.HomePage })));
-const ProjectsPage = React.lazy(() => import('../pages/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
-const ExperiencePage = React.lazy(() => import('../pages/ExperiencePage').then(m => ({ default: m.ExperiencePage })));
-const AboutPage = React.lazy(() => import('../pages/AboutPage').then(m => ({ default: m.AboutPage })));
-const TerminalPage = React.lazy(() => import('../pages/TerminalPage').then(m => ({ default: m.TerminalPage })));
-const LabPage = React.lazy(() => import('../pages/LabPage').then(m => ({ default: m.LabPage })));
-const ContactPage = React.lazy(() => import('../pages/ContactPage').then(m => ({ default: m.ContactPage })));
-const ConsolePage = React.lazy(() => import('../pages/ConsolePage').then(m => ({ default: m.ConsolePage })));
+const HomePage = React.lazy(() => import('@presentation/pages/HomePage').then(m => ({ default: m.HomePage })));
+const ProjectsPage = React.lazy(() => import('@presentation/pages/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
+const ExperiencePage = React.lazy(() => import('@presentation/pages/ExperiencePage').then(m => ({ default: m.ExperiencePage })));
+const AboutPage = React.lazy(() => import('@presentation/pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const TerminalPage = React.lazy(() => import('@presentation/pages/TerminalPage').then(m => ({ default: m.TerminalPage })));
+const LabPage = React.lazy(() => import('@presentation/pages/LabPage').then(m => ({ default: m.LabPage })));
+const ContactPage = React.lazy(() => import('@presentation/pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const ConsolePage = React.lazy(() => import('@presentation/pages/ConsolePage').then(m => ({ default: m.ConsolePage })));
 
 export const AppRouter: React.FC = () => {
   const location = useLocation();

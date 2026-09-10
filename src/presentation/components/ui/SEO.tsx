@@ -1,6 +1,6 @@
+import { portfolioData } from '@infrastructure/data/portfolio.data';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import { portfolioData } from '../../data/portfolio';
 
 interface SEOProps {
   title?: string;

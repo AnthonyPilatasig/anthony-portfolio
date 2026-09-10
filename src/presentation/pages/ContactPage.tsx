@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiMail, FiGithub, FiLinkedin, FiMapPin, FiSend, FiCheckCircle, FiPhone, FiCopy, FiCheck } from 'react-icons/fi';
 import { SiTwitch, SiWhatsapp } from 'react-icons/si';
-import { portfolioData } from '../data/portfolio';
-import { RevealText } from '../components/common/RevealText';
-import { SEO } from '../components/common/SEO';
+import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
+import { RevealText } from '@presentation/components/ui/RevealText';
+import { SEO } from '@presentation/components/ui/SEO';
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -14,7 +14,7 @@ const fadeUpVariant = {
 
 export const ContactPage: React.FC = () => {
   const { t } = useTranslation();
-  const { personal } = portfolioData;
+  const { personal } = getPortfolioData();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);

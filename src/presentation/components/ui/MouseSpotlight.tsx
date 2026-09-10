@@ -1,23 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export const MouseSpotlight: React.FC = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const target = useRef({ x: 0, y: 0 });
+  const raf = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+    // Mutate the DOM directly from a rAF loop instead of calling setState on every
+    // mousemove — that used to trigger a React re-render on every pixel of movement.
+    const handleMove = (e: MouseEvent) => {
+      target.current = { x: e.clientX, y: e.clientY };
     };
+    window.addEventListener('mousemove', handleMove);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const tick = () => {
+      if (spotlightRef.current) {
+        spotlightRef.current.style.background = `radial-gradient(600px circle at ${target.current.x}px ${target.current.y}px, rgba(27, 79, 232, 0.04), transparent 80%)`;
+      }
+      raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
   }, []);
 
-  return (
-    <div
-      className="pointer-events-none fixed inset-0 z-30 transition duration-300"
-      style={{
-        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(27, 79, 232, 0.04), transparent 80%)`
-      }}
-    />
-  );
+  return <div ref={spotlightRef} className="pointer-events-none fixed inset-0 z-30" />;
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import JSZip from 'jszip';
-import { Nostalgist } from 'nostalgist';
+import { launchNostalgistCore, type NostalgistInstance } from '@infrastructure/emulator/nostalgistClient';
 import {
   FiVolume2, FiVolumeX, FiMaximize2, FiMinimize2,
   FiArrowLeft, FiUpload, FiTv, FiSmartphone
@@ -31,7 +31,7 @@ export const RpgMakerPlayer: React.FC<RpgMakerPlayerProps> = ({ initialFile = nu
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const nostalgistInstanceRef = useRef<Nostalgist | null>(null);
+  const nostalgistInstanceRef = useRef<NostalgistInstance | null>(null);
 
   const addLog = useCallback((msg: string) => {
     setLogLines(prev => [...prev.slice(-19), msg]);
@@ -211,7 +211,7 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
       addLog('🚀 Ejecutando juego con Nostalgist WebAssembly (Máximo Rendimiento)...');
 
       // 4. Launch with Nostalgist configured for maximum FPS and lowest latency
-      const instance = await Nostalgist.launch({
+      const instance = await launchNostalgistCore({
         element: canvasRef.current!,
         core: {
           name: 'mkxp-z',
@@ -296,7 +296,9 @@ Object.const_set(:Bignum, Integer) unless defined?(Bignum)
 
   useEffect(() => {
     if (initialFile) {
-      bootGame(initialFile);
+      // Deferred a tick so the (synchronous prefix of the async) boot sequence
+      // doesn't set state directly inside the effect body.
+      queueMicrotask(() => { bootGame(initialFile); });
     }
     return () => {
       if (nostalgistInstanceRef.current) {

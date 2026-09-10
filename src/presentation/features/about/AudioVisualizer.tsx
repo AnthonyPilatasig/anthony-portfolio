@@ -1,19 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiMusic, FiLoader } from 'react-icons/fi';
-
-interface Track {
-  title: string;
-  artist: string;
-  src: string;
-  artwork?: string;
-}
-
-interface ITunesResult {
-  trackName?: string;
-  artistName?: string;
-  previewUrl?: string;
-  artworkUrl60?: string;
-}
+import { getMusicPreviewTracks } from '@application/useCases/music/getMusicPreviewTracks';
+import type { MusicPreviewTrack } from '@domain/entities/music-preview.entity';
 
 interface AudioVisualizerProps {
   /** Search terms sent to the public iTunes Search API — no API key or uploaded files needed. */
@@ -27,7 +15,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number | undefined>(undefined);
 
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [tracks, setTracks] = useState<MusicPreviewTrack[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
@@ -40,37 +28,20 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
   useEffect(() => {
     const controller = new AbortController();
 
-    (async () => {
-      try {
-        const results = await Promise.all(
-          searchTerms.map(async (term) => {
-            const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&media=music&limit=1`;
-            const res = await fetch(url, { signal: controller.signal });
-            if (!res.ok) return null;
-            const data = await res.json();
-            const item: ITunesResult | undefined = data?.results?.[0];
-            if (!item?.previewUrl) return null;
-            return {
-              title: item.trackName ?? term,
-              artist: item.artistName ?? 'Unknown Artist',
-              src: item.previewUrl,
-              artwork: item.artworkUrl60,
-            } as Track;
-          })
-        );
-
-        const found = results.filter((r): r is Track => r !== null);
+    getMusicPreviewTracks(searchTerms, controller.signal)
+      .then((found) => {
         if (found.length === 0) {
           setLoadFailed(true);
         } else {
           setTracks(found);
         }
-      } catch {
+      })
+      .catch(() => {
         if (!controller.signal.aborted) setLoadFailed(true);
-      } finally {
+      })
+      .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
+      });
 
     return () => controller.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -225,7 +196,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ searchTerms })
 
           <div className="flex items-center justify-center gap-2 text-center">
             {track.artwork && (
-              <img src={track.artwork} alt="" className="w-6 h-6 rounded border border-[var(--theme-border)]" />
+              <img src={track.artwork} alt="" loading="lazy" decoding="async" className="w-6 h-6 rounded border border-[var(--theme-border)]" />
             )}
             {playbackErrored ? (
               <p className="text-[11px] font-mono text-[var(--theme-ink-muted)]">Vista previa no disponible para esta pista.</p>

@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+import path from 'node:path'
 import { defineConfig, type Plugin } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -42,7 +43,7 @@ export default defineConfig({
       ].join('; '),
       // ─── SharedArrayBuffer + Atomics required by Emscripten ───────────
       'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Embedder-Policy': 'credentialless',
       'Cross-Origin-Resource-Policy': 'cross-origin',
     },
   },
@@ -51,6 +52,14 @@ export default defineConfig({
     tailwindcss(),
     redirectBaseWithoutSlash(),
   ],
+  resolve: {
+    alias: {
+      '@domain': path.resolve(__dirname, 'src/domain'),
+      '@application': path.resolve(__dirname, 'src/application'),
+      '@infrastructure': path.resolve(__dirname, 'src/infrastructure'),
+      '@presentation': path.resolve(__dirname, 'src/presentation'),
+    },
+  },
   build: {
     chunkSizeWarningLimit: 600,
     rollupOptions: {

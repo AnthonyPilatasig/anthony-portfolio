@@ -1,11 +1,13 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Navbar } from './components/layout/Navbar';
-import { Footer } from './components/layout/Footer';
-import { SEO } from './components/common/SEO';
-import { MouseSpotlight } from './components/common/MouseSpotlight';
-import { CustomCursor } from './components/common/CustomCursor';
-import { ScrollToTop } from './components/common/ScrollToTop';
-import { GlobalAudioPlayer } from './components/common/GlobalAudioPlayer';
+import { Navbar } from '@presentation/layout/Navbar';
+import { Footer } from '@presentation/layout/Footer';
+import { SEO } from '@presentation/components/ui/SEO';
+import { MouseSpotlight } from '@presentation/components/ui/MouseSpotlight';
+import { CustomCursor } from '@presentation/components/ui/CustomCursor';
+import { ScrollToTop } from '@presentation/components/ui/ScrollToTop';
+// The audio player is being actively reworked outside this refactor, so it's left
+// in its original location for now instead of moving into presentation/features.
+import { GlobalAudioPlayer } from '../../components/common/GlobalAudioPlayer';
 import { AppRouter } from './routes/AppRouter';
 
 function App() {

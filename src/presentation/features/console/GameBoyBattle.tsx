@@ -43,18 +43,22 @@ export const GameBoyBattle: React.FC<GameBoyBattleProps> = ({ onClose, onBack, o
   const [enemy, setEnemy] = useState<Enemy>(() => spawnEnemy(1));
   const [playerHp, setPlayerHp] = useState(PLAYER_MAX_HP);
   const [shield, setShield] = useState(25);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(
+    () => `¡Alerta de Sistema! Detectada anomalía: ${enemy.name} (Nivel ${enemy.level})`
+  );
   const [phase, setPhase] = useState<'busy' | 'menu' | 'over'>('busy');
   const [wins, setWins] = useState(0);
   const [hitFlash, setHitFlash] = useState<'enemy' | 'player' | null>(null);
   const busyRef = useRef(false);
 
+  // Mount-only: hold the opening "system alert" message before accepting input.
+  // Later encounters announce themselves via `say()` inside nextEncounter, since
+  // they're already triggered from an event handler rather than a render-driven effect.
   useEffect(() => {
-    setMessage(`¡Alerta de Sistema! Detectada anomalía: ${enemy.name} (Nivel ${enemy.level})`);
     busyRef.current = true;
     const t = setTimeout(() => { busyRef.current = false; setPhase('menu'); }, 900);
     return () => clearTimeout(t);
-  }, [enemy]);
+  }, []);
 
   const say = (msg: string, holdMs: number, after?: () => void) => {
     setMessage(msg);
@@ -69,8 +73,10 @@ export const GameBoyBattle: React.FC<GameBoyBattleProps> = ({ onClose, onBack, o
 
   const nextEncounter = (nextLevel: number) => {
     setLevel(nextLevel);
-    setEnemy(spawnEnemy(nextLevel));
+    const next = spawnEnemy(nextLevel);
+    setEnemy(next);
     setShield(prev => Math.min(50, prev + 15));
+    say(`¡Alerta de Sistema! Detectada anomalía: ${next.name} (Nivel ${next.level})`, 900);
   };
 
   const enemyCounterattack = () => {

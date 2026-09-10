@@ -124,8 +124,8 @@
     "subtitle": "Full Stack Developer & Software Engineering Student in Quito, Ecuador.",
     "mainTitle": "Structured software, technical teaching, and passion for code",
     "bio1": "I am Anthony Pilatasig, a full-stack developer and technical professor at ISTPET. I graduated as a Superior Technologist in Software Development and am currently pursuing my Software Engineering degree at Universidad Politécnica Salesiana.",
-    "bio2": "In my daily work, I build solutions that serve real users: from 'Mi ISTPET' (official mobile app published on Google Play) and modernizing 'Gacad' with Clean Architecture and CQRS, to specialized tools like Scorecraft for sports metrics and AvialB for traffic accident forensics.",
-    "bio3": "In teaching, I love guiding students through the fundamentals of Object-Oriented Programming, algorithms, and Git version control. Outside production code, I enjoy programming turn-based RPGs in Java, anime, and streaming software development on Twitch.",
+    "bio2": "In my daily work I build solutions that serve real users: from 'Mi ISTPET' (official mobile app published on Google Play) and the modernization of 'Gacad' with Clean Architecture and CQRS, to specialized tools like Scorecraft for sports metrics and AvialB for traffic-accident forensics.",
+    "bio3": "In teaching, I enjoy guiding students through the fundamentals of Object-Oriented Programming, algorithms, and Git version control. Outside production code, I program turn-based RPGs in Java, stream development on Twitch, and I'm a casual anime fan.",
     "valuesTitle": "Code Values",
     "valuesDesc": "Readable code, real modularity, tests, and respect for the end-user's time.",
     "securityTitle": "Security Focus",
@@ -168,112 +168,172 @@
   "projectsData": [
     {
       "id": 1,
-      "title": "Gacad — Institutional Academic Core",
+      "title": "Mi ISTPET — Student Mobile App (Google Play)",
       "client": "Higher Technological Institute Traversari",
-      "description": "High-availability administrative web core for complete academic management: admissions, records, enrollment, and grade reports.",
-      "longDescription": "Centralized system that fully digitized institutional academic operations. Built on a decoupled architecture to guarantee high concurrency during mass-enrollment periods.",
-      "problem": "Manual academic processes and bottlenecks during simultaneous enrollment that caused server outages.",
-      "decision": "Adopted Clean Architecture and CQRS in C# .NET 8 with Angular, strictly separating reads (Queries) from writes (Commands).",
-      "tradeoff": "Higher upfront development time and conceptual overhead defining DTOs and Handlers, in exchange for scalability and fault isolation.",
-      "impact": "Sub-100ms response times on grade queries and 100% digitization with zero downtime across the last 4 academic terms.",
-      "metrics": ["Sub-100ms Latency", "+2,500 Active Users", "100% Term Uptime"]
+      "description": "Official mobile app published on Google Play Store. Digitized the student ID card with a dynamic QR code and includes schedules, grades, and real-time push notifications.",
+      "longDescription": "Official academic mobile platform built with React Native Expo (New Architecture – Fabric) and a .NET 8 backend using Clean Architecture and CQRS. Gives the student and faculty community access to a secure digital ID card via offline HMAC-SHA256 signatures, grades, and schedules.",
+      "problem": "PVC credentials prone to forgery and wear, recurring printing costs, and no official mobile channel to check live schedules and grades with offline validation at campus entry points.",
+      "decision": "Built the app with Expo SDK 54 / React Native and a .NET 8 Web API. Designed a QR card token signed with HMAC-SHA256, allowing entry validation without depending on a constant internet connection.",
+      "tradeoff": "Offline validation required synchronizing symmetric keys and timestamps with a tolerance window on the entry scanner.",
+      "impact": "Published on Google Play Store; replaced the physical PVC card for the student community and reduced recurring printing costs.",
+      "metrics": ["Google Play Store", "Offline QR Card", ".NET 8 + Expo", "Digital Card"]
     },
     {
       "id": 2,
-      "title": "My ISTPET — Student Mobile App",
+      "title": "ISTPET Graduation System — Defenses & Records",
       "client": "Higher Technological Institute Traversari",
-      "description": "Official full-stack mobile app for the university community with live schedules, grades, payments, and a digital QR ID card.",
-      "longDescription": "Native/hybrid mobile platform giving instant access to student records, QR-verified digital ID, and payment gateway integration.",
-      "problem": "No direct channel for academic communication and record lookup while students were off campus.",
-      "decision": "Built the app in React Native with TypeScript, consuming a secured RESTful API in .NET 8 with local session caching.",
-      "tradeoff": "iOS/Android compatibility required rigorous re-render optimization and asset bundling.",
-      "impact": "+2,500 active downloads and a 70% reduction in in-person visits to the registrar's office.",
-      "metrics": ["+2,500 Students", "-70% In-Person Requests", "QR Verified"]
+      "description": "Comprehensive platform for degree applications, faculty committee assignment, defense scheduling, and records with Angular 22 and .NET 8.",
+      "longDescription": "Core system built under strict Clean Architecture in .NET 8, with a decoupled Angular 22 frontend (zoneless, using Signals and a hexagonal Ports & Adapters architecture). Manages the full graduation cycle, from validating academic prerequisites to grading and issuing the degree certificate.",
+      "problem": "Manual committee-assignment process with frequent scheduling conflicts among faculty, delays validating requirements, and a lack of traceability in defense records.",
+      "decision": "Implemented a clean architecture with strict layer separation: backend with CQRS, MediatR, FluentValidation, and permission-based authorization (`[HasPermission]`); frontend with reactive Signal-based stores and decoupled HTTP ports.",
+      "tradeoff": "Initial learning curve implementing hexagonal architecture on the frontend, offset by isolated unit tests and low coupling between layers.",
+      "impact": "Notably reduced the time spent scheduling graduation committees and automated the issuance of degree records.",
+      "metrics": ["Angular 22 Zoneless", ".NET 8 Clean Arch", "CQRS & MediatR", "Granular RBAC"]
     },
     {
       "id": 3,
-      "title": "DebtManager — C# Desktop Finance Engine",
-      "client": "Personal Engineering Project",
-      "description": "Native C# desktop app for personal finance control, amortization tracking, and offline debt management.",
-      "longDescription": "Performance-focused desktop tool with no network dependency. Includes French/German amortization calculators, interactive charts, and local relational persistence.",
-      "problem": "Privacy concerns and internet dependency in existing personal finance management apps.",
-      "decision": "Built a native C# .NET Desktop app with a locally encrypted SQLite persistence engine and LINQ.",
-      "tradeoff": "Limited to the desktop environment, in exchange for zero network latency and full user privacy.",
-      "impact": "Instant installment calculations and exportable financial reports with < 5ms response time.",
-      "metrics": ["< 5ms Response", "100% Offline", "SQLite Encryption"]
+      "title": "Institutional Welfare — Scholarships & Agreements",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Platform to digitize scholarships, payment agreements, and academic follow-up, built with Angular 21, .NET 8, and Word/PDF document generation.",
+      "longDescription": "Institutional web system built in Angular 21 (Signals, standalone components) and ASP.NET Core 8 Web API over MySQL 5.7 (SIGAFI). Automates scored evaluation of scholarship applications, installment payment agreements, and dynamic generation of official resolutions with MiniWord and QuestPDF.",
+      "problem": "Manual evaluation of hundreds of scholarship applications with physical files, delays drafting official resolutions, and no tracking of payment agreements.",
+      "decision": "Designed a socioeconomic scoring engine (60% vulnerability / 40% academic merit weighting) with automated generation of `.docx` and `.pdf` documents from institutional templates.",
+      "tradeoff": "Generating documents on the server with MiniWord and QuestPDF instead of the client, to keep seals and legal formatting immutable.",
+      "impact": "Considerably reduced scholarship processing time and made it possible to generate official resolutions in one click instead of drafting them by hand.",
+      "metrics": ["Angular 21 Signals", ".NET 8 Web API", "MiniWord + QuestPDF", "Automated Scoring"]
     },
     {
       "id": 4,
-      "title": "Education Microservices Architecture",
-      "client": "Advanced Architecture Project",
-      "description": "Distributed .NET 8 backend ecosystem with event-driven communication, CQRS, DDD, and container deployment on Docker and Kubernetes.",
-      "longDescription": "Distributed architecture design for mass learning platforms. Separates student analytics, adaptive exams, and the content catalog into independent services.",
-      "problem": "Educational monoliths collapsing under demand spikes during end-of-term exams.",
-      "decision": "Structured independent microservices in .NET 8 orchestrated on Kubernetes with hexagonal architecture and gRPC/REST contracts.",
-      "tradeoff": "Higher operational complexity and the need for distributed tracing, in exchange for complete fault isolation.",
-      "impact": "Full fault isolation: an analytics failure never interrupts exam-taking.",
-      "metrics": ["Fault Isolation", "Zero-Downtime K8s", "CQRS / DDD"]
+      "title": "GAcad — Academic Management & Scheduling ERP",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Core web system for institutional schedules, faculty workload distribution, and automatic detection of class-schedule conflicts.",
+      "longDescription": "Modernization of the institution's academic core, built in Angular 21 and .NET 8 Web API with background jobs via Hangfire and centralized authentication using RSA public keys (AuthGlobal).",
+      "problem": "Faculty schedule conflicts and classroom overbooking during semester planning, plus delays validating professors' teaching-load hours.",
+      "decision": "Developed a matrix validation engine in C# .NET 8 that checks in real time for collisions between professors, student groups, and physical classrooms.",
+      "tradeoff": "In-memory, runtime matrix validation to keep response times fast against recurring queries.",
+      "impact": "Eliminated schedule overlaps in faculty workload distribution and notably reduced the time spent building the institutional schedule.",
+      "metrics": ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "No Overlaps"]
     },
     {
       "id": 5,
-      "title": "Inventory Optimization (0/1 Knapsack)",
-      "client": "Algorithmic Research",
-      "description": "Java system solving the 0/1 Knapsack problem with dynamic programming, comparing 3 approaches.",
-      "longDescription": "Computational performance benchmark analyzing pure recursion, top-down memoization, and bottom-up tabulation on large datasets.",
-      "problem": "Exponential O(2^n) slowdown when computing optimal logistics inventory combinations.",
-      "decision": "Designed a dynamic-programming engine in Java, cutting time complexity to O(n*W).",
-      "tradeoff": "Higher O(n*W) memory usage, in exchange for going from minutes to milliseconds of execution.",
-      "impact": "Execution time optimized from ~45 seconds to 12 milliseconds on high-volume test data.",
-      "metrics": ["O(n*W) Efficiency", "12ms Execution Time", "Dynamic Prog."]
+      "title": "GRECUH — HR & Credentialing System",
+      "client": "Higher Technological Institute Traversari",
+      "description": "Web platform for labor contracts, digital employee files, and high-resolution faculty credentials with SkiaSharp and SharePoint integration.",
+      "longDescription": "Comprehensive HR system built in Angular 20 (PrimeNG + TailwindCSS) and a .NET 8 backend with Entity Framework Core Code First. Manages semester faculty contracts, digital archiving on the institution's SharePoint cloud, and PVC ID rendering with SkiaSharp.",
+      "problem": "Scattered management of physical faculty contracts, slow manual generation of institutional ID cards, and no secure digital repository for faculty records.",
+      "decision": "Implemented a solution that automates contract drafting, connects to Microsoft SharePoint for document archiving, and uses the SkiaSharp library in .NET 8 to generate 300 DPI ID cards with barcodes.",
+      "tradeoff": "Native server-side graphics rendering (SkiaSharp) requires precise pixel calibration, but produces print-ready PVC cards without extra design software.",
+      "impact": "Considerably reduced the time to consolidate faculty contracts and automated the issuance of institutional IDs.",
+      "metrics": ["Angular 20 + PrimeNG", "SkiaSharp 300 DPI", "SharePoint Cloud", "Automated Contracts"]
     },
     {
       "id": 6,
-      "title": "SIAT / AVIALB — Ecuadorian National Police",
-      "client": "Ecuadorian National Police",
-      "description": "Specialized system for collecting, auditing, and analyzing traffic accidents for the Traffic Accident Investigation Service.",
-      "longDescription": "Government application standardizing police reports, roadside evidence collection, and generating official, auditable expert reports.",
-      "problem": "Scattered physical forms and lack of forensic traceability in traffic accident investigations.",
-      "decision": "Implemented modules in .NET Core and SQL Server with immutable audit trails and role-based access control (RBAC).",
-      "tradeoff": "Strict upfront validation requirements lengthened the forms, in exchange for legal security.",
-      "impact": "100% standardization of institutional traffic expert reports with full legal validity.",
-      "metrics": ["100% Standardized Reports", "RBAC Security", "Audit Trail"]
+      "title": "Scorecraft — Sports & Medical Platform (CDMI)",
+      "client": "Club Deportivo Miguel Iturralde",
+      "description": "Web platform for physical monitoring, injury history, anthropometric measurements, and player statistics.",
+      "longDescription": "Comprehensive system built in Angular and .NET Core to centralize records for the coaching staff, physical trainers, and medical department of the sports club.",
+      "problem": "Medical records scattered across physical spreadsheets, with no correlation between physical fatigue and match performance.",
+      "decision": "Built a reactive Angular dashboard with a C# backend and a relational database, with automated anthropometric index calculations and Chart.js visualizations.",
+      "tradeoff": "Strict digitization of medical records ahead of every competitive matchday.",
+      "impact": "Centralized the player roster's medical records and injury tracking in one place.",
+      "metrics": ["Sports Management", "Medical Records", "C# + Angular", "Sports Analytics"]
+    },
+    {
+      "id": 7,
+      "title": "DebtManager — C# Desktop Finance Software",
+      "client": "Personal Engineering Project",
+      "description": "Native C# .NET desktop app with locally encrypted SQLite for financial control, loans, and amortization, fully offline.",
+      "longDescription": "Desktop tool focused on user privacy and a fast response. Includes amortization table simulators (French and German methods), financial charts, and local persistence.",
+      "problem": "Constant internet dependency and privacy concerns with cloud-based finance platforms for managing collections.",
+      "decision": "Implemented a native C# solution with an embedded SQLite database engine and LINQ queries optimized for a near-instant response.",
+      "tradeoff": "Desktop software with no cloud, prioritizing speed and data ownership over the convenience of cloud sync.",
+      "impact": "Fast financial calculations, full portability in a lightweight executable, and fully offline debt tracking.",
+      "metrics": ["Instant Response", "Fully Offline", "SQLite Encryption", "Zero Dependencies"]
+    },
+    {
+      "id": 8,
+      "title": "AvialB / SIAT — Offline-First Traffic Investigation",
+      "client": "Consulting / Traffic Accident Investigation",
+      "description": "Offline-first mobile and web ecosystem for field traffic-accident reporting with asynchronous sync.",
+      "longDescription": "Hybrid app built with Ionic, Angular, and C# for traffic investigators who need to gather technical evidence in rural areas or roads without mobile coverage.",
+      "problem": "Loss of cellular connectivity at accident sites and slow transcription of expert reports originally taken on paper.",
+      "decision": "Designed an offline-first architecture with an on-device local database and background sync through work queues once a connection is detected.",
+      "tradeoff": "Custom conflict-resolution and asynchronous queueing logic was needed to preserve the integrity of forensic evidence.",
+      "impact": "Digitized expert reports directly at the accident site with geolocation, notably reducing delivery times.",
+      "metrics": ["Offline-First", "Ionic + Angular", "Async Sync", "Chain of Custody"]
+    },
+    {
+      "id": 9,
+      "title": "RPG Journey — Java OOP Game Engine (Swing)",
+      "client": "Logic & Game Dev Project",
+      "description": "Turn-based role-playing game built in pure Java with Swing, demonstrating inheritance, polymorphism, interfaces, and collections.",
+      "longDescription": "Decoupled design between the logic model (`com.rpg.logica`) and the graphical presentation (`com.rpg.gui`). Includes classes like Warrior, Mage, Rogue, Tank, and Support/Healer with dynamic polymorphism and custom painting for status bars.",
+      "problem": "Designing an extensible turn-based combat engine without coupling the visual interface to the damage-calculation formulas.",
+      "decision": "Applied a dedicated special-action interface, abstract classes for characters, and LIFO (`Stack`) structures for the loot inventory.",
+      "tradeoff": "More structured classes in exchange for being able to add new character classes without touching the graphical interface.",
+      "impact": "A functional, instructional project that illustrates pure OOP principles in Java.",
+      "metrics": ["Pure OOP & Swing", "Dynamic Polymorphism", "Custom Painting", "LIFO Stacks"]
+    },
+    {
+      "id": 10,
+      "title": "Recursive OOP Minesweeper (Java Desktop)",
+      "client": "Algorithmic Project",
+      "description": "Native desktop game applying OOP and a recursive flood-fill algorithm on 2D matrices with state control.",
+      "longDescription": "A mathematical implementation of the classic Minesweeper that manages random mine distribution, adjacent-cell calculation, and cascading reveals through recursive calls.",
+      "problem": "Handling the expansion of empty cells on the board without freezing the UI.",
+      "decision": "Structured the logic around 2D matrices with a bounded recursive depth-first search algorithm and Swing event handling.",
+      "tradeoff": "Native Swing interface with no external libraries, for maximum portability.",
+      "impact": "Instant response and clean code for teaching purposes in algorithms.",
+      "metrics": ["Instant Response", "Recursion on Matrices", "Native Swing", "Zero-Dependency"]
     }
   ],
   "experienceData": [
     {
       "id": 1,
-      "role": "Software Developer Lead & Architect",
-      "company": "ItspetDev (Higher Technological Institute Mayor Pedro Traversari)",
-      "period": "2022 - Present",
-      "description": "Leading the architecture and implementation of the complete institutional digital ecosystem: Academic Core (Gacad), the official Mobile App (My ISTPET), and the HR ERP.",
+      "role": "Full Stack Developer & Mobile Lead",
+      "company": "Higher Technological Institute Mayor Pedro Traversari (ISTPET)",
+      "period": "May 2024 - Present",
+      "description": "Lead the development of the institution's key applications, including the official mobile app and the modernization of its core systems.",
       "achievements": [
-        "Designed and implemented the distributed backend architecture with Clean Architecture & CQRS in .NET 8, cutting query latency to sub-100ms.",
-        "Built the official 'My ISTPET' mobile app from scratch in React Native, connecting +2,500 active students with real-time notifications and a digital QR ID.",
-        "Optimized relational data models in SQL Server and MySQL, achieving a 35% improvement in indexing efficiency for enrollments and grades.",
-        "Integrated JWT security protocols, digital signatures for employment contracts, and banking transaction modules."
+        "Developed and published the «Mi ISTPET» mobile app on Google Play Store (React Native Expo | .NET 8), which digitized the student ID card with QR code and live lookups.",
+        "Modernized the Institutional Academic ERP (Gacad) with C#, Angular, and Clean Architecture/CQRS over legacy databases, for enrollment and faculty workload management.",
+        "Implemented the integrated HR system in Angular and .NET 8 with MySQL, for contracts and digital employee records.",
+        "Developed the institutional Job Board, AMMI Online, and automated the scholarship regulation workflow (Institutional Welfare).",
+        "Set up CI/CD pipelines in Azure DevOps with Git Flow and documented RESTful APIs with Swagger."
       ]
     },
     {
       "id": 2,
-      "role": "University Software Engineering Professor (Part-Time)",
+      "role": "Technical Higher Education Professor — Software Development",
       "company": "Higher Technological Institute Mayor Pedro Traversari",
-      "period": "2024 - Present",
-      "description": "Teaching advanced programming courses, data structures, and architecture paradigms, training more than 120 future developers.",
+      "period": "October 2025 - Present",
+      "description": "Teach practical courses on algorithms, object-oriented programming, and software project evaluation using Git and GitHub.",
       "achievements": [
-        "Designed and taught practical curricula on Object-Oriented Programming (OOP), Clean Code, and enterprise design patterns.",
-        "Mentored 15+ student capstone projects focused on refactoring, unit testing, and code quality.",
-        "Ran hands-on labs on algorithmic analysis and O(n) complexity optimization."
+        "Hands-on instruction on algorithmic paradigms and OOP design and implementation.",
+        "Promoted good engineering practices by evaluating student projects and GitHub repositories.",
+        "Technical mentoring for capstone student projects."
       ]
     },
     {
       "id": 3,
-      "role": "Backend Consultant & Software Engineer",
-      "company": "External Consulting Projects / Public Sector",
-      "period": "2023 - Present",
-      "description": "Building mission-critical backend solutions and data-processing systems for the public and private sectors in Ecuador.",
+      "role": "Full Stack Developer (Sector Projects)",
+      "company": "Club Deportivo Miguel Iturralde (CDMI) & SIAT / AvialB",
+      "period": "2023 - 2024",
+      "description": "Developed web and mobile solutions for sports management and field traffic-accident investigation.",
       "achievements": [
-        "Built the SIAT / AVIALB traffic investigation and processing modules for the Ecuadorian National Police.",
-        "Designed a microservices architecture in .NET 8, Docker, and Kubernetes for large-scale educational assessment environments."
+        "Scorecraft (CDMI): Designed and developed the platform in C# and Angular to centralize sports metrics, registrations, and medical records.",
+        "AvialB / SIAT: Designed an offline-first ecosystem (Ionic, Angular, C#) with asynchronous local-to-server sync for field traffic-accident reporting without a connection."
+      ]
+    },
+    {
+      "id": 4,
+      "role": "Mobile Developer Intern",
+      "company": "Universidad de Especialidades Turísticas (UDET)",
+      "period": "March 2022 - March 2023",
+      "description": "Developed a cross-platform mobile application in Xamarin and integrated institutional RESTful services.",
+      "achievements": [
+        "Built cross-platform mobile modules in Xamarin.",
+        "Integrated RESTful endpoints for university procedure lookups."
       ]
     }
   ],
@@ -281,8 +341,8 @@
     {
       "id": 1,
       "degree": "Software Engineering",
-      "institution": "Salesian Polytechnic University (Quito, Ecuador)",
-      "status": "Currently in 5th Semester"
+      "institution": "Salesian Polytechnic University (UPS, Quito)",
+      "status": "In progress"
     },
     {
       "id": 2,

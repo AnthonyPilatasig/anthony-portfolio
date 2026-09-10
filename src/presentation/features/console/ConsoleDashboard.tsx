@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
 import JSZip from 'jszip';
-import { GAME_COVERS } from '../../assets/gameCovers';
+import { GAME_COVERS } from '@infrastructure/data/gameCovers.data';
 import { GameBoyBattle } from './GameBoyBattle';
 import { SnakeGame } from './SnakeGame';
 import { Game2048 } from './Game2048';
@@ -889,6 +889,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                           <img
                             src={selectedGame.coverArt}
                             alt={selectedGame.title}
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -979,6 +980,8 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                             <img
                               src={game.coverArt}
                               alt={game.title}
+                              loading="lazy"
+                              decoding="async"
                               className="w-full h-full object-cover transition-all duration-300"
                               style={{
                                 filter: isSel ? 'none' : 'saturate(0.7) brightness(0.75)',
@@ -1116,7 +1119,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                     className="flex items-center justify-between px-4 py-3 rounded-2xl bg-white/[0.04]"
                   >
                     <div className="flex items-center gap-2.5">
-                      <img src={game.coverArt} alt="" className="w-7 h-7 rounded-lg object-cover" />
+                      <img src={game.coverArt} alt="" loading="lazy" decoding="async" className="w-7 h-7 rounded-lg object-cover" />
                       <span className="text-xs font-semibold text-slate-200 truncate">{game.title}</span>
                     </div>
                     <span className="text-xs font-bold shrink-0" style={{ color: game.accentColor }}>
