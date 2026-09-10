@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,8 +9,8 @@ import { SiTwitch } from 'react-icons/si';
 import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
 import { AudioVisualizer } from '@presentation/features/about/AudioVisualizer';
 import { GithubActivity } from '@presentation/features/about/GithubActivity';
-import { VulnHunterGame } from '@presentation/features/about/VulnHunterGame';
 import { RevealText } from '@presentation/components/ui/RevealText';
+import { LiveClock } from '@presentation/components/ui/LiveClock';
 import { SEO } from '@presentation/components/ui/SEO';
 
 const musicTasteSearchTerms = ['lofi hip hop', 'synthwave'];
@@ -31,7 +31,6 @@ const staggerContainer = {
 export const AboutPage: React.FC = () => {
   const { t } = useTranslation();
   const { personal, skills } = getPortfolioData();
-  const [vulnGameOpen, setVulnGameOpen] = useState(false);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
@@ -64,24 +63,18 @@ export const AboutPage: React.FC = () => {
           className="md:col-span-8 space-y-6"
         >
           <h2 className="text-2xl font-light text-[var(--theme-ink)] leading-snug">
-            <RevealText text="De la Lógica de Videojuegos a la Arquitectura de Software" stagger={25} />
+            <RevealText text={t('about.mainTitle')} stagger={25} />
           </h2>
 
           <div className="space-y-4 text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-            <p>
-              Soy <strong>Anthony David Pilatasig Macas</strong>. Mi interés por la programación nació explorando la lógica detrás de los videojuegos: creando mecánicas por turnos, entendiendo estados y experimentando con estructuras de datos. Aprendí temprano que tanto el loop de un juego en Java como un sistema institucional con miles de consultas comparten un mismo pilar: <em>la claridad en la separación de responsabilidades y el control estricto de excepciones</em>.
-            </p>
-            <p>
-              Como <strong>Full Stack Developer &amp; Mobile Lead en el ISTPET</strong>, desarrollo la app móvil oficial <strong>Mi ISTPET</strong> (React Native en Google Play Store), la modernización del core académico <strong>Gacad</strong> y el sistema de <strong>Recursos Humanos</strong> con contratos y expedientes digitales, utilizando <strong>.NET 8, C#, Angular, Clean Architecture y CQRS</strong>.
-            </p>
-            <p>
-              En paralelo, ejerzo la <strong>docencia técnica superior</strong> en el ISTPET impartiendo cátedras de Programación Orientada a Objetos (POO), algoritmos y control de versiones con Git/GitHub. Para mí, enseñar refuerza la disciplina de escribir código legible, modular y libre de complicaciones innecesarias.
-            </p>
+            <p>{t('about.bio1')}</p>
+            <p>{t('about.bio2')}</p>
+            <p>{t('about.bio3')}</p>
           </div>
 
-          {/* Core Values & Security Sandbox */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div className="editorial-card p-4 rounded-xl space-y-1.5 border border-[var(--theme-border)]">
+          {/* Core Values & Security — one consolidated card instead of two boxes */}
+          <div className="editorial-card p-4 rounded-xl border border-[var(--theme-border)] divide-y divide-[var(--theme-border)] pt-2">
+            <div className="pb-3 space-y-1.5">
               <h4 className="text-[var(--theme-accent)] uppercase font-mono text-xs font-semibold flex items-center gap-1.5">
                 <FiZap className="w-3.5 h-3.5" />
                 <span>{t('about.valuesTitle')}</span>
@@ -90,7 +83,7 @@ export const AboutPage: React.FC = () => {
                 Clean Code, desacoplamiento estricto, pruebas automatizadas y mantenibilidad a largo plazo sin deuda técnica oculta.
               </p>
             </div>
-            <div className="editorial-card p-4 rounded-xl space-y-2 border border-[var(--theme-border)]">
+            <div className="pt-3 space-y-1.5">
               <h4 className="text-red-500 uppercase font-mono text-xs font-semibold flex items-center gap-1.5">
                 <FiShield className="w-3.5 h-3.5" />
                 <span>{t('about.securityTitle')}</span>
@@ -98,16 +91,10 @@ export const AboutPage: React.FC = () => {
               <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
                 DevSecOps, RBAC estricto, validación criptográfica de tokens y pistas de auditoría inmutables.
               </p>
-              <button
-                onClick={() => setVulnGameOpen(true)}
-                className="text-[10px] font-mono uppercase tracking-wider text-red-500 hover:text-red-400 underline decoration-dotted block pt-1"
-              >
-                🎮 Jugar: Detecta la Vulnerabilidad →
-              </button>
             </div>
           </div>
 
-          {/* Passions: Game Dev, Streaming & Music — kept understated on purpose */}
+          {/* Passions: Game Dev, Streaming — kept understated on purpose */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -117,7 +104,14 @@ export const AboutPage: React.FC = () => {
           >
             <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-2">
               <h4 className="text-xs font-mono font-bold text-[var(--theme-ink)] uppercase tracking-wider flex items-center gap-2">
-                🎮 Fuera del Código
+                <motion.span
+                  className="inline-block"
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  🎮
+                </motion.span>
+                <span>Fuera del Código</span>
               </h4>
               <a
                 href={`${import.meta.env.BASE_URL}laboratorio`}
@@ -127,24 +121,10 @@ export const AboutPage: React.FC = () => {
               </a>
             </div>
             <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">
-              Fuera del backend empresarial, disfruto del desarrollo de videojuegos en Java y Unity (como mi proyecto <strong>RPG Journey</strong>), la emulación retro y streaming ocasional en <strong>Twitch</strong>. También soy aficionado al anime y a las bandas sonoras de videojuegos, algo que se nota en el reproductor de radio del sitio.
+              Fuera del backend empresarial, disfruto del desarrollo de videojuegos en Java y Unity (mi proyecto <strong>RPG Journey</strong>), la emulación retro y algo de streaming ocasional en <strong>Twitch</strong>.
             </p>
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {['RPG Engine Dev', 'Twitch Streaming', 'Emulación Retro', 'Pixel Art & Sprites'].map((tag) => (
-                <motion.span
-                  key={tag}
-                  className="badge-accent"
-                  whileHover={{ y: -1, scale: 1.03 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
           </motion.div>
         </motion.div>
-
-        {vulnGameOpen && <VulnHunterGame onClose={() => setVulnGameOpen(false)} />}
 
         {/* Sidebar info */}
         <motion.div
@@ -173,8 +153,8 @@ export const AboutPage: React.FC = () => {
                 <span className="flex items-center gap-1"><FiMapPin className="w-3.5 h-3.5 text-[var(--theme-accent)]" /> Quito, Ecuador</span>
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-[var(--theme-border)]">
-                <span className="text-[var(--theme-ink-muted)]">Zona Horaria:</span>
-                <span>UTC-5</span>
+                <span className="text-[var(--theme-ink-muted)]">Hora local:</span>
+                <LiveClock timeZone="America/Guayaquil" utcLabel="UTC-5" />
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-[var(--theme-border)]">
                 <span className="text-[var(--theme-ink-muted)]">Idiomas:</span>
