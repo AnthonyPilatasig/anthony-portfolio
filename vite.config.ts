@@ -24,6 +24,26 @@ const redirectBaseWithoutSlash = (): Plugin => ({
   },
 });
 
+// SharedArrayBuffer + Atomics (required by the WASM emulator cores at /console) only
+// work when the document is served cross-origin-isolated — but that same isolation
+// blocks third-party embeds elsewhere (Spotify's embed CDN 503s when nested under a
+// COEP: credentialless document). So these headers are scoped to just the /console
+// document request instead of applying them to every response.
+const isolateConsoleRoute = (): Plugin => ({
+  name: 'isolate-console-route',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      const url = req.url ?? '';
+      if (url.startsWith(BASE + 'console')) {
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+        res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      }
+      next();
+    });
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig({
   base: BASE, // Necesario para GitHub Pages
@@ -41,16 +61,13 @@ export default defineConfig({
         "connect-src * data: blob:",
         "worker-src * blob:",
       ].join('; '),
-      // ─── SharedArrayBuffer + Atomics required by Emscripten ───────────
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'credentialless',
-      'Cross-Origin-Resource-Policy': 'cross-origin',
     },
   },
   plugins: [
     react(),
     tailwindcss(),
     redirectBaseWithoutSlash(),
+    isolateConsoleRoute(),
   ],
   resolve: {
     alias: {

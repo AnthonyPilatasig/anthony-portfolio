@@ -7,31 +7,41 @@ interface PixelCassetteProps {
   sideLabel?: string;
   isPlaying: boolean;
   tapeCounter: number;
+  /** Real cover art (playlist/album/track) — spins inside the reel hole once known. */
+  coverArtUrl?: string;
 }
 
-// 8-Bit Pixel Spool with authentic stepped 8-bit rotation
-const PixelSpool8Bit: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
-  <div className="relative w-7 h-7 bg-[#f8fafc] border-2 border-[#0f172a] rounded-sm flex items-center justify-center shadow-xs shrink-0">
+// Reel hole: the real cover art spinning like a mini vinyl once we have one, falling
+// back to the plain 8-bit pixel spool (e.g. before Spotify metadata has loaded).
+const PixelSpool8Bit: React.FC<{ isPlaying: boolean; coverArtUrl?: string }> = ({ isPlaying, coverArtUrl }) => (
+  <div className="relative w-7 h-7 bg-[#f8fafc] border-2 border-[#0f172a] rounded-full overflow-hidden flex items-center justify-center shadow-xs shrink-0">
     <motion.div
       className="w-full h-full relative flex items-center justify-center"
       animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
       transition={
         isPlaying
           ? {
-              duration: 2.2,
+              duration: coverArtUrl ? 3.5 : 2.2,
               repeat: Infinity,
               ease: 'linear',
             }
           : { duration: 0.1 }
       }
-      style={{
-        animationTimingFunction: 'steps(8)',
-      }}
+      style={coverArtUrl ? undefined : { animationTimingFunction: 'steps(8)' }}
     >
-      {/* 4 authentic 8-bit teeth notches */}
-      <div className="absolute w-1 h-full bg-[#0f172a]" />
-      <div className="absolute h-1 w-full bg-[#0f172a]" />
-      <div className="w-2.5 h-2.5 bg-[#0f172a] rounded-[1px] relative z-10" />
+      {coverArtUrl ? (
+        <>
+          <img src={coverArtUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="w-1.5 h-1.5 bg-[#0f172a] rounded-full relative z-10 border border-white/60" />
+        </>
+      ) : (
+        <>
+          {/* 4 authentic 8-bit teeth notches */}
+          <div className="absolute w-1 h-full bg-[#0f172a]" />
+          <div className="absolute h-1 w-full bg-[#0f172a]" />
+          <div className="w-2.5 h-2.5 bg-[#0f172a] rounded-[1px] relative z-10" />
+        </>
+      )}
     </motion.div>
   </div>
 );
@@ -42,6 +52,7 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
   sideLabel,
   isPlaying,
   tapeCounter,
+  coverArtUrl,
 }) => {
   return (
     <div
@@ -96,7 +107,7 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
         {/* ─── TAPE WINDOW WITH 8-BIT ROTATING GEARS ─────────────────── */}
         <div className="h-9 bg-[#090d16] border-2 border-[#1e293b] rounded-[2px] flex items-center justify-between px-2 relative overflow-hidden">
           {/* Left Spool */}
-          <PixelSpool8Bit isPlaying={isPlaying} />
+          <PixelSpool8Bit isPlaying={isPlaying} coverArtUrl={coverArtUrl} />
 
           {/* Center: Tape Ribbon & 8-Bit Equalizer */}
           <div className="flex-1 flex flex-col items-center justify-center px-1.5">
@@ -137,7 +148,7 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
           </div>
 
           {/* Right Spool */}
-          <PixelSpool8Bit isPlaying={isPlaying} />
+          <PixelSpool8Bit isPlaying={isPlaying} coverArtUrl={coverArtUrl} />
         </div>
       </div>
 

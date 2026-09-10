@@ -1,42 +1,3 @@
-export interface CassetteStation {
-  id: string;
-  side: string;
-  name: string;
-  genre: string;
-  streamUrl: string;
-}
-
-export const CASSETTE_STATIONS: CassetteStation[] = [
-  {
-    id: 'lofi-synth',
-    side: 'LADO A',
-    name: 'Nightwave Plaza',
-    genre: 'Lo-Fi & Synthwave',
-    streamUrl: 'https://radio.plaza.one/mp3',
-  },
-  {
-    id: 'anime-vgm',
-    side: 'LADO B',
-    name: 'Gensokyo Radio',
-    genre: 'Anime & Gaming VGM',
-    streamUrl: 'https://stream.gensokyoradio.net/1/',
-  },
-  {
-    id: 'chill-ambient',
-    side: 'LADO C',
-    name: 'Groove Salad',
-    genre: 'Ambient Chill',
-    streamUrl: 'https://ice1.somafm.com/groovesalad-128-mp3',
-  },
-  {
-    id: 'indie-pop',
-    side: 'LADO D',
-    name: 'PopTron',
-    genre: 'Indie & Synth Pop',
-    streamUrl: 'https://ice2.somafm.com/poptron-128-mp3',
-  },
-];
-
 // Anthony's official Spotify Playlist (Liked Songs / Favorites)
 export const ANTHONY_SPOTIFY_PLAYLIST_ID = '4QIxKoffJwBltogNu8cGU8';
 export const ANTHONY_SPOTIFY_PLAYLIST_NAME = 'AnthonWorld';
@@ -44,45 +5,78 @@ export const DEFAULT_SPOTIFY_URL = `https://open.spotify.com/playlist/${ANTHONY_
 
 const STORAGE_KEY = 'anthony_portfolio_spotify_playlist';
 
+export type SpotifyEntityType = 'playlist' | 'album' | 'track';
+
+export interface SpotifyEntity {
+  type: SpotifyEntityType;
+  id: string;
+}
+
+const DEFAULT_ENTITY: SpotifyEntity = { type: 'playlist', id: ANTHONY_SPOTIFY_PLAYLIST_ID };
+
+/**
+ * Parses any Spotify playlist/album/track URL, embed URL, URI, or bare ID into
+ * its entity type + id. Falls back to Anthony's default playlist when the input
+ * doesn't look like anything recognizable.
+ */
+export function parseSpotifyEntity(input: string): SpotifyEntity {
+  const trimmed = input?.trim();
+  if (!trimmed) return DEFAULT_ENTITY;
+
+  if (/^[a-zA-Z0-9]{22}$/.test(trimmed)) {
+    return { type: 'playlist', id: trimmed };
+  }
+
+  const uriMatch = trimmed.match(/^spotify:(playlist|album|track):([a-zA-Z0-9]+)$/);
+  if (uriMatch) {
+    return { type: uriMatch[1] as SpotifyEntityType, id: uriMatch[2] };
+  }
+
+  const urlMatch = trimmed.match(/(playlist|album|track)\/([a-zA-Z0-9]+)/);
+  if (urlMatch) {
+    return { type: urlMatch[1] as SpotifyEntityType, id: urlMatch[2] };
+  }
+
+  return DEFAULT_ENTITY;
+}
+
 /**
  * Extracts a clean embed URL from any Spotify URL or ID
  */
 export function formatSpotifyEmbedUrl(input: string): string {
-  if (!input || !input.trim()) {
-    return `https://open.spotify.com/embed/playlist/${ANTHONY_SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=0`;
+  const { type, id } = parseSpotifyEntity(input);
+  return `https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`;
+}
+
+/**
+ * Converts any Spotify URL or ID into the `spotify:type:id` URI the iFrame API expects.
+ */
+export function toSpotifyUri(input: string): string {
+  const { type, id } = parseSpotifyEntity(input);
+  return `spotify:${type}:${id}`;
+}
+
+export interface SpotifyOEmbedInfo {
+  title: string;
+  thumbnailUrl?: string;
+}
+
+/**
+ * Spotify's public oEmbed endpoint — no API key or OAuth required. Used to show the
+ * real playlist/track name and cover art instead of made-up placeholder text.
+ */
+export async function fetchSpotifyOEmbed(input: string): Promise<SpotifyOEmbedInfo | null> {
+  const { type, id } = parseSpotifyEntity(input);
+  const url = `https://open.spotify.com/${type}/${id}`;
+  try {
+    const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.title) return null;
+    return { title: data.title, thumbnailUrl: data.thumbnail_url };
+  } catch {
+    return null;
   }
-
-  const trimmed = input.trim();
-
-  // If it's just an ID
-  if (/^[a-zA-Z0-9]{22}$/.test(trimmed)) {
-    return `https://open.spotify.com/embed/playlist/${trimmed}?utm_source=generator&theme=0`;
-  }
-
-  // If it's already an embed URL
-  if (trimmed.includes('open.spotify.com/embed/')) {
-    return trimmed;
-  }
-
-  // If it's a playlist URL
-  const playlistMatch = trimmed.match(/playlist\/([a-zA-Z0-9]+)/);
-  if (playlistMatch) {
-    return `https://open.spotify.com/embed/playlist/${playlistMatch[1]}?utm_source=generator&theme=0`;
-  }
-
-  // If it's an album URL
-  const albumMatch = trimmed.match(/album\/([a-zA-Z0-9]+)/);
-  if (albumMatch) {
-    return `https://open.spotify.com/embed/album/${albumMatch[1]}?utm_source=generator&theme=0`;
-  }
-
-  // If it's a track URL
-  const trackMatch = trimmed.match(/track\/([a-zA-Z0-9]+)/);
-  if (trackMatch) {
-    return `https://open.spotify.com/embed/track/${trackMatch[1]}?utm_source=generator&theme=0`;
-  }
-
-  return `https://open.spotify.com/embed/playlist/${ANTHONY_SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=0`;
 }
 
 /**

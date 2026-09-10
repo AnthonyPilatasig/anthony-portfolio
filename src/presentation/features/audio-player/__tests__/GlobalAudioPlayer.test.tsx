@@ -25,13 +25,15 @@ describe('GlobalAudioPlayer (Compact 8-Bit Pixel Cassette connected to Anthony\'
     expect(embed).toContain('open.spotify.com/embed/playlist');
   });
 
-  it('debe iniciar la reproducción en el casete al pulsar en REPRODUCIR', () => {
+  it('no debe fingir que reproduce hasta que el controller real de Spotify esté listo', () => {
     render(<GlobalAudioPlayer />);
 
-    const playBtn = screen.getByText(/REPRODUCIR/i);
+    // El botón espera la conexión real con el iFrame API de Spotify (que no existe
+    // en este entorno de test) en vez de alternar un estado local falso — por eso
+    // arranca deshabilitado mostrando "CARGANDO", nunca "PAUSAR" de inmediato.
+    const playBtn = screen.getByRole('button', { name: /cargando/i });
+    expect(playBtn).toBeDisabled();
     fireEvent.click(playBtn);
-
-    // Debe cambiar a PAUSAR y mantener el reproductor compacto
-    expect(screen.getByText(/PAUSAR/i)).toBeInTheDocument();
+    expect(screen.queryByText(/PAUSAR/i)).not.toBeInTheDocument();
   });
 });
