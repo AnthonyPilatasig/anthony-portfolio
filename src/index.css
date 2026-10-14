@@ -373,3 +373,98 @@ a.glass-card:hover,
   a.glass-card:hover,
   .glass-card.group:hover { transform: none; }
 }
+
+/* ─── AP-Deck OS (console home) ──────────────────────── */
+/* Boot logo ring: draws itself once. */
+@keyframes console-ring-draw {
+  from { stroke-dashoffset: 302; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.console-boot-ring {
+  stroke-dasharray: 302;
+  animation: console-ring-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Focused cartridge: soft breathing glow in the game's accent color. */
+@keyframes console-focus-glow {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+.console-focus-ring {
+  animation: console-focus-glow 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .console-boot-ring { animation-duration: 0.01s; }
+  .console-focus-ring { animation: none; }
+}
+
+/* ─── AP-Deck OS themes ───────────────────────────────── */
+/* "Ondas": waves slide sideways forever (transform only). */
+@keyframes ondas-flow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ondas-wave { animation: ondas-flow 18s linear infinite; }
+
+/* "Pixel 8-bit": dot-matrix LCD grid over the screen. */
+.pixel-lcd::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(15, 56, 15, 0.07) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(15, 56, 15, 0.07) 0 1px, transparent 1px 3px);
+}
+/* Covers rendered in the 4-shade green palette, chunky pixels. */
+.pixel-cover {
+  image-rendering: pixelated;
+  filter: grayscale(1) sepia(1) hue-rotate(40deg) saturate(2.4) contrast(1.15) brightness(0.85);
+}
+@keyframes pixel-blink { 50% { opacity: 0; } }
+.pixel-blink { animation: pixel-blink 0.9s steps(1) infinite; }
+
+/* Theme switch: old-TV power off/on (screen collapses to a line, then reopens). */
+@keyframes crt-off {
+  0%   { transform: scale(1, 1); filter: brightness(1); }
+  60%  { transform: scale(1, 0.006); filter: brightness(3); }
+  100% { transform: scale(0, 0.006); filter: brightness(5); }
+}
+@keyframes crt-on {
+  0%   { transform: scale(0, 0.006); filter: brightness(5); }
+  40%  { transform: scale(1, 0.006); filter: brightness(3); }
+  100% { transform: scale(1, 1); filter: brightness(1); }
+}
+.crt-off { animation: crt-off 0.32s ease-in forwards; }
+.crt-on  { animation: crt-on 0.38s ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ondas-wave, .pixel-blink { animation: none; }
+  .crt-off, .crt-on { animation-duration: 0.01s; }
+}
+
+/* "AP-Deck" aurora: slow drifting lights (transform only, desktop only). */
+@keyframes deck-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(6%, 4%, 0) scale(1.1); }
+  100% { transform: translate3d(-4%, 6%, 0) scale(0.96); }
+}
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .deck-aurora-blob { animation: deck-drift 22s ease-in-out infinite alternate; will-change: transform; }
+  .deck-aurora-blob--slow { animation-duration: 30s; }
+  .deck-aurora-blob--reverse { animation-direction: alternate-reverse; animation-duration: 26s; }
+}
+
+/* "Canales" channel preview: gentle breathing cover (CSS, compositor-only). */
+@keyframes canales-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.03); }
+}
+.canales-breathe { animation: canales-breathe 3s ease-in-out infinite; }
+.ondas-wave { will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  .canales-breathe { animation: none; }
+}
