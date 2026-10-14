@@ -65,7 +65,7 @@
       },
       "native": {
         "title": "Mini-juegos hechos desde cero",
-        "desc": "Un combate por turnos, Snake y 2048 programados en TypeScript. Sirven como ejemplo en clase de estados, bucles de juego y eventos de teclado o mando.",
+        "desc": "Neon Breaker (rompe bloques con potenciadores y combos), Snake y 2048, programados en TypeScript. Sirven como ejemplo en clase de física, estados, bucles de juego y eventos de teclado o mando.",
         "tags": [
           "TypeScript",
           "Web Audio",

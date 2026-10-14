@@ -50,47 +50,54 @@ export const GAME_COVERS = {
   <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#FDA4AF" text-anchor="middle" letter-spacing="3">INTÉRPRETE VIRTUAL</text>
 </svg>`)}`,
 
-  cyberEncounter: `data:image/svg+xml;utf8,${encodeURIComponent(`
+  neonBreaker: `data:image/svg+xml;utf8,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg_cyber" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#083344" />
-      <stop offset="50%" stop-color="#164E63" />
-      <stop offset="100%" stop-color="#042F2E" />
+    <linearGradient id="bg_neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E1065" />
+      <stop offset="55%" stop-color="#0B0620" />
+      <stop offset="100%" stop-color="#03020A" />
     </linearGradient>
-    <radialGradient id="cyberglow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.6" />
-      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0" />
+    <linearGradient id="paddle_neon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#A78BFA" />
+    </linearGradient>
+    <radialGradient id="ball_glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#F472B6" stop-opacity="0" />
     </radialGradient>
   </defs>
-  <rect width="400" height="400" fill="url(#bg_cyber)" />
-  <circle cx="200" cy="180" r="150" fill="url(#cyberglow)" />
-  
-  <!-- Monolith Boss Hexagon -->
-  <g transform="translate(100, 70)">
-    <polygon points="100,10 180,50 180,150 100,190 20,150 20,50" fill="#0E7490" stroke="#22D3EE" stroke-width="4" />
-    <polygon points="100,30 160,65 160,135 100,170 40,135 40,65" fill="#155E75" stroke="#67E8F9" stroke-width="2" />
-    
-    <!-- Glowing Boss Core Eye -->
-    <circle cx="100" cy="100" r="28" fill="#042F2E" stroke="#A5F3FC" stroke-width="3" />
-    <circle cx="100" cy="100" r="12" fill="#22D3EE" />
-    <circle cx="100" cy="100" r="4" fill="#FFFFFF" />
-    
-    <line x1="20" y1="210" x2="60" y2="160" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" />
-    <line x1="180" y1="210" x2="140" y2="160" stroke="#F43F5E" stroke-width="4" stroke-linecap="round" />
+  <rect width="400" height="400" fill="url(#bg_neon)" />
+  <g stroke="#A855F7" stroke-opacity="0.18" stroke-width="1">
+    <line x1="200" y1="230" x2="-40" y2="360" /><line x1="200" y1="230" x2="80" y2="360" />
+    <line x1="200" y1="230" x2="200" y2="360" /><line x1="200" y1="230" x2="320" y2="360" />
+    <line x1="200" y1="230" x2="440" y2="360" />
+    <line x1="0" y1="262" x2="400" y2="262" /><line x1="0" y1="296" x2="400" y2="296" /><line x1="0" y1="330" x2="400" y2="330" />
   </g>
-  
-  <!-- JRPG Title Banner -->
-  <rect x="40" y="270" width="320" height="70" rx="14" fill="#082F49" stroke="#38BDF8" stroke-width="2" />
-  <text x="200" y="298" font-family="'Inter', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">CYBER-ENCOUNTER</text>
-  <text x="200" y="322" font-family="'Inter', sans-serif" font-weight="700" font-size="11" fill="#38BDF8" text-anchor="middle" letter-spacing="3">TACTICAL ARCH BOSS</text>
-  
-  <rect x="0" y="360" width="400" height="40" fill="#0B0F19" />
-  <rect x="0" y="360" width="8" height="40" fill="#06B6D4" />
-  <rect x="392" y="360" width="8" height="40" fill="#3B82F6" />
-  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#67E8F9" text-anchor="middle" letter-spacing="3">CLEAN ARCH BATTLE</text>
+  <g>
+    <rect x="40" y="56" width="62" height="20" rx="4" fill="#F472B6" /><rect x="110" y="56" width="62" height="20" rx="4" fill="#F472B6" />
+    <rect x="180" y="56" width="62" height="20" rx="4" fill="#C084FC" /><rect x="250" y="56" width="62" height="20" rx="4" fill="#C084FC" />
+    <rect x="320" y="56" width="40" height="20" rx="4" fill="#818CF8" />
+    <rect x="40" y="84" width="62" height="20" rx="4" fill="#818CF8" /><rect x="180" y="84" width="62" height="20" rx="4" fill="#38BDF8" />
+    <rect x="250" y="84" width="62" height="20" rx="4" fill="#38BDF8" /><rect x="320" y="84" width="40" height="20" rx="4" fill="#22D3EE" />
+    <rect x="110" y="112" width="62" height="20" rx="4" fill="#22D3EE" /><rect x="250" y="112" width="62" height="20" rx="4" fill="#34D399" />
+  </g>
+  <g fill="#F472B6">
+    <rect x="128" y="96" width="5" height="5" /><rect x="140" y="88" width="4" height="4" /><rect x="118" y="86" width="3" height="3" />
+  </g>
+  <circle cx="186" cy="176" r="30" fill="url(#ball_glow)" />
+  <circle cx="160" cy="196" r="5" fill="#F472B6" fill-opacity="0.35" />
+  <circle cx="172" cy="187" r="7" fill="#F472B6" fill-opacity="0.55" />
+  <circle cx="186" cy="176" r="10" fill="#FFFFFF" />
+  <rect x="120" y="226" width="160" height="16" rx="8" fill="#38BDF8" fill-opacity="0.25" />
+  <rect x="128" y="229" width="144" height="11" rx="5.5" fill="url(#paddle_neon)" />
+  <text x="200" y="306" font-family="'Inter', sans-serif" font-weight="900" font-size="38" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">NEON</text>
+  <text x="200" y="338" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#F0ABFC" text-anchor="middle" letter-spacing="10">BREAKER</text>
+  <rect x="0" y="360" width="400" height="40" fill="#0B0620" />
+  <rect x="0" y="360" width="8" height="40" fill="#F472B6" />
+  <rect x="392" y="360" width="8" height="40" fill="#38BDF8" />
+  <text x="200" y="385" font-family="'Inter', sans-serif" font-weight="800" font-size="12" fill="#F0ABFC" text-anchor="middle" letter-spacing="3">ARCADE · NIVELES INFINITOS</text>
 </svg>`)}`,
-
   snake8bit: `data:image/svg+xml;utf8,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
   <defs>

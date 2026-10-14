@@ -65,7 +65,7 @@
       },
       "native": {
         "title": "Mini-games built from scratch",
-        "desc": "A turn-based battle, Snake and 2048 written in TypeScript. I use them in class to explain state, game loops and keyboard or gamepad events.",
+        "desc": "Neon Breaker (brick breaker with power-ups and combos), Snake and 2048, written in TypeScript. I use them in class to explain physics, state, game loops and keyboard or gamepad events.",
         "tags": [
           "TypeScript",
           "Web Audio",

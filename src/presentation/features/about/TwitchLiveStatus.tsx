@@ -8,7 +8,7 @@ interface TwitchLiveStatusProps {
 }
 
 export const TwitchLiveStatus: React.FC<TwitchLiveStatusProps> = ({
-  channel = 'anthonydavidpm'
+  channel = 'anthonworld'
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -27,8 +27,7 @@ export const TwitchLiveStatus: React.FC<TwitchLiveStatusProps> = ({
                 twitch.tv/{channel}
               </span>
               <span className="flex items-center gap-1 text-[9px] font-mono font-bold uppercase text-[#9146FF] bg-[#9146FF]/10 px-2 py-0.5 rounded-full border border-[#9146FF]/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#9146FF] animate-ping" />
-                Live Hub
+                Canal de Twitch
               </span>
             </div>
             <p className="text-[11px] text-[var(--theme-ink-muted)] font-light mt-0.5">

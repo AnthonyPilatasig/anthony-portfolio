@@ -16,7 +16,7 @@ export const portfolioData: IPortfolioData = {
     phone: "+593 98 358 8715",
     github: "https://github.com/AnthonyPilatasig",
     linkedin: "https://linkedin.com/in/anthony-pilatasig",
-    twitch: "https://twitch.tv/anthony_pilatasig",
+    twitch: "https://www.twitch.tv/anthonworld",
     status: "Abierto a proyectos, clases y consultorías",
     avatar: asset("assets/anthony_profile.webp"),
     avatarReal: asset("assets/anthony_real.webp"),

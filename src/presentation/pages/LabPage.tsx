@@ -18,7 +18,7 @@ const openConsole = () => window.location.assign(`${import.meta.env.BASE_URL}con
 const PREVIEW_TILES = [
   { color: '#F43F5E', label: 'RPG' },
   { color: '#EF4444', label: 'WASM' },
-  { color: '#06B6D4', label: 'Cyber' },
+  { color: '#D946EF', label: 'Breaker' },
   { color: '#10B981', label: 'Snake' },
   { color: '#F59E0B', label: '2048' },
 ];
