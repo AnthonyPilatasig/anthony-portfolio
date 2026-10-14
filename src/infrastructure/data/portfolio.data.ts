@@ -7,17 +7,17 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 export const portfolioData: IPortfolioData = {
   personal: {
     name: "Anthony David Pilatasig Macas",
-    title: "Full Stack Developer & Mobile Lead",
-    subtitle: "Especializado en .NET 8, Angular, React Native y bases de datos relacionales",
-    bio: "Desarrollador Full Stack con más de tres años de experiencia construyendo aplicaciones web, móviles y de escritorio sobre .NET (C#), Angular y React Native. En el ISTPET lidero el desarrollo de la app oficial «Mi ISTPET» y la modernización de los sistemas académicos y de recursos humanos de la institución. Combino ese trabajo con la docencia técnica y, en el tiempo libre, con proyectos personales de lógica y videojuegos.",
-    tagline: "Software institucional pensado para durar, y lógica de videojuegos por gusto propio en el tiempo libre.",
+    title: "Desarrollador Full Stack & Docente",
+    subtitle: "Angular, React, Ionic y .NET — del análisis a la base de datos",
+    bio: "Desarrollador Full Stack en el equipo de software del ISTPET: paso por análisis, base de datos, backend y frontend según lo que necesite el proyecto. Ahí construí la app «Mi ISTPET», publicada en Google Play, y participo en los sistemas académicos, de titulación, bienestar y talento humano. También soy docente de la carrera de Desarrollo de Software, y sigo experimentando con tecnologías nuevas en proyectos personales.",
+    tagline: "Construyo software que la gente usa a diario, y enseño a construirlo con casos reales.",
     location: "Quito, Ecuador (UTC-5)",
     email: "antpila3848@gmail.com",
     phone: "+593 98 358 8715",
     github: "https://github.com/AnthonyPilatasig",
     linkedin: "https://linkedin.com/in/anthony-pilatasig",
     twitch: "https://twitch.tv/anthony_pilatasig",
-    status: "Disponible para Proyectos & Desafíos Full Stack",
+    status: "Abierto a proyectos, clases y consultorías",
     avatar: asset("assets/anthony_profile.webp"),
     avatarReal: asset("assets/anthony_real.webp"),
   },
@@ -39,28 +39,28 @@ export const portfolioData: IPortfolioData = {
     },
     {
       number: "04",
-      title: "Aprender y Compartir en Comunidad",
-      description: "Dar clases de programación me obliga a volver a los fundamentos y a escribir código legible, pensado para que cualquier compañero de equipo pueda entenderlo."
+      title: "Aprender siempre y compartirlo",
+      description: "Experimento con tecnologías nuevas y lo llevo al aula. Enseñar me obliga a volver a los fundamentos y a escribir código que cualquier compañero pueda entender."
     }
   ],
   teachingHighlights: [
     {
-      subject: "Paradigmas & Programación Orientada a Objetos",
-      studentsCount: "Cátedra ISTPET",
-      description: "Clases prácticas sobre modelado de clases, herencia, polimorfismo, interfaces y diseño desacoplado en Java y C#.",
-      focus: ["POO", "Polimorfismo", "Interfaces", "Clean Code"]
+      subject: "Fundamentos y lógica de programación",
+      studentsCount: "Primeros niveles",
+      description: "Algoritmos, estructuras de control y resolución de problemas, explicados con ejemplos del mundo real antes de escribir código.",
+      focus: ["Lógica", "Algoritmos", "Java"]
     },
     {
-      subject: "Algoritmos & Estructuras de Datos",
-      studentsCount: "Laboratorios Prácticos",
-      description: "Ejercicios de lógica computacional, matrices bidimensionales, recursividad y estructuras de datos aplicadas.",
-      focus: ["Matrices 2D", "Recursión", "Lógica Algorítmica"]
+      subject: "POO y sistemas completos",
+      studentsCount: "Niveles intermedios y avanzados",
+      description: "Desde clases e interfaces hasta sistemas con frontend, backend y base de datos, usando casos reales como código heredado y trabajo en equipo.",
+      focus: ["POO", "Frontend", "Backend", "Bases de datos"]
     },
     {
-      subject: "Buenas Prácticas & Repositorios GitHub",
-      studentsCount: "Mentoría de Proyectos",
-      description: "Guía a estudiantes en el uso de control de versiones con Git, trabajo colaborativo y estructura limpia de proyectos.",
-      focus: ["Git / GitHub", "Code Review", "Estructura Modular"]
+      subject: "Proyectos creativos en GitHub",
+      studentsCount: "Evaluación",
+      description: "Proyectos pequeños pensados para que cada estudiante proponga sus propias ideas, apoyándose en la IA y colaborando en repositorios de GitHub.",
+      focus: ["Git / GitHub", "Trabajo en equipo", "IA como apoyo"]
     }
   ],
   certifications: [
@@ -78,10 +78,10 @@ export const portfolioData: IPortfolioData = {
   experience: [
     {
       id: 1,
-      role: "Desarrollador Full Stack & Mobile Lead",
+      role: "Desarrollador Full Stack",
       company: "Instituto Superior Tecnológico Mayor Pedro Traversari (ISTPET)",
       period: "Mayo 2024 - Presente",
-      description: "Lidero el desarrollo de las aplicaciones institucionales clave, incluyendo la app móvil oficial y la modernización de los sistemas core de la institución.",
+      description: "Formo parte del equipo de desarrollo de software: trabajo en análisis, base de datos, backend y frontend de las aplicaciones institucionales, incluida la app móvil oficial.",
       achievements: [
         "Desarrollé y publiqué en Google Play Store la app móvil «Mi ISTPET» (React Native Expo | .NET 8), que digitalizó el carnet estudiantil con código QR y consultas en vivo.",
         "Modernicé el ERP Académico Institucional (Gacad) con C#, Angular y Clean Architecture/CQRS sobre bases de datos heredadas, para matrículas y distributivos docentes.",
@@ -93,14 +93,14 @@ export const portfolioData: IPortfolioData = {
     },
     {
       id: 2,
-      role: "Docente Técnico Superior — Área de Desarrollo de Software",
+      role: "Docente — Carrera de Desarrollo de Software",
       company: "Instituto Superior Tecnológico Mayor Pedro Traversari",
-      period: "Octubre 2025 - Presente",
-      description: "Imparto cátedras prácticas sobre algoritmos, programación orientada a objetos y evaluación de proyectos de software en Git y GitHub.",
+      period: "2025 - Presente",
+      description: "Docente colaborador en la carrera de Desarrollo de Software. Las materias varían por período: desde fundamentos y lógica hasta sistemas completos con frontend, backend y base de datos.",
       achievements: [
-        "Instrucción práctica sobre diseño e implementación de paradigmas algorítmicos y POO.",
-        "Fomento de buenas prácticas de ingeniería evaluando proyectos y repositorios en GitHub.",
-        "Mentoría técnica para proyectos estudiantiles de fin de ciclo."
+        "Explico cada tema con ejemplos del mundo real y casos del trabajo diario (equipos, código heredado).",
+        "Evalúo con proyectos pequeños y creativos que los estudiantes desarrollan en equipo en GitHub, con la IA como apoyo.",
+        "Acompaño proyectos de fin de ciclo; los materiales de clase se comparten en el EVA institucional."
       ],
       technologies: ["POO", "Java", "C#", "Algoritmos", "Git / GitHub", "Clean Code"]
     },
@@ -155,15 +155,16 @@ export const portfolioData: IPortfolioData = {
       id: 1,
       title: "Mi ISTPET — App Móvil Estudiantil (Google Play)",
       client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollé la app móvil y su API en .NET, y la publiqué en Google Play.",
       category: "mobile",
       description: "Aplicación móvil oficial publicada en Google Play Store. Digitalizó el carnet estudiantil con código QR dinámico e incluye horarios, notas y notificaciones push en tiempo real.",
       longDescription: "Plataforma académica móvil oficial construida en React Native Expo (New Architecture - Fabric) y backend en .NET 8 con Clean Architecture y CQRS. Da a la comunidad estudiantil y docente acceso a su carnet digital seguro mediante firmas criptográficas HMAC-SHA256 offline, calificaciones y cronogramas.",
       problem: "Uso de credenciales de PVC propensas a falsificación/deterioro, gasto recurrente en impresión física y falta de un canal móvil oficial para consultar horarios y calificaciones en vivo con validación offline en accesos de portería.",
       decision: "Desarrollé la aplicación con Expo SDK 54 / React Native y .NET 8 Web API. Diseñé un algoritmo de carnet con token QR temporal firmado con HMAC-SHA256, permitiendo validación en portería sin depender de conectividad constante a internet.",
       tradeoff: "Implementar validación offline requirió sincronización de llaves simétricas y timestamps con ventana de tolerancia en el escáner de portería.",
-      impact: "Publicada en Google Play Store; reemplazó el carnet físico de PVC para la comunidad estudiantil y redujo el gasto recurrente en impresión.",
+      impact: "Publicada en Google Play Store como canal móvil oficial: el carnet digital es una alternativa al carnet físico de PVC y las notas y horarios se consultan desde el teléfono.",
       architectureOverview: "Clean Architecture en .NET 8 con CQRS (MediatR), autenticación JWT, sincronización local y cifrado de llaves en SecureStore.",
-      securityAndCompliance: "Firmas criptográficas HMAC-SHA256 para códigos QR que expiran periódicamente, dificultando el uso de capturas de pantalla estáticas. Cumple con la LOPDP y las políticas de Google Play Store.",
+      securityAndCompliance: "Firmas criptográficas HMAC-SHA256 para códigos QR que expiran periódicamente, dificultando el uso de capturas de pantalla estáticas. Diseñado considerando la LOPDP y las políticas de Google Play.",
       keyFeatures: [
         "Carnet estudiantil digital con código QR dinámico y validación biométrica/PIN",
         "Consulta de récord de calificaciones parciales y distributivo de materias en vivo",
@@ -172,18 +173,16 @@ export const portfolioData: IPortfolioData = {
       ],
       ndaDisclaimer: "Documentación basada exclusivamente en arquitectura pública y tecnologías implementadas. No se exponen credenciales ni datos privados de estudiantes.",
       metrics: ["Google Play Store", "Carnet QR Offline", ".NET 8 + Expo", "Carnet Digital"],
-      image: asset("assets/projects/mi_istpet_home_capture.webp"),
+      image: asset("assets/projects/evidencias/mi_home.webp"),
       technologies: ["React Native", "Expo SDK 54", "TypeScript", ".NET 8", "C#", "CQRS", "MediatR", "HMAC-SHA256", "Google Play"],
       architectureBadges: ["Mobile App", "Google Play Store", "QR Criptográfico", "Clean Architecture", "CQRS"],
-      liveUrl: "https://play.google.com/store/apps",
+      liveUrl: "https://play.google.com/store/apps/details?id=com.istpet.miistpet",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/mi_istpet_home_capture.webp"), title: "Pantalla Principal de la App Móvil (React Native)", caption: "Módulos de portal estudiantil, admisiones, cronograma y novedades de Facebook" },
-        { url: asset("assets/projects/mi_istpet_app_login.webp"), title: "Acceso y Autenticación Móvil", caption: "Formulario de inicio de sesión institucional en React Native Expo" },
-        { url: asset("assets/projects/mi_istpet_carnet_capture.webp"), title: "Carnet Estudiantil Digital", caption: "Credencial digital oficial con validación criptográfica" },
-        { url: asset("assets/projects/mi_istpet_calificaciones_capture.webp"), title: "Consulta de Calificaciones en Vivo", caption: "Récord académico sincronizado con el backend .NET 8" },
-        { url: asset("assets/projects/mi_istpet_horario_capture.webp"), title: "Horario y Cronograma de Clases", caption: "Visualización de bloques horarios por carrera y paralelo" }
+        { url: asset("assets/projects/evidencias/mi_home.webp"), title: "Inicio del estudiante", caption: "Captura con datos ficticios: saludo, período vigente y avance en la carrera" },
+        { url: asset("assets/projects/evidencias/mi_calificaciones.webp"), title: "Calificaciones por nivel", caption: "Captura con datos ficticios: notas por asignatura y promedio general" },
+        { url: asset("assets/projects/mi_istpet_app_login.webp"), title: "Inicio de sesión", caption: "Acceso con cédula o usuario institucional" }
       ],
       architectureFlow: {
         title: "Flujo de Autenticación & Validación de Carnet QR Offline",
@@ -202,64 +201,40 @@ export const portfolioData: IPortfolioData = {
           { from: "mediatr", to: "qrEngine", label: "Firmar Payload" },
           { from: "mediatr", to: "db", label: "Consultar Alumno" }
         ]
-      },
-      codeSnippet: {
-        title: "Generación de Token QR con Firma HMAC-SHA256 (C# .NET 8)",
-        language: "csharp",
-        code: `public class QrSecurityService : IQrSecurityService
-{
-    private readonly byte[] _secretKey;
-
-    public QrSecurityService(IConfiguration config)
-    {
-        _secretKey = Encoding.UTF8.GetBytes(config["Security:QrSecretKey"]!);
-    }
-
-    public string GenerateOfflineQrPayload(int studentId, string cedula)
-    {
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var rawData = $"{studentId}:{cedula}:{timestamp}";
-
-        using var hmac = new HMACSHA256(_secretKey);
-        var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(rawData)));
-
-        // Payload serializado: datos del estudiante + timestamp de expiración + firma HMAC
-        return $"{rawData}:{hash}";
-    }
-}`,
-        explanation: "Permite que los lectores de portería verifiquen la autenticidad del carnet de forma offline contrastando el hash con la llave pública institucional."
       }
     },
     {
       id: 2,
       title: "Sistema de Titulación ISTPET — Gestión de Defensas & Actas",
       client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollador Full Stack del equipo: backend en .NET y frontend en Angular.",
       category: "web",
-      description: "Plataforma integral para postulaciones de grado, asignación de tribunales docentes, calendario de defensas y actas con Angular 22 y .NET 8.",
-      longDescription: "Sistema core desarrollado bajo Clean Architecture estricta en .NET 8 y frontend desacoplado en Angular 22 (Zoneless con Signals y arquitectura Hexagonal por Ports & Adapters). Controla todo el ciclo de graduación, desde la validación de prerrequisitos académicos hasta la calificación y emisión del acta de grado.",
+      description: "Plataforma para postulaciones de grado, asignación de tribunales docentes, calendario de defensas y actas con Angular 22 y .NET 8.",
+      longDescription: "Sistema desarrollado con Clean Architecture en .NET 8 y frontend desacoplado en Angular 22 (Zoneless con Signals y arquitectura Hexagonal por Ports & Adapters). Controla todo el ciclo de graduación, desde la validación de prerrequisitos académicos hasta la calificación y emisión del acta de grado.",
       problem: "Proceso manual de asignación de tribunales con frecuentes conflictos de horarios de docentes, demoras en la validación de requisitos y falta de trazabilidad en las actas de defensa de grado.",
       decision: "Implementé una arquitectura limpia con separación estricta de capas: Backend con CQRS, MediatR, FluentValidation y autorización basada en permisos `[HasPermission]`; Frontend con stores reactivos basados en Signals y puertos desacoplados de HTTP.",
       tradeoff: "Curva inicial de implementación de arquitectura hexagonal en frontend, compensada por tests unitarios aislados y bajo acoplamiento entre capas.",
-      impact: "Redujo de forma notable el tiempo de calendarización de tribunales de grado y automatizó la emisión de actas de titulación.",
+      impact: "Centraliza las postulaciones de grado en una sola bandeja, ayuda a asignar tribunales sin cruces de horario y genera las actas automáticamente.",
       architectureOverview: "Clean Architecture en backend (.NET 8 WebApi, Application, Domain, Infrastructure con Pomelo MySQL) y Hexagonal en Frontend (Domain Ports, Application Signal Stores, Infrastructure HTTP Adapters, Presentation OnPush).",
       securityAndCompliance: "Autorización RBAC granular a nivel de permisos específicos (ej. `titulacion:tribunal:asignar`), validación de cédulas ecuatorianas y hashing de contraseñas.",
       keyFeatures: [
         "Bandeja de postulantes con control de estados (Revisión, Asignación Tribunal, Programado, Calificado)",
         "Motor de asignación de docentes a tribunales con detección automática de cruces de horario",
-        "Generador de actas de grado en PDF y registro inmutable de notas de sustentación",
-        "Frontend Angular 22 zoneless con signals para máxima reactividad y fluidez"
+        "Generador de actas de grado en PDF y registro de notas de sustentación",
+        "Frontend en Angular 22 sin Zone.js, con estado basado en Signals"
       ],
       ndaDisclaimer: "Estructura arquitectónica y patrones presentados respetando la privacidad institucional y los estándares de seguridad.",
       metrics: ["Angular 22 Zoneless", ".NET 8 Clean Arch", "CQRS & MediatR", "RBAC Granular"],
-      image: asset("assets/projects/titulacion_real_capture.webp"),
+      image: asset("assets/projects/evidencias/tit_dashboard.webp"),
       technologies: ["Angular 22", "Signals", "TypeScript", ".NET 8", "C#", "Clean Architecture", "CQRS", "MediatR", "FluentValidation", "MySQL 5.7"],
       architectureBadges: ["Clean Architecture", "Hexagonal Frontend", "CQRS Pattern", "Signals Reactive"],
       liveUrl: "#",
       githubUrl: "https://github.com/JosephBano/titulacion-istpet",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/titulacion_real_capture.webp"), title: "Panel Institucional de Gobernanza y Control (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig en el Sistema de Titulación en Angular 22" },
-        { url: asset("assets/projects/titulacion_alumnos_capture.webp"), title: "Bandeja de Postulaciones & Estudiantes", caption: "Gestión de alumnos en proceso de titulación, requisitos maestros y cortes" }
+        { url: asset("assets/projects/evidencias/tit_dashboard.webp"), title: "Vista general del proceso", caption: "Captura con datos ficticios: totales de postulaciones, aprobadas y en revisión" },
+        { url: asset("assets/projects/evidencias/tit_bandeja.webp"), title: "Bandeja de postulaciones", caption: "Captura con datos ficticios: estado y requisitos cumplidos por estudiante" },
+        { url: asset("assets/projects/evidencias/tit_alumnos.webp"), title: "Estudiantes aptos para titulación", caption: "Captura con datos ficticios: filtro por modalidad, período y estado" }
       ],
       architectureFlow: {
         title: "Arquitectura Hexagonal & Clean Architecture (.NET 8 + Angular 22)",
@@ -278,45 +253,22 @@ export const portfolioData: IPortfolioData = {
           { from: "api", to: "cqrs", label: "Send(Command)" },
           { from: "cqrs", to: "db", label: "Persiste Estado" }
         ]
-      },
-      codeSnippet: {
-        title: "Controlador REST con Autorización Granular [HasPermission] (.NET 8)",
-        language: "csharp",
-        code: `[ApiController]
-[Route("api/v1/[controller]")]
-[Authorize]
-public class TitulacionController : ControllerBase
-{
-    private readonly ISender _mediator;
-
-    public TitulacionController(ISender mediator) => _mediator = mediator;
-
-    [HttpPost("asignar-tribunal")]
-    [HasPermission("titulacion:tribunal:asignar")]
-    public async Task<IActionResult> AsignarTribunal([FromBody] AsignarTribunalCommand cmd)
-    {
-        var result = await _mediator.Send(cmd);
-        return result.IsSuccess 
-            ? Ok(new ApiResponse<int>(result.Value, "Tribunal asignado exitosamente")) 
-            : BadRequest(new ApiErrorResponse(result.Error));
-    }
-}`,
-        explanation: "Garantiza que únicamente los directores de carrera o coordinadores con el permiso granular explícito puedan estructurar las ternas de sustentación."
       }
     },
     {
       id: 3,
       title: "Bienestar Institucional — Sistema de Becas & Convenios",
       client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollador Full Stack del equipo: backend en .NET, frontend en Angular y generación de documentos.",
       category: "web",
       description: "Plataforma para digitalizar becas, convenios de pago y seguimiento académico con Angular 21, .NET 8 y generación de documentos Word/PDF.",
       longDescription: "Sistema web institucional desarrollado en Angular 21 (Signals, standalone components) y ASP.NET Core 8 Web API sobre MySQL 5.7 (SIGAFI). Automatiza la evaluación baremada de solicitudes de beca, convenios de pago por cuotas y generación dinámica de resoluciones oficiales con MiniWord y QuestPDF.",
-      problem: "Evaluación manual de cientos de postulaciones a becas con expedientes físicos, retrasos en la redacción de resoluciones oficiales y falta de seguimiento a convenios de pago.",
+      problem: "Evaluación manual de postulaciones a becas con expedientes físicos, retrasos en la redacción de resoluciones oficiales y falta de seguimiento a convenios de pago.",
       decision: "Diseñé un motor algorítmico de baremación socioeconómica (ponderación 60% vulnerabilidad / 40% mérito académico) con generación automatizada de documentos `.docx` y `.pdf` a partir de plantillas institucionales.",
       tradeoff: "Generar documentos en el servidor con MiniWord y QuestPDF en lugar de hacerlo en el cliente para garantizar la inmutabilidad de sellos y formatos legales.",
-      impact: "Redujo considerablemente el tiempo de tramitación de becas y permitió generar las resoluciones oficiales en un clic en lugar de redactarlas a mano.",
+      impact: "El trámite de becas pasa de expedientes físicos a un flujo digital, y las resoluciones oficiales se generan desde plantillas en lugar de redactarse a mano.",
       architectureOverview: "Arquitectura por servicios e interfaces en .NET 8, middleware de auditoría de transacciones, integración directa con `sigafi_esContext` y frontend reactivo con Angular Signals.",
-      securityAndCompliance: "Control de acceso basado en roles (Bienestar, Secretaría, Rectorado), auditoría de cambios en resoluciones y cumplimiento de la LOPDP para datos socioeconómicos.",
+      securityAndCompliance: "Control de acceso basado en roles (Bienestar, Secretaría, Rectorado), auditoría de cambios en resoluciones y tratamiento de datos socioeconómicos considerando la LOPDP.",
       keyFeatures: [
         "Motor de puntuación algorítmica para asignación transparente de becas",
         "Generador de resoluciones oficiales en `.docx` con MiniWord desde plantillas",
@@ -325,15 +277,17 @@ public class TitulacionController : ControllerBase
       ],
       ndaDisclaimer: "Datos socioeconómicos de alumnos protegidos. La documentación detalla exclusivamente los componentes técnicos y la arquitectura de software.",
       metrics: ["Angular 21 Signals", ".NET 8 Web API", "MiniWord + QuestPDF", "Baremación Auto"],
-      image: asset("assets/projects/bienestar_real_capture.webp"),
+      image: asset("assets/projects/evidencias/bien_catalogo.webp"),
       technologies: ["Angular 21", "Signals", "TypeScript", ".NET 8", "C#", "Entity Framework Core", "Pomelo MySQL", "MiniWord", "QuestPDF", "MailKit"],
       architectureBadges: ["Document Automation", "Algorithmic Scoring", "Angular Signals", ".NET 8 Web API"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/bienestar_real_capture.webp"), title: "Panel de Control de Bienestar Institucional (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de becas, usuarios activos y solicitudes" },
-        { url: asset("assets/projects/bienestar_gestor_capture.webp"), title: "Módulo Gestor & Baremación de Becas", caption: "Evaluación baremada de solicitudes socioeconómicas y convenios de pago" }
+        { url: asset("assets/projects/evidencias/bien_catalogo.webp"), title: "Catálogos de becas", caption: "Captura con datos ficticios: motivos, porcentajes y requisitos asociados" },
+        { url: asset("assets/projects/evidencias/bien_convocatorias.webp"), title: "Cronograma de la convocatoria", caption: "Captura con datos ficticios: etapas del proceso con sus fechas" },
+        { url: asset("assets/projects/evidencias/bien_solicitudes.webp"), title: "Solicitudes de becas", caption: "Captura con datos ficticios: bandeja filtrable por estado" },
+        { url: asset("assets/projects/evidencias/bien_jurado.webp"), title: "Revisión del tribunal", caption: "Captura con datos ficticios: votos emitidos y avance de cada expediente" }
       ],
       architectureFlow: {
         title: "Pipeline de Baremación & Generación de Documentos Oficiales",
@@ -352,45 +306,20 @@ public class TitulacionController : ControllerBase
           { from: "scoring", to: "docs", label: "Renderizar Resolución" },
           { from: "api", to: "db", label: "Guardar Resolución" }
         ]
-      },
-      codeSnippet: {
-        title: "Servicio de Generación de Resoluciones con MiniWord (.NET 8)",
-        language: "csharp",
-        code: `public class ResolucionBecaDocumentService : IResolucionBecaDocumentService
-{
-    public byte[] GenerarResolucionWord(PostulacionBecaDto postulacion, MatrizPuntajeDto puntaje)
-    {
-        var templatePath = Path.Combine(AppContext.BaseDirectory, "Storage/Templates/ResolucionBeca.docx");
-        
-        var valueDict = new Dictionary<string, object>
-        {
-            ["NombreEstudiante"] = postulacion.EstudianteNombre,
-            ["Cedula"] = postulacion.Cedula,
-            ["Carrera"] = postulacion.CarreraNombre,
-            ["PuntajeSocioeconomico"] = puntaje.PuntajeSocioeconomico.ToString("F2"),
-            ["PromedioAcademico"] = puntaje.PromedioAcademico.ToString("F2"),
-            ["PorcentajeBeca"] = $"{puntaje.PorcentajeAdjudicado}%",
-            ["FechaEmision"] = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy")
-        };
-
-        // Rellena los {{placeholders}} en la plantilla .docx en memoria
-        return MiniWord.SaveAsBytesByTemplate(templatePath, valueDict);
-    }
-}`,
-        explanation: "Genera documentos Word institucionales válidos directamente en memoria RAM sin necesidad de licencias ni dependencias COM de Microsoft Office."
       }
     },
     {
       id: 4,
       title: "GAcad — ERP de Gestión Académica & Horarios ISTPET",
       client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollador Full Stack del equipo: validación de horarios y panel de control.",
       category: "web",
-      description: "Sistema web core para cronogramas institucionales, distributivos docentes y detección automática de conflictos en horarios de clase.",
-      longDescription: "Modernización del núcleo académico institucional desarrollada en Angular 21 y .NET 8 Web API con soporte para tareas en segundo plano mediante Hangfire y autenticación centralizada mediante llaves públicas RSA (AuthGlobal).",
+      description: "Sistema web para cronogramas institucionales, distributivos docentes y detección automática de conflictos en horarios de clase.",
+      longDescription: "Modernización del sistema académico institucional desarrollada en Angular 21 y .NET 8 Web API con soporte para tareas en segundo plano mediante Hangfire y autenticación centralizada mediante llaves públicas RSA (AuthGlobal).",
       problem: "Cruce de horarios docentes y saturación de aulas durante la planificación semestral, además de demoras en la validación de horas de dedicación de profesores.",
       decision: "Desarrollé un motor de validación matricial en C# .NET 8 que comprueba en tiempo real colisiones entre profesores, grupos de estudiantes y aulas físicas.",
       tradeoff: "Validación matricial en tiempo de ejecución en memoria para mantener una respuesta rápida frente a consultas recurrentes.",
-      impact: "Eliminó los solapamientos en los distributivos docentes y redujo notablemente el tiempo de armado del horario institucional.",
+      impact: "Detecta los cruces de horario antes de guardarlos y da a la coordinación una vista clara de cobertura docente y vacantes por carrera.",
       architectureOverview: "Arquitectura basada en Service + Interface Pattern con inyección de dependencias, base de datos MySQL 5.7 heredada y background workers con Hangfire.",
       securityAndCompliance: "Autenticación RSA asimétrica con tokens JWT validados contra AuthGlobal; almacenamiento seguro de sesiones exclusivamente en memoria.",
       keyFeatures: [
@@ -400,25 +329,25 @@ public class TitulacionController : ControllerBase
         "Integración transparente con esquemas relacionales históricos de SIGAFI"
       ],
       ndaDisclaimer: "Se documentan algoritmos de detección de colisiones y diseño de software sin divulgar datos de la planta docente ni credenciales.",
-      metrics: ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "Sin Solapamientos"],
-      image: asset("assets/projects/gacad_real_capture.webp"),
+      metrics: ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "Detección de Cruces"],
+      image: asset("assets/projects/evidencias/gacad_admin.webp"),
       technologies: ["Angular 21", "TypeScript", ".NET 8", "C#", "MySQL 5.7", "Hangfire", "Serilog", "RSA JWT"],
       architectureBadges: ["ERP Académico", "Conflict Detection", "Hangfire Jobs", "RSA Security"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/gacad_real_capture.webp"), title: "Panel de Control GAcad (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de asignaturas, cobertura docente y estado de planificación" },
-        { url: asset("assets/projects/gacad_gestor_capture.webp"), title: "Matriz de Planificación y Distributivos", caption: "Gestión de carga horaria, verificación 3D de conflictos y cruces de aula" }
+        { url: asset("assets/projects/evidencias/gacad_admin.webp"), title: "Panel de control académico", caption: "Captura con datos ficticios: docentes, asignaciones, horarios y cobertura por carrera" },
+        { url: asset("assets/projects/evidencias/gacad_admin_full.webp"), title: "Panel completo con alertas de planificación", caption: "Captura con datos ficticios: carga horaria y cursos con vacantes" }
       ],
       architectureFlow: {
         title: "Motor de Detección de Conflictos & Hangfire Workers",
-        description: "Cada asignación de bloque horario pasa por una validación tridimensional (Docente, Aula, Grupo) antes de persistirse en la base de datos.",
+        description: "Cada asignación de bloque horario se valida contra docente, aula y grupo antes de persistirse en la base de datos.",
         pattern: "Service Interface Pattern + Background Sync Worker",
         nodes: [
           { id: "fe", label: "🅰️ Angular 21 Frontend", sub: "Signals & Drag-Drop Grid", tag: "Frontend" },
           { id: "api", label: "⚙️ HorariosController", sub: ".NET 8 Web API", tag: "Backend" },
-          { id: "conflict", label: "🛡️ ConflictValidationEngine", sub: "Verificación 3D en Memoria", tag: "Algoritmo" },
+          { id: "conflict", label: "🛡️ ConflictValidationEngine", sub: "Docente · Aula · Grupo", tag: "Algoritmo" },
           { id: "hangfire", label: "⏱️ Hangfire Jobs", sub: "Procesamiento Asíncrono", tag: "Worker" },
           { id: "db", label: "🗄️ MySQL sigafi_es", sub: "GAcadDbContext", tag: "Persistencia" }
         ],
@@ -428,53 +357,22 @@ public class TitulacionController : ControllerBase
           { from: "conflict", to: "db", label: "Commit Transacción" },
           { from: "api", to: "hangfire", label: "Encolar Notificación" }
         ]
-      },
-      codeSnippet: {
-        title: "Algoritmo de Detección de Conflictos en Horarios (.NET 8)",
-        language: "csharp",
-        code: `public class HorarioValidationService : IHorarioValidationService
-{
-    private readonly GAcadDbContext _db;
-
-    public HorarioValidationService(GAcadDbContext db) => _db = db;
-
-    public async Task<ValidationResult> ValidarConflictoHorarioAsync(HorarioSlotDto slot)
-    {
-        // 1. Validar si el aula está ocupada en ese intervalo
-        var conflictoAula = await _db.Horarios.AnyAsync(h => 
-            h.AulaId == slot.AulaId && h.Dia == slot.Dia &&
-            h.HoraInicio < slot.HoraFin && h.HoraFin > slot.HoraInicio);
-            
-        if (conflictoAula)
-            return ValidationResult.Conflict("El aula seleccionada ya se encuentra asignada en este bloque.");
-
-        // 2. Validar si el docente tiene cruce con otra materia
-        var conflictoDocente = await _db.Horarios.AnyAsync(h => 
-            h.DocenteId == slot.DocenteId && h.Dia == slot.Dia &&
-            h.HoraInicio < slot.HoraFin && h.HoraFin > slot.HoraInicio);
-
-        if (conflictoDocente)
-            return ValidationResult.Conflict("El docente tiene otra asignatura asignada en el mismo horario.");
-
-        return ValidationResult.Success();
-    }
-}`,
-        explanation: "Evita colisiones en la ocupación de espacios físicos y en la dedicación horaria de los catedráticos."
       }
     },
     {
       id: 5,
       title: "GRECUH — Sistema de Recursos Humanos & Credencialización",
       client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollador Full Stack del equipo: contratos, expediente digital y credenciales.",
       category: "web",
       description: "Plataforma web para contratos laborales, expediente digital, credenciales docentes en alta resolución con SkiaSharp e integración con SharePoint.",
       longDescription: "Sistema integral de talento humano construido en Angular 20 (PrimeNG + TailwindCSS) y backend .NET 8 con Entity Framework Core Code First. Gestiona contratos docentes semestrales, archivo digital en la nube institucional de SharePoint y renderizado de carnets de PVC con SkiaSharp.",
       problem: "Gestión dispersa de contratos físicos de profesores, demora en la generación manual de carnets institucionales y falta de repositorio digital seguro para expedientes docentes.",
       decision: "Implementé una solución que automatiza la redacción de contratos, conecta con Microsoft SharePoint para archivo documental y utiliza la librería SkiaSharp en .NET 8 para generar carnets a 300 DPI con código de barras.",
       tradeoff: "Uso de renderizado gráfico nativo en servidor (SkiaSharp) que requiere calibración de píxeles exacta pero produce carnets listos para impresión en PVC sin software de diseño adicional.",
-      impact: "Redujo considerablemente el tiempo de consolidación de contratos docentes y automatizó la emisión de identificaciones institucionales.",
+      impact: "Reúne contratos, expedientes y alertas de documentos por vencer en un solo sistema, y automatiza la emisión de credenciales.",
       architectureOverview: "Frontend Angular 20 con PrimeNG, Backend RESTful en .NET 8 (Code First), motor de imágenes SkiaSharp y conector para SharePoint.",
-      securityAndCompliance: "Control estricto de accesos RBAC, protección de datos conforme a la LOPDP y almacenamiento seguro con pistas de auditoría para cada expediente.",
+      securityAndCompliance: "Control estricto de accesos RBAC, protección de datos personales considerando la LOPDP y almacenamiento seguro con pistas de auditoría para cada expediente.",
       keyFeatures: [
         "Generador de credenciales de PVC a 300 DPI con SkiaSharp y códigos de barras",
         "Generación parametrizada de contratos laborales semestrales",
@@ -483,15 +381,15 @@ public class TitulacionController : ControllerBase
       ],
       ndaDisclaimer: "Los expedientes y remuneraciones docentes se mantienen confidenciales. Solo se describe la arquitectura de software y capacidades técnicas.",
       metrics: ["Angular 20 + PrimeNG", "SkiaSharp 300 DPI", "SharePoint Cloud", "Contratos Auto"],
-      image: asset("assets/projects/rrhh_real_capture.webp"),
+      image: asset("assets/projects/evidencias/rrhh_dashboard.webp"),
       technologies: ["Angular 20", "PrimeNG", "Tailwind CSS", ".NET 8", "C#", "EF Core", "SkiaSharp", "SharePoint API", "PDFMake"],
       architectureBadges: ["Talento Humano", "SkiaSharp 2D", "SharePoint Cloud", "PrimeNG UI"],
       liveUrl: "#",
       githubUrl: "https://github.com/ItspetDev",
       isFeatured: true,
       screenshots: [
-        { url: asset("assets/projects/rrhh_real_capture.webp"), title: "Panel de Gestión Administrativa y Talento Humano (Vista Real)", caption: "Sesión autenticada del Ing. Anthony Pilatasig con métricas de personal docente activo, sedes y calendario" },
-        { url: asset("assets/projects/rrhh_docentes_capture.webp"), title: "Expediente Digital de Docentes y Contratos", caption: "Gestión de contratos laborales semestrales y emisión de carnets en PVC con SkiaSharp" }
+        { url: asset("assets/projects/evidencias/rrhh_dashboard.webp"), title: "Panel de talento humano", caption: "Captura con datos ficticios: departamentos por sede y fichas completas" },
+        { url: asset("assets/projects/evidencias/rrhh_docentes.webp"), title: "Gestión de personal", caption: "Captura con datos ficticios: filtros por institución, dedicación y cargo" }
       ],
       architectureFlow: {
         title: "Pipeline de Generación de Credenciales & Archivo en SharePoint",
@@ -510,41 +408,13 @@ public class TitulacionController : ControllerBase
           { from: "api", to: "sp", label: "Archivar Contrato" },
           { from: "api", to: "db", label: "Registrar Emisión" }
         ]
-      },
-      codeSnippet: {
-        title: "Renderizado de Credencial Docente en 300 DPI con SkiaSharp (.NET 8)",
-        language: "csharp",
-        code: `public class CredencialGeneratorService : ICredencialGeneratorService
-{
-    public byte[] GenerarCarnetDocente(DocenteDto docente, byte[] fotoBytes)
-    {
-        // Dimensiones estándar CR-80 en 300 DPI: 1012 x 638 píxeles
-        using var surface = SKSurface.Create(new SKImageInfo(1012, 638));
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColors.White);
-
-        // Fondo institucional con esquinas redondeadas
-        using var paintBg = new SKPaint { Color = SKColor.Parse("#180B1E"), IsAntialias = true };
-        canvas.DrawRoundRect(new SKRoundRect(new SKRect(0, 0, 1012, 638), 32), paintBg);
-
-        // Dibujar foto escalada del docente
-        using var img = SKImage.FromEncodedData(fotoBytes);
-        canvas.DrawImage(img, new SKRect(60, 120, 360, 480));
-
-        // Tipografía y datos institucionales
-        using var paintText = new SKPaint { Color = SKColors.White, TextSize = 36, IsAntialias = true };
-        canvas.DrawText(docente.NombreCompleto.ToUpper(), 400, 220, paintText);
-
-        return surface.Snapshot().Encode(SKEncodedImageFormat.Png, 100).ToArray();
-    }
-}`,
-        explanation: "Genera archivos gráficos de alta resolución listos para impresoras térmicas de tarjetas de identificación sin requerir servidores gráficos externos."
       }
     },
     {
       id: 6,
       title: "Scorecraft — Plataforma Deportiva & Médica CDMI",
       client: "Club Deportivo Miguel Iturralde",
+      role: "Diseñé y desarrollé la plataforma con Angular y C#.",
       category: "web",
       description: "Plataforma web para monitoreo físico, historial de lesiones, pliegues antropométricos y estadísticas de futbolistas.",
       longDescription: "Sistema integral desarrollado en Angular y .NET Core para centralizar los registros del cuerpo técnico, preparadores físicos y departamento médico del club deportivo.",
@@ -576,6 +446,7 @@ public class TitulacionController : ControllerBase
       id: 7,
       title: "DebtManager — Software Financiero C# Desktop",
       client: "Proyecto de Ingeniería Personal",
+      role: "Proyecto personal: diseño y desarrollo completos.",
       category: "desktop",
       description: "Aplicación nativa de escritorio en C# .NET con SQLite cifrado local para control financiero, préstamos y amortizaciones, totalmente offline.",
       longDescription: "Herramienta de escritorio nativa enfocada en la privacidad del usuario y en una respuesta rápida. Incluye simuladores de tablas de amortización (método francés y alemán), gráficos financieros y persistencia local.",
@@ -607,13 +478,14 @@ public class TitulacionController : ControllerBase
       id: 8,
       title: "AvialB / SIAT — Peritaje Vial Offline-First",
       client: "Consultoría / Peritaje Vial",
+      role: "Diseñé la arquitectura offline-first y desarrollé la app con Ionic, Angular y C#.",
       category: "mobile",
       description: "Ecosistema móvil y web offline-first para levantamiento de accidentes de tránsito en campo con sincronización asíncrona.",
       longDescription: "Aplicación híbrida desarrollada en Ionic, Angular y C# diseñada para peritos e investigadores viales que deben levantar información técnica en zonas rurales o carreteras sin cobertura móvil.",
       problem: "Pérdida de conectividad celular en sitios de siniestros viales y lentitud en la transcripción de partes periciales tomados en papel.",
       decision: "Diseñé una arquitectura Offline-First con base de datos local en el dispositivo y sincronización en segundo plano mediante colas de trabajo cuando se detecta conexión.",
       tradeoff: "Desarrollo de lógica personalizada de resolución de conflictos y encolamiento asíncrono para garantizar la integridad de las evidencias periciales.",
-      impact: "Digitalización de informes periciales directamente en el lugar del siniestro con georreferenciación, reduciendo de forma notable los tiempos de entrega.",
+      impact: "Los informes periciales se levantan en el lugar del siniestro, con georreferenciación, aunque no haya señal.",
       architectureOverview: "Cliente híbrido Ionic/Angular con SQLite local y backend de sincronización asíncrona en C# .NET.",
       securityAndCompliance: "Inmutabilidad de marcas de tiempo y coordenadas GPS para asegurar la cadena de custodia legal de las pruebas periciales.",
       keyFeatures: [
@@ -638,6 +510,7 @@ public class TitulacionController : ControllerBase
       id: 9,
       title: "RPG Journey — Motor de Juego Java POO (Swing)",
       client: "Proyecto de Lógica & Game Dev",
+      role: "Proyecto personal de práctica en POO.",
       category: "desktop",
       description: "Juego de rol interactivo por turnos desarrollado en Java puro con Swing, demostrando herencia, polimorfismo, interfaces y colecciones.",
       longDescription: "Diseño desacoplado entre el modelo de lógica (`com.rpg.logica`) y la presentación gráfica (`com.rpg.gui`). Incluye clases como Guerrero, Mago, Asesino, Tanque, Soporte, Curandero con polimorfismo dinámico y custom painting para las barras de estado.",
@@ -669,6 +542,7 @@ public class TitulacionController : ControllerBase
       id: 10,
       title: "Buscaminas POO Recursivo (Java Desktop)",
       client: "Proyecto Algorítmico",
+      role: "Proyecto personal; lo uso como ejemplo en clases de algoritmos.",
       category: "desktop",
       description: "Juego nativo de escritorio aplicando POO y algoritmo de destape recursivo en matrices bidimensionales con control de estados.",
       longDescription: "Implementación matemática del clásico Buscaminas que gestiona la dispersión aleatoria de minas, el cálculo de casillas adyacentes y el destape en cascada mediante llamadas recursivas.",
@@ -695,7 +569,39 @@ public class TitulacionController : ControllerBase
       screenshots: [
         { url: asset("assets/projects/buscaminas_preview.webp"), title: "Tablero Recursivo en Swing", caption: "Destape algorítmico de casillas en matriz 2D" }
       ]
+    },
+    {
+      id: 11,
+      title: "Bolsa de Empleo ISTPET — Portal de Ofertas Laborales",
+      client: "Instituto Superior Tecnológico Traversari",
+      role: "Desarrollador Full Stack del equipo: portal de estudiantes, CV y ofertas.",
+      category: "web",
+      description: "Portal que conecta a estudiantes y egresados con empresas: ofertas por carrera, currículum en línea y postulaciones.",
+      longDescription: "Aplicación web en Angular con backend en .NET 8 (Clean Architecture, CQRS con MediatR) sobre MySQL. Los estudiantes mantienen su hoja de vida y se postulan; las empresas publican ofertas filtradas por carrera.",
+      problem: "Las ofertas laborales llegaban por correo o redes sociales, sin filtro por carrera ni seguimiento de quién se postulaba.",
+      decision: "Separé el portal por rol (estudiante/egresado, empresa, administrador) con autenticación JWT, y modelé ofertas con requisitos, habilidades y carreras asociadas.",
+      tradeoff: "Un catálogo de habilidades y carreras centralizado exige mantenimiento, pero permite filtrar y emparejar ofertas con perfiles de forma consistente.",
+      impact: "Las ofertas quedan en un solo lugar, filtrables por carrera y ciudad, y cada estudiante puede seguir el estado de sus postulaciones.",
+      architectureOverview: ".NET 8 Web API con Clean Architecture, CQRS (MediatR), FluentValidation y EF Core (Pomelo MySQL); frontend Angular con rutas protegidas por rol.",
+      securityAndCompliance: "Autenticación JWT separada para usuarios y empresas, contraseñas con BCrypt y datos personales tratados considerando la LOPDP.",
+      keyFeatures: [
+        "Buscador de ofertas con filtros por carrera, ciudad y texto",
+        "Currículum en línea: formación, experiencia, referencias y habilidades",
+        "Registro de empresas y publicación de ofertas con requisitos",
+        "Seguimiento de postulaciones por parte del estudiante"
+      ],
+      ndaDisclaimer: "Las capturas usan datos ficticios. No se muestran datos reales de estudiantes ni de empresas.",
+      metrics: ["Angular", ".NET 8 + CQRS", "JWT por rol", "MySQL"],
+      image: asset("assets/projects/evidencias/bolsa_ofertas.webp"),
+      technologies: ["Angular", "TypeScript", ".NET 8", "C#", "MediatR", "FluentValidation", "EF Core", "MySQL", "JWT"],
+      architectureBadges: ["Portal Web", "Clean Architecture", "CQRS", "Roles"],
+      liveUrl: "#",
+      isFeatured: true,
+      screenshots: [
+        { url: asset("assets/projects/evidencias/bolsa_home.webp"), title: "Inicio del portal", caption: "Ofertas laborales agrupadas por carrera" },
+        { url: asset("assets/projects/evidencias/bolsa_ofertas.webp"), title: "Buscador de empleo", caption: "Captura con datos ficticios: ofertas con ciudad, vacantes y salario" },
+        { url: asset("assets/projects/evidencias/bolsa_perfil.webp"), title: "Currículum del estudiante", caption: "Captura con datos ficticios: datos personales y secciones del CV" }
+      ]
     }
   ]
 };
-

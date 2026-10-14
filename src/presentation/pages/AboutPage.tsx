@@ -36,7 +36,7 @@ export const AboutPage: React.FC = () => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
       <SEO
         title="Sobre Mí — Anthony Pilatasig"
-        description="Full Stack Developer y Docente Técnico en Quito, Ecuador. Valores de ingeniería, afición al desarrollo de videojuegos en Java y docencia técnica en programación."
+        description="Desarrollador Full Stack y docente en Quito, Ecuador. Cómo trabajo, qué valoro al escribir código y qué hago fuera del trabajo."
       />
       {/* Header */}
       <motion.div 
@@ -51,7 +51,7 @@ export const AboutPage: React.FC = () => {
             {t('about.title')}
           </h1>
           <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
-            Arquitecto de Software, Docente Técnico & Creador en Quito, Ecuador.
+            Desarrollador Full Stack y docente en Quito, Ecuador.
           </p>
         </div>
       </motion.div>
@@ -89,7 +89,7 @@ export const AboutPage: React.FC = () => {
                 <span>{t('about.securityTitle')}</span>
               </h4>
               <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-                DevSecOps, RBAC estricto, validación criptográfica de tokens y pistas de auditoría inmutables.
+                Autenticación con JWT, contraseñas con hashing, permisos por rol y registro de cambios importantes.
               </p>
             </div>
           </div>
@@ -114,10 +114,10 @@ export const AboutPage: React.FC = () => {
                 <span>Fuera del Código</span>
               </h4>
               <a
-                href={`${import.meta.env.BASE_URL}laboratorio`}
+                href={`${import.meta.env.BASE_URL}zona-interactiva`}
                 className="text-[10px] font-mono text-[var(--theme-accent)] hover:underline"
               >
-                Abrir Laboratorio AP-Deck →
+                Ir a la Zona Interactiva →
               </a>
             </div>
             <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">

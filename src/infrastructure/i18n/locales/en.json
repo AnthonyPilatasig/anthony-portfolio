@@ -5,61 +5,77 @@
     "experience": "Experience",
     "about": "About Me",
     "terminal": "Terminal",
-    "lab": "Lab",
-    "contact": "Contact"
+    "lab": "Playground",
+    "contact": "Contact",
+    "teaching": "Teaching"
   },
   "home": {
-    "profileBadge": "Full Stack & Architecture",
-    "subtitle": "Full Stack Developer (.NET 8 / React / Angular) & Mobile Lead",
+    "profileBadge": "Development & Teaching",
+    "subtitle": "Full Stack Developer (Angular, React, Ionic, .NET) and teacher",
     "viewAll": "View all ({{count}})"
   },
   "hero": {
     "badgeArchitecture": "Clean Architecture & CQRS",
-    "statusAvailable": "Available for Projects & Full Stack Challenges",
+    "statusAvailable": "Open to projects, classes and consulting",
     "mainTitle": "Software that solves real problems with clean architecture and solid judgement",
-    "heroDesc": "Full Stack Developer and Technical Professor based in Quito, Ecuador. I build mobile applications published on Google Play, modernize institutional academic platforms with .NET & Angular, and teach programming with solid foundations in OOP and algorithms.",
+    "heroDesc": "Full Stack Developer and teacher in Quito, Ecuador. I build web and mobile apps for an educational institution —one of them published on Google Play— and teach programming with real-world examples.",
     "viewProjects": "Explore Projects",
     "cliMode": "CLI Console Mode",
     "downloadCv": "Download CV (PDF)",
     "copyEmail": "Copy Email",
     "emailCopied": "Email Copied!",
     "statSystems": "Systems & Apps",
-    "statExperience": "Lead Developer",
+    "statExperience": "Full Stack",
     "statEducation": "UPS Semester",
     "statArchitecture": "Clean & CQRS"
   },
   "lab": {
-    "badge": "05 / The Lab",
-    "title": "Things I built just for fun.",
-    "subtitle": "A tour of the easter eggs and technical experiments hidden inside this portfolio.",
-    "consoleEyebrow": "Virtual Console",
-    "consoleStatus": "Online",
-    "consoleDesc": "A high-performance interactive virtual console. Run an RPG Maker / Pokémon Essentials engine in WebAssembly, emulate classic consoles with libretro cores, or enjoy native mini-games — everything runs 100% locally in your browser.",
-    "consoleCta": "Open AP-Deck",
+    "badge": "Playground",
+    "title": "Play, try things, see how they work.",
+    "subtitle": "Games, emulators and a terminal that run right in your browser. They are my experiments to learn —and teach— how the web works under the hood.",
+    "consoleEyebrow": "Game console",
+    "consoleStatus": "Available",
+    "consoleDesc": "Classic games and mini-games I built that run in your browser, nothing to install. Under the hood it uses WebAssembly, the technology that lets heavy programs run on the web.",
+    "consoleCta": "Open the console",
     "consoleModes": "{{count}} modes available",
     "features": {
-      "rpgmaker": "RPG Maker engine in WASM",
-      "wasm": "Multi-console emulation",
-      "fullscreen": "Fullscreen mode",
-      "mobile": "Mobile friendly"
+      "rpgmaker": "RPG Maker games",
+      "wasm": "Classic consoles",
+      "fullscreen": "Fullscreen",
+      "mobile": "Works on mobile"
     },
     "cards": {
       "rpgmaker": {
-        "title": "RPG Maker & Pokémon Essentials Engine",
-        "desc": "Launch any RPG Maker XP / VX / Ace or Pokémon Essentials project straight in the browser, powered by the mkxp-z core compiled to WebAssembly and running entirely client-side.",
-        "tags": ["mkxp-z WASM", "RGSS Runtime", "100% Local"]
+        "title": "Games made with RPG Maker",
+        "desc": "Open RPG Maker XP / VX / Ace or Pokémon Essentials projects right in the browser. To make it work I compiled an engine (mkxp-z) to WebAssembly.",
+        "tags": [
+          "WebAssembly",
+          "RPG Maker",
+          "No server"
+        ]
       },
       "wasm": {
-        "title": "Multi-Console WebAssembly Emulation",
-        "desc": "An environment with open-source libretro cores compiled to WebAssembly, with automatic system detection: GBA, NDS, PS1, N64, SNES and Mega Drive, with local save support in the browser.",
-        "tags": ["libretro Cores", "Auto-Detection", "Zero Server"]
+        "title": "Classic console emulator",
+        "desc": "Load your own game files and the emulator detects the console: GBA, NDS, PS1, N64, SNES or Mega Drive. Saves stay in your browser.",
+        "tags": [
+          "libretro",
+          "Auto-detection",
+          "Local saves"
+        ]
       },
       "native": {
-        "title": "Native Widescreen Mini-Games",
-        "desc": "Cyber-Encounter (tactical J-RPG), Retro Snake Neon DX and 2048 Logic Matrix, built with TypeScript and modern CSS with keyboard and gamepad support.",
-        "tags": ["Pure TypeScript", "Web Audio API", "Gamepad API"]
+        "title": "Mini-games built from scratch",
+        "desc": "A turn-based battle, Snake and 2048 written in TypeScript. I use them in class to explain state, game loops and keyboard or gamepad events.",
+        "tags": [
+          "TypeScript",
+          "Web Audio",
+          "Gamepad"
+        ]
       }
-    }
+    },
+    "terminalTitle": "Interactive terminal",
+    "terminalDesc": "Explore the portfolio by typing commands like in a real console. Type help to start.",
+    "terminalCta": "Open terminal"
   },
   "techShowcase": {
     "badge": "Stack & Infrastructure",
@@ -70,8 +86,8 @@
     "title": "Explore My Portfolio",
     "projectsDesc": "Mi ISTPET (Google Play), Gacad ERP, RRHH, Scorecraft CDMI, AvialB SIAT, and DebtManager.",
     "experienceDesc": "Experience at ISTPET, CDMI Scorecraft, SIAT National Police, and academic education.",
-    "aboutDesc": "Engineering values, Java game dev hobby, and technical teaching.",
-    "terminalDesc": "Interactive full-screen Unix terminal with CLI commands."
+    "aboutDesc": "Who I am, how I work and my side projects.",
+    "terminalDesc": "Interactive terminal to explore the portfolio with commands."
   },
   "skills": {
     "badge": "Capabilities & Stack",
@@ -87,7 +103,7 @@
     "architectureDesc": "Separation of concerns with Clean Architecture & CQRS, relational modeling in SQL Server / MySQL, and Docker containers."
   },
   "projects": {
-    "badge": "Software Catalog",
+    "badge": "Projects",
     "title": "Projects & Systems",
     "subtitle": "Institutional systems, mobile apps in production, desktop utilities, and backend architectures.",
     "catAll": "All Projects",
@@ -97,7 +113,7 @@
     "catArchitecture": "Architecture & .NET Backend",
     "client": "Client / Context:",
     "featured": "FEATURED",
-    "viewDetails": "View architecture & specifications →",
+    "viewDetails": "View details & screenshots →",
     "viewCode": "View Code on GitHub",
     "liveDemo": "View Live Demo",
     "close": "Close",
@@ -105,12 +121,12 @@
     "sectionDecision": "2. Architecture Decision",
     "sectionTradeoff": "3. Trade-off Accepted",
     "sectionImpact": "4. Result & Real Impact",
-    "sectionStack": "Stack & Tech Signature"
+    "sectionStack": "Technologies"
   },
   "experience": {
     "badge": "Experience & Career",
     "title": "Experience & CV",
-    "subtitle": "Institutional development, technical higher education, and applied software projects.",
+    "subtitle": "Software development for an educational institution, teaching and applied projects.",
     "requestCv": "Download CV (PDF)",
     "careerTitle": "Professional Career",
     "educationTitle": "Academic Education",
@@ -120,8 +136,8 @@
   },
   "about": {
     "badge": "Biography & Focus",
-    "title": "About Me & Development Approach",
-    "subtitle": "Full Stack Developer & Software Engineering Student in Quito, Ecuador.",
+    "title": "About me",
+    "subtitle": "Full Stack Developer, teacher and Software Engineering student in Quito, Ecuador.",
     "mainTitle": "From video game logic to software architecture",
     "bio1": "I'm Anthony David Pilatasig Macas. I got into programming out of curiosity, not obligation — I wanted to understand how the video games I played actually worked, so I started building my own. That left me with a way of thinking I never lost: before writing a single line, I try to fully understand the problem, and I'd rather ship something simple that works than something clever nobody can maintain later.",
     "bio2": "I currently work as a Full Stack Developer & Mobile Lead at ISTPET, where I build mobile applications and modernize academic and administrative management systems using .NET, C#, Angular, and React Native, applying Clean Architecture and CQRS. I like building software people actually use every day, not just demos.",
@@ -129,7 +145,7 @@
     "valuesTitle": "Code Values",
     "valuesDesc": "Readable code, real modularity, tests, and respect for the end-user's time.",
     "securityTitle": "Security Focus",
-    "securityDesc": "DevSecOps principles, secure hashing, JWT tokens, and strict role control.",
+    "securityDesc": "JWT authentication, hashed passwords and role-based permissions in every system.",
     "ficheTitle": "Technical Sheet",
     "location": "Location",
     "timezone": "Time Zone",
@@ -139,24 +155,24 @@
     "stackBreakdown": "Technology Breakdown"
   },
   "contact": {
-    "badge": "Direct Contact & Collaboration",
+    "badge": "Contact",
     "title": "Contact",
-    "subtitle": "Do you have a project, job offer, or technical challenge? Connect directly with me.",
+    "subtitle": "Have a job offer, a course, a mentoring request or a project? Write to me.",
     "formTitle": "Send Message",
     "name": "Name",
     "namePlaceholder": "Your name or company",
     "email": "Email Address",
     "emailPlaceholder": "you@email.com",
     "subject": "Subject",
-    "subjectPlaceholder": "Job offer / Full-Stack Project / Inquiry",
+    "subjectPlaceholder": "Job offer / Classes / Consulting",
     "message": "Message",
     "messagePlaceholder": "Describe the details of your inquiry...",
-    "sendBtn": "Send Message",
-    "successTitle": "Message Sent Successfully!",
-    "successDesc": "Thank you for getting in touch. I will reply as soon as possible to",
-    "sendAnother": "Send Another Message",
+    "sendBtn": "Open my email to send",
+    "successTitle": "Your email app was opened",
+    "successDesc": "Review the draft and press send. If nothing opened, write to me directly at",
+    "sendAnother": "Back to the form",
     "directLinks": "Direct Connections",
-    "sending": "Enviando..."
+    "sending": "Opening your email..."
   },
   "terminal": {
     "title": "UNIX CLI Virtual Console",
@@ -176,7 +192,12 @@
       "decision": "Built the app with Expo SDK 54 / React Native and a .NET 8 Web API. Designed a QR card token signed with HMAC-SHA256, allowing entry validation without depending on a constant internet connection.",
       "tradeoff": "Offline validation required synchronizing symmetric keys and timestamps with a tolerance window on the entry scanner.",
       "impact": "Published on Google Play Store; replaced the physical PVC card for the student community and reduced recurring printing costs.",
-      "metrics": ["Google Play Store", "Offline QR Card", ".NET 8 + Expo", "Digital Card"]
+      "metrics": [
+        "Google Play Store",
+        "Offline QR Card",
+        ".NET 8 + Expo",
+        "Digital Card"
+      ]
     },
     {
       "id": 2,
@@ -188,7 +209,12 @@
       "decision": "Implemented a clean architecture with strict layer separation: backend with CQRS, MediatR, FluentValidation, and permission-based authorization (`[HasPermission]`); frontend with reactive Signal-based stores and decoupled HTTP ports.",
       "tradeoff": "Initial learning curve implementing hexagonal architecture on the frontend, offset by isolated unit tests and low coupling between layers.",
       "impact": "Notably reduced the time spent scheduling graduation committees and automated the issuance of degree records.",
-      "metrics": ["Angular 22 Zoneless", ".NET 8 Clean Arch", "CQRS & MediatR", "Granular RBAC"]
+      "metrics": [
+        "Angular 22 Zoneless",
+        ".NET 8 Clean Arch",
+        "CQRS & MediatR",
+        "Granular RBAC"
+      ]
     },
     {
       "id": 3,
@@ -200,7 +226,12 @@
       "decision": "Designed a socioeconomic scoring engine (60% vulnerability / 40% academic merit weighting) with automated generation of `.docx` and `.pdf` documents from institutional templates.",
       "tradeoff": "Generating documents on the server with MiniWord and QuestPDF instead of the client, to keep seals and legal formatting immutable.",
       "impact": "Considerably reduced scholarship processing time and made it possible to generate official resolutions in one click instead of drafting them by hand.",
-      "metrics": ["Angular 21 Signals", ".NET 8 Web API", "MiniWord + QuestPDF", "Automated Scoring"]
+      "metrics": [
+        "Angular 21 Signals",
+        ".NET 8 Web API",
+        "MiniWord + QuestPDF",
+        "Automated Scoring"
+      ]
     },
     {
       "id": 4,
@@ -212,7 +243,12 @@
       "decision": "Developed a matrix validation engine in C# .NET 8 that checks in real time for collisions between professors, student groups, and physical classrooms.",
       "tradeoff": "In-memory, runtime matrix validation to keep response times fast against recurring queries.",
       "impact": "Eliminated schedule overlaps in faculty workload distribution and notably reduced the time spent building the institutional schedule.",
-      "metrics": ["Angular 21", ".NET 8 Web API", "Hangfire Worker", "No Overlaps"]
+      "metrics": [
+        "Angular 21",
+        ".NET 8 Web API",
+        "Hangfire Worker",
+        "No Overlaps"
+      ]
     },
     {
       "id": 5,
@@ -224,7 +260,12 @@
       "decision": "Implemented a solution that automates contract drafting, connects to Microsoft SharePoint for document archiving, and uses the SkiaSharp library in .NET 8 to generate 300 DPI ID cards with barcodes.",
       "tradeoff": "Native server-side graphics rendering (SkiaSharp) requires precise pixel calibration, but produces print-ready PVC cards without extra design software.",
       "impact": "Considerably reduced the time to consolidate faculty contracts and automated the issuance of institutional IDs.",
-      "metrics": ["Angular 20 + PrimeNG", "SkiaSharp 300 DPI", "SharePoint Cloud", "Automated Contracts"]
+      "metrics": [
+        "Angular 20 + PrimeNG",
+        "SkiaSharp 300 DPI",
+        "SharePoint Cloud",
+        "Automated Contracts"
+      ]
     },
     {
       "id": 6,
@@ -236,7 +277,12 @@
       "decision": "Built a reactive Angular dashboard with a C# backend and a relational database, with automated anthropometric index calculations and Chart.js visualizations.",
       "tradeoff": "Strict digitization of medical records ahead of every competitive matchday.",
       "impact": "Centralized the player roster's medical records and injury tracking in one place.",
-      "metrics": ["Sports Management", "Medical Records", "C# + Angular", "Sports Analytics"]
+      "metrics": [
+        "Sports Management",
+        "Medical Records",
+        "C# + Angular",
+        "Sports Analytics"
+      ]
     },
     {
       "id": 7,
@@ -248,7 +294,12 @@
       "decision": "Implemented a native C# solution with an embedded SQLite database engine and LINQ queries optimized for a near-instant response.",
       "tradeoff": "Desktop software with no cloud, prioritizing speed and data ownership over the convenience of cloud sync.",
       "impact": "Fast financial calculations, full portability in a lightweight executable, and fully offline debt tracking.",
-      "metrics": ["Instant Response", "Fully Offline", "SQLite Encryption", "Zero Dependencies"]
+      "metrics": [
+        "Instant Response",
+        "Fully Offline",
+        "SQLite Encryption",
+        "Zero Dependencies"
+      ]
     },
     {
       "id": 8,
@@ -260,7 +311,12 @@
       "decision": "Designed an offline-first architecture with an on-device local database and background sync through work queues once a connection is detected.",
       "tradeoff": "Custom conflict-resolution and asynchronous queueing logic was needed to preserve the integrity of forensic evidence.",
       "impact": "Digitized expert reports directly at the accident site with geolocation, notably reducing delivery times.",
-      "metrics": ["Offline-First", "Ionic + Angular", "Async Sync", "Chain of Custody"]
+      "metrics": [
+        "Offline-First",
+        "Ionic + Angular",
+        "Async Sync",
+        "Chain of Custody"
+      ]
     },
     {
       "id": 9,
@@ -272,7 +328,12 @@
       "decision": "Applied a dedicated special-action interface, abstract classes for characters, and LIFO (`Stack`) structures for the loot inventory.",
       "tradeoff": "More structured classes in exchange for being able to add new character classes without touching the graphical interface.",
       "impact": "A functional, instructional project that illustrates pure OOP principles in Java.",
-      "metrics": ["Pure OOP & Swing", "Dynamic Polymorphism", "Custom Painting", "LIFO Stacks"]
+      "metrics": [
+        "Pure OOP & Swing",
+        "Dynamic Polymorphism",
+        "Custom Painting",
+        "LIFO Stacks"
+      ]
     },
     {
       "id": 10,
@@ -284,7 +345,12 @@
       "decision": "Structured the logic around 2D matrices with a bounded recursive depth-first search algorithm and Swing event handling.",
       "tradeoff": "Native Swing interface with no external libraries, for maximum portability.",
       "impact": "Instant response and clean code for teaching purposes in algorithms.",
-      "metrics": ["Instant Response", "Recursion on Matrices", "Native Swing", "Zero-Dependency"]
+      "metrics": [
+        "Instant Response",
+        "Recursion on Matrices",
+        "Native Swing",
+        "Zero-Dependency"
+      ]
     }
   ],
   "experienceData": [

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { prefersRichMotion } from '@presentation/utils/motion';
 
 interface Particle {
   x: number;
@@ -15,7 +16,9 @@ export const AnimeGridCanvas: React.FC = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    // Decorative only: skipped on phones and low-end CPUs, where the per-frame redraw
+    // competes with scrolling.
+    if (!canvas || !prefersRichMotion()) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 

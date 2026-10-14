@@ -46,7 +46,9 @@ export const ContactPage: React.FC = () => {
     try {
       const subject = encodeURIComponent(formData.subject || 'Contacto desde Portafolio');
       const body = encodeURIComponent(`Hola Anthony,\n\nDe: ${formData.name} (${formData.email})\n\nMensaje:\n${formData.message}`);
-      window.open(`mailto:${personal.email}?subject=${subject}&body=${body}`, '_blank');
+      // mailto opens the visitor's own email app with a prefilled draft; nothing is sent
+      // until they press send there, which the success screen says explicitly.
+      window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
       setFormSubmitted(true);
     } catch {
       setFormError('Error al abrir el cliente de correo.');

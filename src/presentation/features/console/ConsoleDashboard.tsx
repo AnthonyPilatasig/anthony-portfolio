@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import {
   FiPlay, FiMaximize2, FiMinimize2, FiTv, FiVolume2, FiVolumeX,
   FiArrowLeft, FiArrowRight, FiGrid, FiSettings,
@@ -196,8 +195,11 @@ interface ConsoleDashboardProps {
   embeddedFullscreen?: boolean;
 }
 
+// Leaving the emulator with a full page load (not client-side navigation) drops the
+// cross-origin isolation /console needs, so third-party embeds like Spotify work again.
+const exitConsole = () => window.location.assign(`${import.meta.env.BASE_URL}zona-interactiva`);
+
 export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFullscreen = false }) => {
-  const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeRunningGame, setActiveRunningGame] = useState<ConsoleGame | null>(null);
   const [currentTime, setCurrentTime] = useState('');
@@ -357,12 +359,12 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
         const selected = CONSOLE_GAMES[selectedIndex];
         launchGame(selected);
       } else if (e.key === 'Escape') {
-        navigate('/laboratorio');
+        exitConsole();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, activeRunningGame, soundEnabled, navigate, launchGame, selectGame]);
+  }, [selectedIndex, activeRunningGame, soundEnabled, launchGame, selectGame]);
 
   // Portrait detector
   useEffect(() => {
@@ -523,7 +525,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
           </span>
 
           <button
-            onClick={() => navigate('/laboratorio')}
+            onClick={() => exitConsole()}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md"
             style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.35)', color: '#FCA5A5' }}
             title="Salir de la consola y volver al portafolio"
@@ -741,7 +743,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 <FiSettings className="w-5 h-5" />
               </button>
               <button
-                onClick={() => navigate('/laboratorio')}
+                onClick={() => exitConsole()}
                 title="Salir al Portafolio"
                 className="w-11 h-11 rounded-[16px] flex items-center justify-center transition-all hover:bg-red-500/20 hover:text-red-400"
                 style={{ background: 'rgba(255,255,255,0.03)', color: '#64748B' }}

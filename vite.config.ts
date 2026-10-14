@@ -29,18 +29,27 @@ const redirectBaseWithoutSlash = (): Plugin => ({
 // blocks third-party embeds elsewhere (Spotify's embed CDN 503s when nested under a
 // COEP: credentialless document). So these headers are scoped to just the /console
 // document request instead of applying them to every response.
+const isolateConsoleMiddleware = (
+  req: { url?: string },
+  res: { setHeader(name: string, value: string): void },
+  next: () => void
+) => {
+  if ((req.url ?? '').startsWith(BASE + 'console')) {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+  next();
+};
+
+// Applied to both `vite` (dev) and `vite preview` (the production build served locally).
 const isolateConsoleRoute = (): Plugin => ({
   name: 'isolate-console-route',
   configureServer(server) {
-    server.middlewares.use((req, res, next) => {
-      const url = req.url ?? '';
-      if (url.startsWith(BASE + 'console')) {
-        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-        res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
-        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-      }
-      next();
-    });
+    server.middlewares.use(isolateConsoleMiddleware);
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use(isolateConsoleMiddleware);
   },
 });
 

@@ -1,771 +1,386 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiLayers,
-  FiX, FiCheckCircle, FiExternalLink, FiTrendingUp, FiAlertCircle,
-  FiSettings, FiGitBranch, FiShield, FiLock, FiInfo, FiCheck, FiCopy
+  FiFolder, FiGithub, FiMonitor, FiSmartphone, FiCpu, FiX, FiExternalLink,
+  FiChevronLeft, FiChevronRight, FiUser, FiTarget, FiCheckCircle,
+  FiTrendingUp, FiLock, FiImage, FiLayers,
 } from 'react-icons/fi';
 import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
 import { mergeLocalizedEntries } from '@application/useCases/portfolio/mergeLocalizedEntries';
-import { RevealText } from '@presentation/components/ui/RevealText';
 import { SEO } from '@presentation/components/ui/SEO';
-import type { IProject, ProjectCategory } from '@domain/entities/portfolio.entity';
+import type { IProject, IProjectScreenshot, ProjectCategory } from '@domain/entities/portfolio.entity';
 
+type Gallery = { shots: IProjectScreenshot[]; index: number };
+
+const screenshotsOf = (p: IProject): IProjectScreenshot[] =>
+  p.screenshots && p.screenshots.length > 0
+    ? p.screenshots
+    : [{ url: p.image, title: p.title, caption: p.description }];
+
+const hasLink = (url?: string) => !!url && url !== '#';
+
+// ─── Lightbox ────────────────────────────────────────────────────────────────
+const Lightbox: React.FC<{ gallery: Gallery; onClose: () => void }> = ({ gallery, onClose }) => {
+  const [index, setIndex] = useState(gallery.index);
+  const touchX = useRef<number | null>(null);
+  const shot = gallery.shots[index];
+  const count = gallery.shots.length;
+
+  const go = useCallback((delta: number) => setIndex((i) => (i + delta + count) % count), [count]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      else if (e.key === 'ArrowRight') go(1);
+      else if (e.key === 'ArrowLeft') go(-1);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [go, onClose]);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[60] flex flex-col bg-black/90"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={shot.title}
+      onClick={onClose}
+      onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+      onTouchEnd={(e) => {
+        if (touchX.current === null) return;
+        const dx = e.changedTouches[0].clientX - touchX.current;
+        if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+        touchX.current = null;
+      }}
+    >
+      <div className="flex items-center justify-between px-4 py-3 text-white" onClick={(e) => e.stopPropagation()}>
+        <span className="font-mono text-xs text-slate-300">{index + 1} / {count}</span>
+        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20" aria-label="Cerrar">
+          <FiX className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="relative flex-1 flex items-center justify-center px-2 sm:px-16 min-h-0">
+        <img
+          src={shot.url}
+          alt={shot.title}
+          className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        />
+        {count > 1 && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); go(-1); }}
+              className="hidden sm:flex absolute left-3 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white"
+              aria-label="Anterior"
+            >
+              <FiChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); go(1); }}
+              className="hidden sm:flex absolute right-3 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white"
+              aria-label="Siguiente"
+            >
+              <FiChevronRight className="w-6 h-6" />
+            </button>
+          </>
+        )}
+      </div>
+
+      <div className="px-4 py-4 text-center text-white" onClick={(e) => e.stopPropagation()}>
+        <p className="text-sm font-semibold">{shot.title}</p>
+        <p className="text-xs text-slate-300 mt-1">{shot.caption}</p>
+        {count > 1 && <p className="sm:hidden text-[11px] text-slate-400 mt-2">Desliza para ver más</p>}
+      </div>
+    </motion.div>
+  );
+};
+
+// ─── Details panel (modal on desktop, bottom sheet on phones) ────────────────
+const Section: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+  <section className="space-y-1.5">
+    <h3 className="flex items-center gap-2 text-sm font-semibold text-[var(--theme-ink)]">{icon}{title}</h3>
+    <div className="text-sm text-[var(--theme-ink-muted)] leading-relaxed">{children}</div>
+  </section>
+);
+
+const ProjectDetails: React.FC<{ project: IProject; onClose: () => void; onOpen: (g: Gallery) => void }> = ({ project, onClose, onOpen }) => {
+  const shots = screenshotsOf(project);
+  const flow = project.architectureFlow;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 sm:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 40, opacity: 0 }}
+        transition={{ duration: 0.22 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full sm:max-w-2xl max-h-[88vh] overflow-y-auto overscroll-contain rounded-t-3xl sm:rounded-3xl border border-[var(--glass-border)] bg-[var(--glass-bg-solid)] shadow-2xl"
+      >
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[var(--glass-border)] bg-[var(--glass-bg-solid)] px-5 py-4">
+          <div className="min-w-0">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[var(--theme-accent)] truncate">{project.client}</p>
+            <h2 className="text-lg sm:text-xl font-semibold text-[var(--theme-ink)]">{project.title}</h2>
+          </div>
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-[var(--theme-border)] text-[var(--theme-ink-muted)]" aria-label="Cerrar">
+            <FiX className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="space-y-5 px-5 py-5">
+          {shots.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {shots.map((s, i) => (
+                <button
+                  key={s.url}
+                  onClick={() => onOpen({ shots, index: i })}
+                  className={`shrink-0 overflow-hidden rounded-lg border border-[var(--glass-border)] ${project.category === 'mobile' ? 'w-20 aspect-[9/19.5]' : 'w-36 aspect-[16/10]'}`}
+                  aria-label={`Ampliar: ${s.title}`}
+                >
+                  <img src={s.url} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {project.role && <Section icon={<FiUser className="w-4 h-4 text-[var(--theme-accent)]" />} title="Mi rol">{project.role}</Section>}
+          {project.problem && <Section icon={<FiTarget className="w-4 h-4 text-amber-500" />} title="El reto">{project.problem}</Section>}
+          {project.keyFeatures && project.keyFeatures.length > 0 && (
+            <Section icon={<FiCheckCircle className="w-4 h-4 text-emerald-500" />} title="Qué incluye">
+              <ul className="list-disc pl-5 space-y-1">
+                {project.keyFeatures.map((f) => <li key={f}>{f}</li>)}
+              </ul>
+            </Section>
+          )}
+          {project.impact && <Section icon={<FiTrendingUp className="w-4 h-4 text-sky-500" />} title="Resultado">{project.impact}</Section>}
+
+          {(flow || project.decision) && (
+            <Section icon={<FiLayers className="w-4 h-4 text-violet-500" />} title="Cómo está construido">
+              {flow && (
+                <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                  {flow.nodes.map((n, i) => (
+                    <React.Fragment key={n.id}>
+                      {i > 0 && <FiChevronRight className="w-3.5 h-3.5" />}
+                      <span className="rounded-md border border-[var(--glass-border)] px-2 py-1 text-xs text-[var(--theme-ink)]">{n.label}</span>
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+              {project.decision && <p>{project.decision}</p>}
+            </Section>
+          )}
+
+          <div className="flex flex-wrap gap-1.5">
+            {project.technologies.map((tech) => <span key={tech} className="badge text-[11px] normal-case">{tech}</span>)}
+          </div>
+
+          {project.ndaDisclaimer && (
+            <p className="flex items-start gap-2 text-xs text-[var(--theme-ink-muted)]">
+              <FiLock className="w-3.5 h-3.5 mt-0.5 shrink-0" />{project.ndaDisclaimer}
+            </p>
+          )}
+
+          <ProjectLinks project={project} />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const ProjectLinks: React.FC<{ project: IProject }> = ({ project }) => (
+  <div className="flex flex-wrap gap-2">
+    {hasLink(project.liveUrl) && (
+      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
+        <FiExternalLink className="w-3.5 h-3.5" />
+        {project.liveUrl!.includes('play.google.com') ? 'Google Play' : 'Ver en vivo'}
+      </a>
+    )}
+    {hasLink(project.githubUrl) && (
+      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+        <FiGithub className="w-3.5 h-3.5" />
+        GitHub
+      </a>
+    )}
+  </div>
+);
+
+// ─── Compact project card ────────────────────────────────────────────────────
+const ProjectCard: React.FC<{ project: IProject; onOpen: (g: Gallery) => void; onDetails: () => void }> = ({ project, onOpen, onDetails }) => {
+  const shots = screenshotsOf(project);
+  return (
+    <article className="glass-card flex flex-col overflow-hidden">
+      <button
+        onClick={() => onOpen({ shots, index: 0 })}
+        className="relative block aspect-[16/9] overflow-hidden bg-[var(--theme-bg)]"
+        aria-label={`Ver capturas de ${project.title}`}
+      >
+        <img
+          src={project.image}
+          alt={project.title}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-[1.03]"
+        />
+        <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-black/65 px-2 py-0.5 text-[11px] text-white">
+          <FiImage className="w-3 h-3" /> {shots.length}
+        </span>
+        {project.category === 'mobile' && (
+          <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/65 px-2 py-0.5 text-[11px] text-white">
+            <FiSmartphone className="w-3 h-3" /> App móvil
+          </span>
+        )}
+      </button>
+
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="space-y-1">
+          <h3 className="text-base font-semibold leading-snug text-[var(--theme-ink)]">{project.title}</h3>
+          <p className="text-sm text-[var(--theme-ink-muted)] leading-relaxed line-clamp-2">{project.description}</p>
+        </div>
+
+        {project.role && (
+          <p className="flex items-start gap-1.5 text-xs text-[var(--theme-ink)] line-clamp-2">
+            <FiUser className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[var(--theme-accent)]" />
+            {project.role}
+          </p>
+        )}
+
+        <div className="flex flex-wrap gap-1.5">
+          {project.technologies.slice(0, 4).map((tech) => (
+            <span key={tech} className="badge text-[11px] normal-case">{tech}</span>
+          ))}
+          {project.technologies.length > 4 && <span className="badge text-[11px]">+{project.technologies.length - 4}</span>}
+        </div>
+
+        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+          <button onClick={onDetails} className="flex items-center gap-1 text-sm font-semibold text-[var(--theme-accent)] hover:underline">
+            Ver detalles <FiChevronRight className="w-4 h-4" />
+          </button>
+          <div className="flex items-center gap-1">
+            {hasLink(project.liveUrl) && (
+              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-[var(--theme-border)] text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)]" aria-label="Ver proyecto publicado">
+                <FiExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            {hasLink(project.githubUrl) && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full hover:bg-[var(--theme-border)] text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)]" aria-label="Ver en GitHub">
+                <FiGithub className="w-4 h-4" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+};
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
-
   const projects = mergeLocalizedEntries<IProject>(
     getPortfolioData().projects,
     t('projectsData', { returnObjects: true })
   );
 
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
-  const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
-  const [modalTab, setModalTab] = useState<'case-study' | 'architecture' | 'gallery' | 'code'>('case-study');
-  const [activeScreenshotIdx, setActiveScreenshotIdx] = useState<number>(0);
-  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
-  const [codeCopied, setCodeCopied] = useState<boolean>(false);
+  const [gallery, setGallery] = useState<Gallery | null>(null);
+  const [details, setDetails] = useState<IProject | null>(null);
+  const closeDetails = useCallback(() => setDetails(null), []);
+  const closeGallery = useCallback(() => setGallery(null), []);
 
-  const handleCopyCode = async (code: string) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCodeCopied(true);
-      setTimeout(() => setCodeCopied(false), 2000);
-    } catch { /* silent */ }
-  };
+  // Only offer filters that actually have projects behind them.
+  const categories = useMemo(() => {
+    const all: { key: ProjectCategory; label: string; icon: React.ReactNode }[] = [
+      { key: 'all', label: t('projects.catAll'), icon: <FiFolder className="w-3.5 h-3.5" /> },
+      { key: 'web', label: 'Web', icon: <FiMonitor className="w-3.5 h-3.5" /> },
+      { key: 'mobile', label: 'Móvil', icon: <FiSmartphone className="w-3.5 h-3.5" /> },
+      { key: 'desktop', label: 'Escritorio', icon: <FiCpu className="w-3.5 h-3.5" /> },
+    ];
+    return all.filter((c) => c.key === 'all' || projects.some((p) => p.category === c.key));
+  }, [projects, t]);
 
-  // Prevent background body scroll when modal or lightbox is open
-  useEffect(() => {
-    if (selectedProject || zoomedImage) {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      if (scrollBarWidth > 0) {
-        document.body.style.paddingRight = `${scrollBarWidth}px`;
-      }
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
-      };
-    }
-  }, [selectedProject, zoomedImage]);
-
-  // Close modal on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (zoomedImage) {
-          setZoomedImage(null);
-        } else {
-          setSelectedProject(null);
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [zoomedImage]);
-
-  const filteredProjects = activeCategory === 'all' 
-    ? projects 
-    : projects.filter((p) => p.category === activeCategory);
-
-  const categories: { key: ProjectCategory; label: string; icon: React.ReactNode }[] = [
-    { key: 'all', label: t('projects.catAll'), icon: <FiFolder className="w-3.5 h-3.5" /> },
-    { key: 'web', label: t('projects.catWeb'), icon: <FiMonitor className="w-3.5 h-3.5" /> },
-    { key: 'mobile', label: t('projects.catMobile'), icon: <FiSmartphone className="w-3.5 h-3.5" /> },
-    { key: 'desktop', label: t('projects.catDesktop'), icon: <FiCpu className="w-3.5 h-3.5" /> },
-    { key: 'architecture', label: t('projects.catArchitecture'), icon: <FiLayers className="w-3.5 h-3.5" /> },
-  ];
+  // Work projects with real (fake-data) screenshots first, then the rest.
+  const visible = (activeCategory === 'all' ? projects : projects.filter((p) => p.category === activeCategory))
+    .slice()
+    .sort((a, b) => Number(!!b.isFeatured) - Number(!!a.isFeatured));
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
       <SEO
-        title="Proyectos — Anthony Pilatasig | .NET 8, Angular, React Native"
-        description="Mi ISTPET (Google Play), Gacad ERP, Sistema de Titulación, RRHH, Scorecraft CDMI, AvialB SIAT y DebtManager — proyectos reales construidos con Clean Architecture y CQRS."
+        title="Proyectos — Anthony Pilatasig"
+        description="Sistemas institucionales, una app publicada en Google Play y proyectos personales: mi rol, lo que construí y el resultado."
       />
-      {/* Page Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-[var(--theme-border)] pb-8"
-      >
-        <div>
-          <span className="section-index">02 / {t('projects.badge')}</span>
-          <h1 className="text-4xl md:text-6xl font-sans font-semibold text-[var(--theme-ink)] tracking-tight">
-            <RevealText text={t('projects.title')} />
-          </h1>
-          <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2 max-w-2xl">
-            {t('projects.subtitle')}
+
+      <header className="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="max-w-2xl">
+          <span className="section-index">{t('projects.badge')}</span>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--theme-ink)]">Lo que he construido</h1>
+          <p className="mt-3 flex items-start gap-2 text-sm text-[var(--theme-ink-muted)]">
+            <FiLock className="w-4 h-4 mt-0.5 shrink-0" />
+            Los sistemas institucionales están bajo contrato: las capturas usan datos ficticios y no se muestra código.
           </p>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filtrar proyectos">
           {categories.map((cat) => (
             <button
               key={cat.key}
+              role="tab"
+              aria-selected={activeCategory === cat.key}
               onClick={() => setActiveCategory(cat.key)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm transition-colors ${
                 activeCategory === cat.key
-                  ? 'bg-[var(--theme-accent)] text-white border border-[var(--theme-accent)] font-medium shadow-sm'
-                  : 'btn-secondary font-mono'
+                  ? 'bg-[var(--theme-accent)] text-white shadow-sm'
+                  : 'glass-pill text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)]'
               }`}
             >
-              <span className={activeCategory === cat.key ? '' : 'text-[var(--theme-accent)]'}>{cat.icon}</span>
-              <span>{cat.label}</span>
+              {cat.icon}
+              {cat.label}
             </button>
           ))}
         </div>
-      </motion.div>
+      </header>
 
-      {/* Projects Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 group/list">
-        {filteredProjects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.4, delay: (index % 4) * 0.08 }}
-            className="editorial-card p-5 sm:p-6 rounded-2xl flex flex-col justify-between border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/60 cursor-pointer group/item transition-all duration-300 shadow-sm hover:shadow-md"
-            onClick={() => {
-              setSelectedProject(project);
-              setModalTab('case-study');
-              setActiveScreenshotIdx(0);
-            }}
-          >
-            {/* Image & Top Meta */}
-            <div>
-              <div className="w-full rounded-xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border)] relative aspect-video mb-4">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover opacity-90 group-hover/item:opacity-100 group-hover/item:scale-105 transition-all duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)]/90 via-transparent to-transparent opacity-80" />
-                
-                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-                  <span className="badge bg-[var(--theme-surface)] backdrop-blur-md">
-                    {project.category.toUpperCase()}
-                  </span>
-                  {project.isFeatured && (
-                    <span className="badge-accent py-0.5">
-                      DESTACADO
-                    </span>
-                  )}
-                </div>
-
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-slate-200">
-                  <span className="truncate pr-2">{project.client}</span>
-                  <span className="text-[var(--theme-accent)] flex items-center gap-1 shrink-0 font-semibold">
-                    Ver Detalles →
-                  </span>
-                </div>
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="text-xl font-semibold text-[var(--theme-ink)] group-hover/item:text-[var(--theme-accent)] transition-colors mb-2">
-                {project.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light mb-4 line-clamp-3">
-                {project.description}
-              </p>
-            </div>
-
-            {/* Badges & Metrics Strip */}
-            <div className="space-y-3 pt-2 border-t border-[var(--theme-border)]">
-              {project.metrics && project.metrics.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {project.metrics.slice(0, 3).map((m, mIdx) => (
-                    <span key={mIdx} className="text-[10px] font-mono text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <FiTrendingUp className="w-2.5 h-2.5" />
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              <div className="flex flex-wrap gap-1.5">
-                {project.technologies.slice(0, 5).map((tech, tIdx) => (
-                  <span key={tIdx} className="badge text-[10px] py-0.5">
-                    {tech}
-                  </span>
-                ))}
-                {project.technologies.length > 5 && (
-                  <span className="badge text-[10px] py-0.5">
-                    +{project.technologies.length - 5}
-                  </span>
-                )}
-              </div>
-            </div>
-          </motion.div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        {visible.map((p) => (
+          <ProjectCard key={p.id} project={p} onOpen={setGallery} onDetails={() => setDetails(p)} />
         ))}
       </div>
 
-      {/* ─── MODAL DETAIL VIEW (RESPONSIVE, MULTI-TAB & NDA-SAFE) ──── */}
       <AnimatePresence>
-        {selectedProject && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md overscroll-contain"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setSelectedProject(null);
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 15 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-5xl h-[92vh] max-h-[920px] flex flex-col bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] rounded-2xl shadow-2xl relative overflow-hidden my-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Fixed Header & Tabs */}
-              <div className="p-5 sm:p-6 md:p-8 pb-3 border-b border-[var(--theme-border)] shrink-0 space-y-4 bg-[var(--theme-surface)] relative">
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] rounded-full bg-[var(--theme-border)] hover:bg-[var(--theme-border-strong)] transition-colors z-20"
-                  aria-label="Cerrar modal"
-                >
-                  <FiX className="w-5 h-5" />
-                </button>
-
-                {/* Modal Header */}
-                <div className="space-y-1.5 pr-10">
-                  <div className="flex flex-wrap items-center gap-2 text-[var(--theme-accent)] font-mono text-xs uppercase">
-                    <span className="badge-accent py-0.5">{selectedProject.category}</span>
-                    <span>•</span>
-                    <span>{selectedProject.client}</span>
-                  </div>
-
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[var(--theme-ink)] tracking-tight">
-                    {selectedProject.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm font-mono text-[var(--theme-ink-muted)] line-clamp-2">
-                    {selectedProject.longDescription || selectedProject.description}
-                  </p>
-                </div>
-
-                {/* Modal Tabs Navigation (4 Tabs) */}
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <button
-                    onClick={() => setModalTab('case-study')}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                      modalTab === 'case-study'
-                        ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                        : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                    }`}
-                  >
-                    <FiInfo className="w-3.5 h-3.5" />
-                    <span>1. Caso de Estudio &amp; Reto</span>
-                  </button>
-                  <button
-                    onClick={() => setModalTab('architecture')}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                      modalTab === 'architecture'
-                        ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                        : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                    }`}
-                  >
-                    <FiLayers className="w-3.5 h-3.5" />
-                    <span>2. Diagrama de Arquitectura</span>
-                  </button>
-                  <button
-                    onClick={() => setModalTab('gallery')}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                      modalTab === 'gallery'
-                        ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                        : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                    }`}
-                  >
-                    <FiMonitor className="w-3.5 h-3.5" />
-                    <span>3. Capturas Reales</span>
-                    {selectedProject.screenshots && (
-                      <span className="ml-1 px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">
-                        {selectedProject.screenshots.length}
-                      </span>
-                    )}
-                  </button>
-                  {selectedProject.codeSnippet && (
-                    <button
-                      onClick={() => setModalTab('code')}
-                      className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 ${
-                        modalTab === 'code'
-                          ? 'bg-[var(--theme-accent)] text-white font-semibold shadow-sm'
-                          : 'text-[var(--theme-ink-muted)] hover:text-[var(--theme-ink)] bg-[var(--theme-bg)]'
-                      }`}
-                    >
-                      <FiCpu className="w-3.5 h-3.5" />
-                      <span>4. Código &amp; Backend (.NET/TS)</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Scrollable Content Body */}
-              <div className="flex-1 overflow-y-auto p-5 sm:p-6 md:p-8 space-y-6 overscroll-contain">
-                {/* ── TAB 1: CASE STUDY ──────────────────────────────── */}
-                {modalTab === 'case-study' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-6"
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* Left: Image & Stack */}
-                    <div className="lg:col-span-5 space-y-4">
-                      <div className="w-full rounded-xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border)] aspect-video relative group">
-                        <img
-                          src={selectedProject.image}
-                          alt={selectedProject.title}
-                          decoding="async"
-                          className="w-full h-full object-cover"
-                        />
-                        <button 
-                          onClick={() => setZoomedImage(selectedProject.image)}
-                          className="absolute bottom-2 right-2 p-1.5 bg-black/70 hover:bg-black text-white rounded-md text-xs flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          Ampliar Imagen
-                        </button>
-                      </div>
-
-                      {/* Key Metrics */}
-                      {selectedProject.metrics && (
-                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
-                          <span className="font-mono text-xs font-semibold text-[var(--theme-ink)] block">
-                            Métricas &amp; Despliegue:
-                          </span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {selectedProject.metrics.map((m, mIdx) => (
-                              <span key={mIdx} className="badge bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-[10px]">
-                                <FiTrendingUp className="w-2.5 h-2.5" />
-                                {m}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Technologies */}
-                      <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
-                        <span className="font-mono text-xs font-semibold text-[var(--theme-ink)] block">
-                          Stack Tecnológico:
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {selectedProject.technologies.map((tech, idx) => (
-                            <span key={idx} className="badge text-[10px]">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right: Detailed Structured Sections */}
-                    <div className="lg:col-span-7 space-y-4">
-                      {/* Problem Statement */}
-                      {selectedProject.problem && (
-                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-red-500/20 space-y-1.5">
-                          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-mono font-bold text-xs uppercase">
-                            <FiAlertCircle className="w-4 h-4" />
-                            <span>1. El Reto de Negocio &amp; Problema Técnico</span>
-                          </div>
-                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                            {selectedProject.problem}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Architecture Decision */}
-                      {selectedProject.decision && (
-                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-accent)]/20 space-y-1.5">
-                          <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono font-bold text-xs uppercase">
-                            <FiSettings className="w-4 h-4" />
-                            <span>2. Decisión de Ingeniería &amp; Patrón Aplicado</span>
-                          </div>
-                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                            {selectedProject.decision}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Trade-off */}
-                      {selectedProject.tradeoff && (
-                        <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border-strong)] space-y-1.5">
-                          <div className="flex items-center gap-2 text-[var(--theme-ink)] font-mono font-bold text-xs uppercase">
-                            <FiGitBranch className="w-4 h-4" />
-                            <span>3. Trade-off &amp; Compensaciones Asumidas</span>
-                          </div>
-                          <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                            {selectedProject.tradeoff}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Impact */}
-                      {selectedProject.impact && (
-                        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-1.5">
-                          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs uppercase">
-                            <FiCheckCircle className="w-4 h-4" />
-                            <span>4. Impacto Cuantitativo &amp; Resultado Real</span>
-                          </div>
-                          <p className="text-xs sm:text-sm text-[var(--theme-ink)] font-normal leading-relaxed">
-                            {selectedProject.impact}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Key Features List */}
-                  {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
-                    <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] space-y-2">
-                      <h4 className="font-mono text-xs font-semibold text-[var(--theme-ink)] uppercase tracking-wide flex items-center gap-2">
-                        <FiCheck className="w-4 h-4 text-emerald-500" />
-                        <span>Funcionalidades &amp; Módulos Desarrollados:</span>
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                        {selectedProject.keyFeatures.map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-start gap-2 text-xs text-[var(--theme-ink-muted)] font-light">
-                            <span className="text-[var(--theme-accent)] mt-0.5">•</span>
-                            <span>{feat}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ── TAB 2: ARCHITECTURE & SECURITY FLOW ────────────── */}
-              {modalTab === 'architecture' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-6"
-                >
-                  {/* Visual Architecture Flowchart */}
-                  {selectedProject.architectureFlow && (
-                    <div className="p-5 rounded-2xl bg-[var(--theme-bg)] border border-[var(--theme-accent)]/30 space-y-4">
-                      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[var(--theme-border)] pb-3">
-                        <div>
-                          <span className="text-[10px] font-mono text-[var(--theme-accent)] font-semibold uppercase tracking-wider block">
-                            DIAGRAMA DE ARQUITECTURA DE LA SOLUCIÓN
-                          </span>
-                          <h4 className="text-base sm:text-lg font-semibold text-[var(--theme-ink)]">
-                            {selectedProject.architectureFlow.title}
-                          </h4>
-                        </div>
-                        <span className="badge-accent py-1 px-3 text-[11px] self-start sm:self-auto font-mono">
-                          {selectedProject.architectureFlow.pattern}
-                        </span>
-                      </div>
-
-                      <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] font-light leading-relaxed">
-                        {selectedProject.architectureFlow.description}
-                      </p>
-
-                      {/* Interactive Nodes Flow */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
-                        {selectedProject.architectureFlow.nodes.map((node, nIdx) => (
-                          <div 
-                            key={node.id} 
-                            className="p-3.5 rounded-xl bg-[var(--theme-surface)] border border-[var(--theme-border-strong)] flex flex-col justify-between space-y-2 hover:border-[var(--theme-accent)] transition-all shadow-sm group"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] font-mono text-[var(--theme-accent)] px-1.5 py-0.5 rounded bg-[var(--theme-accent)]/10">
-                                {node.tag || `CAPA 0${nIdx + 1}`}
-                              </span>
-                              <span className="text-[10px] font-mono text-[var(--theme-ink-muted)]">
-                                #{nIdx + 1}
-                              </span>
-                            </div>
-                            <div>
-                              <h5 className="text-xs font-bold text-[var(--theme-ink)] group-hover:text-[var(--theme-accent)] transition-colors">
-                                {node.label}
-                              </h5>
-                              <p className="text-[11px] font-mono text-[var(--theme-ink-muted)] mt-0.5">
-                                {node.sub}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Connection Legend */}
-                      {selectedProject.architectureFlow.connections && (
-                        <div className="p-3 rounded-xl bg-[var(--theme-surface)]/60 border border-[var(--theme-border)] flex flex-wrap items-center gap-3 text-[11px] font-mono text-[var(--theme-ink-muted)]">
-                          <span className="font-semibold text-[var(--theme-ink)]">Flujo de Datos:</span>
-                          {selectedProject.architectureFlow.connections.map((conn, cIdx) => (
-                            <span key={cIdx} className="flex items-center gap-1 bg-[var(--theme-bg)] px-2 py-1 rounded border border-[var(--theme-border)]">
-                              <span className="text-[var(--theme-ink)]">{conn.from}</span>
-                              <span className="text-[var(--theme-accent)]">──({conn.label || '→'})──►</span>
-                              <span className="text-[var(--theme-ink)]">{conn.to}</span>
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Architecture & Security Overview Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Architecture Overview */}
-                    <div className="editorial-card p-5 rounded-xl border border-[var(--theme-border)] space-y-3">
-                      <div className="flex items-center gap-2 text-[var(--theme-accent)] font-mono text-xs font-bold uppercase">
-                        <FiLayers className="w-4 h-4" />
-                        <span>Principios de Diseño &amp; Desacoplamiento</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                        {selectedProject.architectureOverview || 'Arquitectura estructurada bajo principios de Clean Architecture y bajo acoplamiento.'}
-                      </p>
-                      
-                      {selectedProject.architectureBadges && (
-                        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[var(--theme-border)]">
-                          {selectedProject.architectureBadges.map((badge, bIdx) => (
-                            <span key={bIdx} className="badge-accent text-[10px]">
-                              {badge}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Security & Compliance */}
-                    <div className="editorial-card p-5 rounded-xl border border-[var(--theme-border)] space-y-3">
-                      <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-mono text-xs font-bold uppercase">
-                        <FiShield className="w-4 h-4" />
-                        <span>Seguridad, RBAC &amp; Cumplimiento Normativo</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                        {selectedProject.securityAndCompliance || 'Implementación de roles RBAC, autenticación JWT segura y pistas de auditoría.'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* NDA Disclaimer Note */}
-                  <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
-                    <FiLock className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                      <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 block uppercase">
-                        Nota de Confidencialidad &amp; Cumplimiento Contractual (NDA-Safe)
-                      </span>
-                      <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-                        {selectedProject.ndaDisclaimer || 'La información expuesta describe exclusivamente patrones arquitectónicos de dominio público, metodologías de ingeniería de software y tecnologías aplicadas, protegiendo llaves criptográficas, credenciales internas y bases de datos privadas.'}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── TAB 3: SCREENSHOT GALLERY & UI MOCKUPS ─────────── */}
-              {modalTab === 'gallery' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-6"
-                >
-                  {selectedProject.screenshots && selectedProject.screenshots.length > 0 ? (
-                    <div className="space-y-4">
-                      {/* Featured Screenshot Display */}
-                      <div className="w-full rounded-2xl overflow-hidden bg-[var(--theme-bg)] border border-[var(--theme-border-strong)] relative group">
-                        <img
-                          src={selectedProject.screenshots[activeScreenshotIdx]?.url || selectedProject.image}
-                          alt={selectedProject.screenshots[activeScreenshotIdx]?.title || selectedProject.title}
-                          decoding="async"
-                          className="w-full max-h-[500px] object-contain mx-auto bg-black/40"
-                        />
-                        <button
-                          onClick={() => setZoomedImage(selectedProject.screenshots![activeScreenshotIdx].url)}
-                          className="absolute top-4 right-4 p-2 bg-black/75 hover:bg-black text-white rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md"
-                          title="Ampliar captura a pantalla completa"
-                        >
-                          <FiExternalLink className="w-3.5 h-3.5" />
-                          <span>Pantalla Completa</span>
-                        </button>
-                      </div>
-
-                      {/* Screenshot Title & Caption */}
-                      <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <div>
-                          <h4 className="text-sm font-semibold text-[var(--theme-ink)]">
-                            {selectedProject.screenshots[activeScreenshotIdx]?.title}
-                          </h4>
-                          <p className="text-xs text-[var(--theme-ink-muted)] mt-0.5">
-                            {selectedProject.screenshots[activeScreenshotIdx]?.caption}
-                          </p>
-                        </div>
-                        <span className="text-[11px] font-mono text-[var(--theme-accent)]">
-                          Captura {activeScreenshotIdx + 1} de {selectedProject.screenshots.length}
-                        </span>
-                      </div>
-
-                      {/* Thumbnail Selector Strip */}
-                      {selectedProject.screenshots.length > 1 && (
-                        <div className="flex gap-3 overflow-x-auto pb-2">
-                          {selectedProject.screenshots.map((s, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setActiveScreenshotIdx(idx)}
-                              className={`relative rounded-xl overflow-hidden border-2 w-32 aspect-video shrink-0 transition-all ${
-                                activeScreenshotIdx === idx
-                                  ? 'border-[var(--theme-accent)] shadow-md scale-105'
-                                  : 'border-[var(--theme-border)] opacity-70 hover:opacity-100'
-                              }`}
-                            >
-                              <img src={s.url} alt={s.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                              <span className="absolute bottom-0 inset-x-0 bg-black/70 text-[9px] font-mono text-white px-1 truncate text-center">
-                                #{idx + 1} {s.title}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="p-8 rounded-2xl bg-[var(--theme-bg)] border border-[var(--theme-border)] text-center space-y-3">
-                      <div className="w-full max-w-lg mx-auto rounded-xl overflow-hidden border border-[var(--theme-border)] aspect-video">
-                        <img src={selectedProject.image} alt={selectedProject.title} decoding="async" className="w-full h-full object-cover" />
-                      </div>
-                      <p className="text-xs text-[var(--theme-ink-muted)]">
-                        Captura principal de la interfaz del proyecto.
-                      </p>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ── TAB 4: REAL CODE IMPLEMENTATION ────────────────── */}
-              {modalTab === 'code' && selectedProject.codeSnippet && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-4"
-                >
-                  <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)] flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-                    <div>
-                      <span className="text-[10px] font-mono text-[var(--theme-accent)] font-semibold uppercase block">
-                        IMPLEMENTACIÓN DE BACKEND &amp; CONTROLADORES
-                      </span>
-                      <h4 className="text-sm font-semibold text-[var(--theme-ink)]">
-                        {selectedProject.codeSnippet.title}
-                      </h4>
-                    </div>
-
-                    <button
-                      onClick={() => handleCopyCode(selectedProject.codeSnippet!.code)}
-                      className="btn-secondary text-xs flex items-center gap-1.5 self-start sm:self-auto py-1 px-3"
-                    >
-                      {codeCopied ? (
-                        <>
-                          <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
-                          <span className="text-emerald-500">Copiado</span>
-                        </>
-                      ) : (
-                        <>
-                          <FiCopy className="w-3.5 h-3.5 text-[var(--theme-accent)]" />
-                          <span>Copiar Código</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Code Box */}
-                  <div className="rounded-2xl overflow-hidden bg-[#0A0D14] border border-[#1E293B] shadow-inner text-xs font-mono">
-                    <div className="flex items-center justify-between px-4 py-2 bg-[#0F172A] border-b border-[#1E293B]">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block" />
-                        <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-                        <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
-                      </div>
-                      <span className="text-[11px] text-slate-400 font-mono">
-                        {selectedProject.codeSnippet.language.toUpperCase()} • C# .NET 8 / TypeScript
-                      </span>
-                    </div>
-                    <pre className="p-4 sm:p-6 overflow-x-auto text-slate-200 leading-relaxed max-h-[380px] overflow-y-auto">
-                      <code>{selectedProject.codeSnippet.code}</code>
-                    </pre>
-                  </div>
-
-                  {/* Explanation Note */}
-                  <div className="p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-accent)]/20 flex items-start gap-3">
-                    <FiSettings className="w-4 h-4 text-[var(--theme-accent)] shrink-0 mt-0.5" />
-                    <p className="text-xs text-[var(--theme-ink-muted)] leading-relaxed font-light">
-                      <strong className="text-[var(--theme-ink)] font-medium">Explicación Técnica: </strong>
-                      {selectedProject.codeSnippet.explanation}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-              </div>
-
-              {/* Action Buttons Sticky Footer */}
-              <div className="p-4 sm:p-5 border-t border-[var(--theme-border)] bg-[var(--theme-surface)] shrink-0 flex flex-wrap gap-3 items-center">
-                {selectedProject.githubUrl && (
-                  <a
-                    href={selectedProject.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-secondary text-xs flex items-center gap-2"
-                  >
-                    <FiGithub className="w-4 h-4 text-[var(--theme-accent)]" />
-                    <span>{t('projects.viewCode')}</span>
-                  </a>
-                )}
-                {selectedProject.liveUrl && selectedProject.liveUrl !== '#' && (
-                  <a
-                    href={selectedProject.liveUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-primary text-xs flex items-center gap-2"
-                  >
-                    <FiExternalLink className="w-4 h-4" />
-                    <span>{selectedProject.category === 'mobile' ? 'Ver en Google Play Store' : t('projects.liveDemo')}</span>
-                  </a>
-                )}
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="ml-auto btn-secondary text-xs"
-                >
-                  {t('projects.close')}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
+        {details && <ProjectDetails key={details.id} project={details} onClose={closeDetails} onOpen={setGallery} />}
       </AnimatePresence>
-
-      {/* ─── FULLSCREEN ZOOM LIGHTBOX MODAL ───────────────────────── */}
       <AnimatePresence>
-        {zoomedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-lg"
-            onClick={() => setZoomedImage(null)}
-          >
-            <button
-              onClick={() => setZoomedImage(null)}
-              className="absolute top-6 right-6 p-3 text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
-              aria-label="Cerrar visor"
-            >
-              <FiX className="w-6 h-6" />
-            </button>
-            <img
-              src={zoomedImage}
-              alt="Vista ampliada"
-              decoding="async"
-              className="max-w-full max-h-[90vh] object-contain rounded-xl border border-white/20 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
+        {gallery && <Lightbox key={gallery.shots[0].url + gallery.index} gallery={gallery} onClose={closeGallery} />}
       </AnimatePresence>
     </div>
   );

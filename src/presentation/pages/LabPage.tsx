@@ -1,15 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  FiCpu, FiZap, FiMonitor, FiExternalLink
+  FiCpu, FiZap, FiMonitor, FiExternalLink, FiTerminal, FiArrowRight
 } from 'react-icons/fi';
 import { Gamepad2 } from 'lucide-react';
 import { RevealText } from '@presentation/components/ui/RevealText';
 import { SEO } from '@presentation/components/ui/SEO';
 
 const MODE_COUNT = 5;
+
+// /console needs a cross-origin-isolated document (see ConsolePage), which only a real
+// page load can give it, so it is opened with a full navigation instead of the router.
+const openConsole = () => window.location.assign(`${import.meta.env.BASE_URL}console`);
 
 const PREVIEW_TILES = [
   { color: '#F43F5E', label: 'RPG' },
@@ -20,7 +24,6 @@ const PREVIEW_TILES = [
 ];
 
 export const LabPage: React.FC = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const infoCards = [
@@ -71,10 +74,10 @@ export const LabPage: React.FC = () => {
         {/* Big launch card */}
         <div
           className="relative rounded-[28px] overflow-hidden cursor-pointer group"
-          onClick={() => navigate('/console')}
+          onClick={() => openConsole()}
           role="button"
           tabIndex={0}
-          onKeyDown={e => e.key === 'Enter' && navigate('/console')}
+          onKeyDown={e => e.key === 'Enter' && openConsole()}
           style={{
             background: 'linear-gradient(135deg, #0F1629 0%, #050811 100%)',
             border: '1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent)',
@@ -164,7 +167,7 @@ export const LabPage: React.FC = () => {
                   color: '#0F172A',
                   boxShadow: '0 0 24px rgba(255,255,255,0.1)',
                 }}
-                onClick={e => { e.stopPropagation(); navigate('/console'); }}
+                onClick={e => { e.stopPropagation(); openConsole(); }}
               >
                 <FiExternalLink className="w-4 h-4" />
                 {t('lab.consoleCta')}
@@ -203,26 +206,51 @@ export const LabPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
         {infoCards.map(({ key, icon }) => (
-          <div key={key} className="editorial-card p-6 rounded-2xl space-y-3">
+          <div key={key} className="glass-card p-6 space-y-3">
             <div className="flex items-center gap-2 text-[var(--theme-accent)]">
               {icon}
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-ink)]">
+              <h3 className="text-sm font-semibold text-[var(--theme-ink)]">
                 {t(`lab.cards.${key}.title`)}
               </h3>
             </div>
-            <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
+            <p className="text-sm text-[var(--theme-ink-muted)] leading-relaxed">
               {t(`lab.cards.${key}.desc`)}
             </p>
             <div className="pt-2 flex flex-wrap gap-1.5">
               {(t(`lab.cards.${key}.tags`, { returnObjects: true }) as string[]).map(tag => (
-                <span key={tag} className="badge-accent text-[9px]">{tag}</span>
+                <span key={tag} className="badge-accent text-[11px]">{tag}</span>
               ))}
             </div>
           </div>
         ))}
+      </motion.div>
+
+      {/* ─── Terminal ─────────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.3 }}
+        className="mt-6"
+      >
+        <Link
+          to="/terminal"
+          className="glass-card group flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6"
+        >
+          <div className="flex items-start gap-3">
+            <FiTerminal className="w-5 h-5 mt-0.5 text-[var(--theme-accent)] shrink-0" />
+            <div>
+              <h3 className="text-sm font-semibold text-[var(--theme-ink)]">{t('lab.terminalTitle')}</h3>
+              <p className="text-sm text-[var(--theme-ink-muted)] leading-relaxed mt-1">{t('lab.terminalDesc')}</p>
+            </div>
+          </div>
+          <span className="btn-secondary shrink-0">
+            {t('lab.terminalCta')}
+            <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </Link>
       </motion.div>
     </div>
   );

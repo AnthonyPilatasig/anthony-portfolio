@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const HomePage = React.lazy(() => import('@presentation/pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -8,6 +8,7 @@ const ExperiencePage = React.lazy(() => import('@presentation/pages/ExperiencePa
 const AboutPage = React.lazy(() => import('@presentation/pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const TerminalPage = React.lazy(() => import('@presentation/pages/TerminalPage').then(m => ({ default: m.TerminalPage })));
 const LabPage = React.lazy(() => import('@presentation/pages/LabPage').then(m => ({ default: m.LabPage })));
+const TeachingPage = React.lazy(() => import('@presentation/pages/TeachingPage').then(m => ({ default: m.TeachingPage })));
 const ContactPage = React.lazy(() => import('@presentation/pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const ConsolePage = React.lazy(() => import('@presentation/pages/ConsolePage').then(m => ({ default: m.ConsolePage })));
 
@@ -63,18 +64,21 @@ export const AppRouter: React.FC = () => {
           }
         />
         <Route
-          path="/laboratorio"
+          path="/zona-interactiva"
           element={
             <PageWrapper>
               <LabPage />
             </PageWrapper>
           }
         />
+        {/* Old names of the section, kept so existing links keep working. */}
+        <Route path="/laboratorio" element={<Navigate to="/zona-interactiva" replace />} />
+        <Route path="/lab" element={<Navigate to="/zona-interactiva" replace />} />
         <Route
-          path="/lab"
+          path="/docencia"
           element={
             <PageWrapper>
-              <LabPage />
+              <TeachingPage />
             </PageWrapper>
           }
         />
@@ -94,7 +98,7 @@ export const AppRouter: React.FC = () => {
           path="*"
           element={
             <PageWrapper>
-              <HomePage />
+              <NotFound />
             </PageWrapper>
           }
         />
@@ -113,4 +117,13 @@ const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   >
     {children}
   </motion.div>
+);
+
+const NotFound: React.FC = () => (
+  <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4 px-4 text-center">
+    <span className="section-index">404</span>
+    <h1 className="text-3xl font-semibold text-[var(--theme-ink)]">Esta página no existe</h1>
+    <p className="text-sm text-[var(--theme-ink-muted)] max-w-md">Puede que el enlace haya cambiado. Vuelve al inicio para seguir explorando.</p>
+    <Link to="/" className="btn-primary">Ir al inicio</Link>
+  </div>
 );

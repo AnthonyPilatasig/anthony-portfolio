@@ -228,13 +228,13 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
               <p className="text-yellow-400 font-semibold">Comandos disponibles:</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
                 <div><span className="text-cyan-400 font-bold">about</span> : Resumen profesional & biografía</div>
-                <div><span className="text-cyan-400 font-bold">manifesto</span> : Mis 4 Reglas No Negociables de Arquitectura</div>
+                <div><span className="text-cyan-400 font-bold">manifesto</span> : Mis principios de trabajo</div>
                 <div><span className="text-cyan-400 font-bold">projects</span> : Lista de todos los proyectos institucionales</div>
                 <div><span className="text-cyan-400 font-bold">gacad</span> : Detalles del Core Académico Gacad</div>
                 <div><span className="text-cyan-400 font-bold">istpet</span> : Detalles de la App Móvil Mi ISTPET</div>
                 <div><span className="text-cyan-400 font-bold">rrhh</span> : Detalles del ERP Recursos Humanos</div>
                 <div><span className="text-cyan-400 font-bold">rpg</span> : Detalles del Motor RPG Java POO</div>
-                <div><span className="text-cyan-400 font-bold">teach</span> : Cátedra universitaria y mentoría de software</div>
+                <div><span className="text-cyan-400 font-bold">teach</span> : Docencia y forma de enseñar</div>
                 <div><span className="text-cyan-400 font-bold">desktop</span> : Proyectos de escritorio nativos (DebtManager, Buscaminas)</div>
                 <div><span className="text-cyan-400 font-bold">skills</span> : Desglose del Stack Tecnológico & Arquitectura</div>
                 <div><span className="text-cyan-400 font-bold">experience</span> : Trayectoria laboral y formación académica</div>
@@ -272,7 +272,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({ fullHeight = f
         case 'docencia':
           outputNode = (
             <div className="text-xs space-y-2 font-mono text-slate-300">
-              <p className="text-yellow-400 font-bold">DOCENCIA TÉCNICA &amp; MENTORÍA UNIVERSITARIA (ISTPET):</p>
+              <p className="text-yellow-400 font-bold">DOCENCIA (ISTPET):</p>
               {portfolioData.teachingHighlights.map((t, idx) => (
                 <div key={idx} className="border-l-2 border-cyan-500/40 pl-2">
                   <p className="text-emerald-300 font-semibold">{t.subject} ({t.studentsCount})</p>

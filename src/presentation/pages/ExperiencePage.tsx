@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FiBriefcase, FiAward, FiCheck, FiDownload, FiFileText, FiBookOpen, FiUsers } from 'react-icons/fi';
 import { getPortfolioData } from '@application/useCases/portfolio/getPortfolioData';
@@ -37,7 +38,7 @@ export const ExperiencePage: React.FC = () => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-28 md:pt-36 pb-24">
       <SEO
         title="Trayectoria & Experiencia — Anthony Pilatasig"
-        description="Liderazgo técnico en ISTPET, CDMI Scorecraft y SIAT Policía Nacional, además de formación académica y docencia en programación."
+        description="Experiencia como desarrollador Full Stack en ISTPET, CDMI Scorecraft y SIAT, además de formación académica y docencia en programación."
       />
       {/* Header */}
       <motion.div 
@@ -52,7 +53,7 @@ export const ExperiencePage: React.FC = () => {
             <RevealText text={t('experience.title')} />
           </h1>
           <p className="text-sm font-mono text-[var(--theme-ink-muted)] mt-2">
-            Liderazgo técnico en desarrollo institucional, educación superior y proyectos de software.
+            Desarrollo de software institucional, docencia y proyectos aplicados.
           </p>
         </div>
 
@@ -226,15 +227,15 @@ export const ExperiencePage: React.FC = () => {
       >
         <div className="flex items-center justify-between">
           <div>
-            <span className="section-index text-xs">CÁTEDRA UNIVERSITARIA &amp; MENTORÍA TÉCNICA</span>
+            <span className="section-index text-xs">DOCENCIA</span>
             <h3 className="text-2xl font-semibold text-[var(--theme-ink)]">
-              Formación de Ingenieros de Software @ ISTPET
+              Docente de Desarrollo de Software @ ISTPET
             </h3>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[var(--theme-accent)]">
+          <Link to="/docencia" className="flex items-center gap-2 text-xs font-mono text-[var(--theme-accent)] hover:underline">
             <FiUsers className="w-4 h-4" />
-            <span>Docencia Técnica &amp; POO</span>
-          </div>
+            <span>Ver perfil docente →</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

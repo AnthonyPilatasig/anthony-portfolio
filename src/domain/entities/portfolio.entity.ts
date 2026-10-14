@@ -32,6 +32,8 @@ export interface IProject {
   id: number;
   title: string;
   client: string;
+  /** What Anthony personally did on the project (most work projects are team efforts). */
+  role?: string;
   category: ProjectCategory;
   description: string;
   longDescription?: string;

@@ -5,61 +5,77 @@
     "experience": "Trayectoria",
     "about": "Sobre Mí",
     "terminal": "Terminal",
-    "lab": "Laboratorio",
-    "contact": "Contacto"
+    "lab": "Zona Interactiva",
+    "contact": "Contacto",
+    "teaching": "Docencia"
   },
   "home": {
-    "profileBadge": "Full Stack & Arquitectura",
-    "subtitle": "Full Stack Developer (.NET 8 / React / Angular) & Mobile Lead",
+    "profileBadge": "Desarrollo & Docencia",
+    "subtitle": "Desarrollador Full Stack (Angular, React, Ionic, .NET) y docente",
     "viewAll": "Ver todos ({{count}})"
   },
   "hero": {
     "badgeArchitecture": "Clean Architecture & CQRS",
-    "statusAvailable": "Disponible para proyectos & Desafíos Full Stack",
+    "statusAvailable": "Abierto a proyectos, clases y consultorías",
     "mainTitle": "Software que resuelve problemas reales con arquitectura limpia y buen criterio",
-    "heroDesc": "Desarrollador Full Stack y Docente Técnico en Quito, Ecuador. Construyo aplicaciones móviles publicadas en Google Play, modernizo sistemas académicos institucionales con .NET y Angular, y enseño programación con bases sólidas en POO y algoritmos.",
+    "heroDesc": "Desarrollador Full Stack y docente en Quito, Ecuador. Construyo aplicaciones web y móviles para una institución educativa —una de ellas publicada en Google Play— y enseño programación con ejemplos del mundo real.",
     "viewProjects": "Ver Proyectos",
     "cliMode": "Modo Consola CLI",
     "downloadCv": "Descargar CV (PDF)",
     "copyEmail": "Copiar Email",
     "emailCopied": "¡Email Copiado!",
     "statSystems": "Sistemas & Apps",
-    "statExperience": "Lead Developer",
+    "statExperience": "Full Stack",
     "statEducation": "Semestre UPS",
     "statArchitecture": "Clean & CQRS"
   },
   "lab": {
-    "badge": "05 / El Laboratorio",
-    "title": "Cosas que construí solo por diversión.",
-    "subtitle": "Un recorrido por los easter eggs y experimentos técnicos escondidos en este portafolio.",
-    "consoleEyebrow": "Consola Virtual",
-    "consoleStatus": "En línea",
-    "consoleDesc": "Consola virtual interactiva de alto rendimiento. Ejecuta un motor RPG Maker / Pokémon Essentials en WebAssembly, emula consolas clásicas con núcleos libretro o disfruta mini-juegos nativos — todo corre 100% local en tu navegador.",
-    "consoleCta": "Abrir AP-Deck",
+    "badge": "Zona Interactiva",
+    "title": "Juega, prueba y mira cómo funciona.",
+    "subtitle": "Juegos, emuladores y una terminal que corren directamente en tu navegador. Son mis experimentos para aprender —y enseñar— cómo funciona la web por dentro.",
+    "consoleEyebrow": "Consola de juegos",
+    "consoleStatus": "Disponible",
+    "consoleDesc": "Juegos clásicos y mini-juegos hechos por mí que funcionan en tu navegador, sin instalar nada. Por dentro usa WebAssembly, la tecnología que permite correr programas pesados en la web.",
+    "consoleCta": "Abrir la consola",
     "consoleModes": "{{count}} modos disponibles",
     "features": {
-      "rpgmaker": "Motor RPG Maker en WASM",
-      "wasm": "Emulación multi-consola",
+      "rpgmaker": "Juegos RPG Maker",
+      "wasm": "Consolas clásicas",
       "fullscreen": "Pantalla completa",
-      "mobile": "Compatible con móvil"
+      "mobile": "Funciona en móvil"
     },
     "cards": {
       "rpgmaker": {
-        "title": "Motor RPG Maker & Pokémon Essentials",
-        "desc": "Lanza cualquier proyecto de RPG Maker XP / VX / Ace o Pokémon Essentials directamente en el navegador, gracias al núcleo mkxp-z compilado a WebAssembly y ejecutado 100% en el cliente.",
-        "tags": ["mkxp-z WASM", "RGSS Runtime", "100% Local"]
+        "title": "Juegos hechos con RPG Maker",
+        "desc": "Abre proyectos de RPG Maker XP / VX / Ace o Pokémon Essentials directamente en el navegador. Para lograrlo compilé un motor (mkxp-z) a WebAssembly.",
+        "tags": [
+          "WebAssembly",
+          "RPG Maker",
+          "Sin servidor"
+        ]
       },
       "wasm": {
-        "title": "Emulación WebAssembly Multi-Consola",
-        "desc": "Entorno con núcleos libretro de código abierto compilados a WebAssembly, con auto-detección de sistema: GBA, NDS, PS1, N64, SNES y Mega Drive, con guardado local en el navegador.",
-        "tags": ["Núcleos libretro", "Auto-Detección", "Zero Server"]
+        "title": "Emulador de consolas clásicas",
+        "desc": "Carga tus propios archivos de juego y el emulador detecta la consola: GBA, NDS, PS1, N64, SNES o Mega Drive. Las partidas se guardan en tu navegador.",
+        "tags": [
+          "libretro",
+          "Detección automática",
+          "Guardado local"
+        ]
       },
       "native": {
-        "title": "Mini-Juegos Nativos Widescreen",
-        "desc": "Cyber-Encounter (J-RPG táctico), Retro Snake Neon DX y 2048 Logic Matrix, construidos en TypeScript y CSS moderno con soporte de teclado y mando.",
-        "tags": ["TypeScript Puro", "Web Audio API", "Gamepad API"]
+        "title": "Mini-juegos hechos desde cero",
+        "desc": "Un combate por turnos, Snake y 2048 programados en TypeScript. Sirven como ejemplo en clase de estados, bucles de juego y eventos de teclado o mando.",
+        "tags": [
+          "TypeScript",
+          "Web Audio",
+          "Gamepad"
+        ]
       }
-    }
+    },
+    "terminalTitle": "Terminal interactiva",
+    "terminalDesc": "Explora el portafolio escribiendo comandos como en una consola real. Escribe help para empezar.",
+    "terminalCta": "Abrir terminal"
   },
   "techShowcase": {
     "badge": "Stack & Infraestructura",
@@ -70,8 +86,8 @@
     "title": "Explora mi Portafolio",
     "projectsDesc": "Mi ISTPET (Google Play), Gacad ERP, RRHH, Scorecraft CDMI, AvialB SIAT y DebtManager.",
     "experienceDesc": "Experiencia en ISTPET, CDMI Scorecraft, SIAT Policía Nacional y formación académica.",
-    "aboutDesc": "Valores de ingeniería, afición al desarrollo de juegos en Java y docencia técnica.",
-    "terminalDesc": "Terminal Unix interactiva en pantalla completa con comandos CLI."
+    "aboutDesc": "Quién soy, cómo trabajo y mis proyectos personales.",
+    "terminalDesc": "Terminal interactiva para explorar el portafolio con comandos."
   },
   "skills": {
     "badge": "Capacidades & Stack",
@@ -87,7 +103,7 @@
     "architectureDesc": "Separación de responsabilidades con Clean Architecture y CQRS, modelado relacional en SQL Server / MySQL y contenedores Docker."
   },
   "projects": {
-    "badge": "Catálogo de Software",
+    "badge": "Proyectos",
     "title": "Proyectos & Sistemas",
     "subtitle": "Sistemas institucionales, aplicaciones móviles en producción, herramientas de escritorio y arquitecturas backend.",
     "catAll": "Todos los Proyectos",
@@ -97,7 +113,7 @@
     "catArchitecture": "Arquitectura & Backend .NET",
     "client": "Cliente / Contexto:",
     "featured": "DESTACADO",
-    "viewDetails": "Ver arquitectura & especificaciones →",
+    "viewDetails": "Ver detalles y capturas →",
     "viewCode": "Ver Código en GitHub",
     "liveDemo": "Ver Demo en Vivo",
     "close": "Cerrar",
@@ -105,12 +121,12 @@
     "sectionDecision": "2. Decisión de Arquitectura",
     "sectionTradeoff": "3. Trade-off Asumido",
     "sectionImpact": "4. Resultado & Impacto Real",
-    "sectionStack": "Stack & Firma Tecnológica"
+    "sectionStack": "Tecnologías"
   },
   "experience": {
     "badge": "Experiencia & Trayectoria",
     "title": "Experiencia & CV",
-    "subtitle": "Desarrollo institucional, docencia técnica superior y proyectos de software aplicados.",
+    "subtitle": "Desarrollo de software para una institución educativa, docencia y proyectos aplicados.",
     "requestCv": "Descargar CV (PDF)",
     "careerTitle": "Trayectoria Profesional",
     "educationTitle": "Formación Académica",
@@ -120,17 +136,17 @@
   },
   "about": {
     "badge": "Biografía & Enfoque",
-    "title": "Sobre Mí & Enfoque de Desarrollo",
-    "subtitle": "Desarrollador Full Stack & Estudiante de Ingeniería en Software en Quito, Ecuador.",
+    "title": "Sobre mí",
+    "subtitle": "Desarrollador Full Stack, docente y estudiante de Ingeniería en Software en Quito, Ecuador.",
     "mainTitle": "De los videojuegos a la arquitectura de software",
     "bio1": "Soy Anthony David Pilatasig Macas. Empecé a programar por curiosidad, no por obligación: quería entender cómo funcionaban los videojuegos que jugaba, así que empecé a armar los míos. De ahí me quedó una forma de pensar que no he perdido: antes de escribir una línea, trato de entender bien el problema completo, y prefiero una solución simple que funcione a una elegante que nadie entienda después.",
-    "bio2": "Hoy trabajo como Full Stack Developer & Mobile Lead en el ISTPET, donde desarrollo aplicaciones móviles y modernizo sistemas de gestión académica y administrativa con .NET, C#, Angular y React Native, aplicando Clean Architecture y CQRS. Me gusta construir software que la gente realmente usa a diario, no solo demos.",
-    "bio3": "También enseño Programación Orientada a Objetos, algoritmos y control de versiones a nivel superior. Dar clases me obliga a explicar las cosas de la forma más simple posible, y eso termina notándose en cómo escribo código: prefiero que sea claro antes que impresionante.",
+    "bio2": "Hoy soy desarrollador Full Stack en el equipo de software del ISTPET: según el proyecto trabajo en análisis, base de datos, backend o frontend, con .NET, C#, Angular, React e Ionic. Me gusta construir software que la gente usa a diario, no solo demos.",
+    "bio3": "También soy docente en la carrera de Desarrollo de Software, desde fundamentos hasta sistemas completos. Dar clases me obliga a explicar las cosas de la forma más simple posible, y eso termina notándose en cómo escribo código: prefiero que sea claro antes que impresionante.",
     "valuesTitle": "Valores de Código",
     "valuesDesc": "Código legible, modularidad real, pruebas y respeto por el tiempo del usuario final.",
     "securityTitle": "Enfoque de Seguridad",
-    "securityDesc": "Principios de DevSecOps, hashing seguro, tokens JWT y control estricto de roles.",
-    "ficheTitle": "Ficha Técnica",
+    "securityDesc": "Autenticación con JWT, contraseñas con hashing y permisos por rol en cada sistema.",
+    "ficheTitle": "Datos rápidos",
     "location": "Ubicación",
     "timezone": "Zona Horaria",
     "language": "Idioma",
@@ -139,24 +155,24 @@
     "stackBreakdown": "Desglose de Tecnologías"
   },
   "contact": {
-    "badge": "Contacto Directo & Colaboración",
+    "badge": "Contacto",
     "title": "Contacto",
-    "subtitle": "¿Tienes un proyecto, propuesta laboral o desafío técnico? Conéctate directamente conmigo.",
+    "subtitle": "¿Tienes una propuesta de trabajo, un curso, una mentoría o un proyecto? Escríbeme.",
     "formTitle": "Enviar Mensaje",
     "name": "Nombre",
     "namePlaceholder": "Tu nombre o empresa",
     "email": "Correo Electrónico",
     "emailPlaceholder": "tu@correo.com",
     "subject": "Asunto",
-    "subjectPlaceholder": "Propuesta laboral / Proyecto Full-Stack / Consulta",
+    "subjectPlaceholder": "Propuesta laboral / Clases / Consultoría",
     "message": "Mensaje",
     "messagePlaceholder": "Describe los detalles de tu consulta...",
-    "sendBtn": "Enviar Mensaje",
-    "successTitle": "¡Mensaje Enviado con Éxito!",
-    "successDesc": "Gracias por ponerte en contacto. Te responderé a la brevedad posible a",
-    "sendAnother": "Enviar Otro Mensaje",
+    "sendBtn": "Abrir mi correo para enviar",
+    "successTitle": "Se abrió tu aplicación de correo",
+    "successDesc": "Revisa el borrador y pulsa enviar. Si no se abrió nada, escríbeme directamente a",
+    "sendAnother": "Volver al formulario",
     "directLinks": "Conexiones Directas",
-    "sending": "Enviando..."
+    "sending": "Abriendo tu correo..."
   },
   "terminal": {
     "title": "Consola Virtual UNIX CLI",

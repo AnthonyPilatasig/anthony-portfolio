@@ -35,9 +35,9 @@ export const Navbar: React.FC = () => {
     { path: '/', label: t('nav.home') },
     { path: '/proyectos', label: t('nav.projects') },
     { path: '/trayectoria', label: t('nav.experience') },
+    { path: '/docencia', label: t('nav.teaching') },
     { path: '/sobre-mi', label: t('nav.about') },
-    { path: '/terminal', label: t('nav.terminal') },
-    { path: '/laboratorio', label: t('nav.lab') },
+    { path: '/zona-interactiva', label: t('nav.lab') },
     { path: '/contacto', label: t('nav.contact') },
   ];
 
@@ -45,8 +45,8 @@ export const Navbar: React.FC = () => {
     <header
       className={`fixed w-full z-50 top-0 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-[var(--theme-border)] bg-[var(--theme-bg)]/95 backdrop-blur-md'
-          : 'bg-[var(--theme-bg)]'
+          ? 'border-b border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl backdrop-saturate-150 shadow-[var(--glass-shadow)]'
+          : 'bg-transparent'
       }`}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-14 flex items-center justify-between">

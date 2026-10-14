@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   FiArrowRight, FiDownload, FiCopy, FiCheck, FiMonitor, FiServer,
-  FiLayers, FiBox, FiTerminal, FiBookOpen, FiAward,
+  FiLayers, FiBox, FiBookOpen, FiBriefcase, FiMessageSquare,
   FiZap, FiGithub, FiLinkedin
 } from 'react-icons/fi';
 import { SiTwitch } from 'react-icons/si';
@@ -33,22 +33,47 @@ const STACK_CARDS = [
   {
     icon: <FiMonitor className="w-5 h-5" />,
     label: 'Frontend & Mobile',
-    tech: ['Angular', 'React Native', 'TypeScript', 'Tailwind CSS', 'RxJS'],
+    tech: ['Angular', 'React', 'Ionic', 'React Native', 'TypeScript'],
   },
   {
     icon: <FiServer className="w-5 h-5" />,
-    label: 'Backend & Server',
-    tech: ['.NET 8', 'C#', 'Java Spring/Core', 'REST APIs', 'JWT Auth'],
+    label: 'Backend',
+    tech: ['.NET 8', 'C#', 'REST APIs', 'JWT', 'Java'],
   },
   {
     icon: <FiLayers className="w-5 h-5" />,
-    label: 'Arquitectura & Core',
-    tech: ['Clean Architecture', 'CQRS', 'DDD', 'MediatR', 'Event-Driven'],
+    label: 'Arquitectura',
+    tech: ['Clean Architecture', 'CQRS', 'MediatR', 'FluentValidation'],
   },
   {
     icon: <FiBox className="w-5 h-5" />,
-    label: 'Infra & Data',
-    tech: ['Docker', 'Kubernetes', 'SQL Server', 'MySQL', 'SQLite'],
+    label: 'Datos & Herramientas',
+    tech: ['MySQL', 'SQL Server', 'SQLite', 'Git', 'Azure DevOps'],
+  },
+];
+
+// Three entry points for the three audiences the portfolio serves.
+const AUDIENCE_PATHS = [
+  {
+    icon: <FiBriefcase className="w-5 h-5" />,
+    title: 'Busco un desarrollador',
+    desc: 'Sistemas institucionales en producción, una app publicada en Google Play y cómo trabajo en equipo.',
+    to: '/proyectos',
+    cta: 'Ver proyectos',
+  },
+  {
+    icon: <FiBookOpen className="w-5 h-5" />,
+    title: 'Soy estudiante o institución',
+    desc: 'Cómo enseño, qué materias dicto y cómo evalúo con proyectos creativos en GitHub.',
+    to: '/docencia',
+    cta: 'Ver docencia',
+  },
+  {
+    icon: <FiMessageSquare className="w-5 h-5" />,
+    title: 'Clases, mentorías o consultoría',
+    desc: 'Talleres de programación, acompañamiento en proyectos o apoyo para modernizar un sistema.',
+    to: '/contacto',
+    cta: 'Escribirme',
   },
 ];
 
@@ -100,8 +125,8 @@ export const HomePage: React.FC = () => {
           <motion.div variants={fadeUp} className="lg:col-span-8 space-y-6">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="badge-accent py-1">Full Stack &amp; Mobile Lead @ ISTPET</span>
-                <span className="badge py-1">Docente Técnico Superior</span>
+                <span className="badge-accent py-1">Desarrollador Full Stack @ ISTPET</span>
+                <span className="badge py-1">Docente de Desarrollo de Software</span>
                 <span className="badge py-1">Quito, Ecuador (UTC-5)</span>
               </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.08] text-[var(--theme-ink)] tracking-tight">
@@ -150,10 +175,6 @@ export const HomePage: React.FC = () => {
                 <span>{copied ? t('hero.emailCopied') : t('hero.copyEmail')}</span>
               </button>
 
-              <Link to="/terminal" className="btn-secondary text-xs">
-                <FiTerminal className="w-3.5 h-3.5 text-[var(--theme-accent)]" />
-                <span>CLI Terminal</span>
-              </Link>
             </div>
 
             {/* Social Links Strip */}
@@ -186,11 +207,11 @@ export const HomePage: React.FC = () => {
                 <span>Twitch</span>
               </a>
               <Link
-                to="/laboratorio"
+                to="/zona-interactiva"
                 className="flex items-center gap-1.5 hover:text-[var(--theme-accent)] transition-colors ml-auto"
               >
                 <FiZap className="w-3.5 h-3.5 text-amber-500" />
-                <span>AP-Deck Lab →</span>
+                <span>Zona Interactiva →</span>
               </Link>
             </div>
           </motion.div>
@@ -215,7 +236,7 @@ export const HomePage: React.FC = () => {
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
                     Anthony Pilatasig
                   </span>
-                  <span className="text-amber-300">Full Stack &amp; Mobile Lead</span>
+                  <span className="text-amber-300">Full Stack &amp; Docente</span>
                 </div>
               </div>
 
@@ -229,9 +250,9 @@ export const HomePage: React.FC = () => {
                 </div>
                 <div className="p-2.5 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
                   <span className="text-lg font-bold text-[var(--theme-ink)] block">
-                    <CountUp end={2} suffix="+ Años" />
+                    <CountUp end={1.5} decimals={1} suffix=" años" />
                   </span>
-                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Docencia Técnica</span>
+                  <span className="text-[9px] text-[var(--theme-ink-muted)] uppercase">Como docente</span>
                 </div>
               </div>
             </div>
@@ -239,7 +260,35 @@ export const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* ─── 02 / ENGINEERING MANIFESTO (SELLO DE SENIORITY) ─── */}
+      {/* ─── ¿QUÉ BUSCAS? — accesos por tipo de visitante ─── */}
+      <motion.section
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={stagger}
+        className="py-12 border-b border-[var(--theme-border)]"
+      >
+        <motion.h2 variants={fadeUp} className="text-lg font-semibold text-[var(--theme-ink)] mb-5">
+          ¿Qué te trae por aquí?
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {AUDIENCE_PATHS.map((path) => (
+            <motion.div key={path.to} variants={fadeUp}>
+              <Link to={path.to} className="glass-card group flex h-full flex-col gap-3 p-5">
+                <span className="text-[var(--theme-accent)]">{path.icon}</span>
+                <h3 className="text-base font-semibold text-[var(--theme-ink)]">{path.title}</h3>
+                <p className="text-sm text-[var(--theme-ink-muted)] leading-relaxed flex-1">{path.desc}</p>
+                <span className="font-mono text-xs text-[var(--theme-accent)] flex items-center gap-1">
+                  {path.cta}
+                  <FiArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ─── 02 / PRINCIPIOS DE TRABAJO ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
@@ -248,12 +297,12 @@ export const HomePage: React.FC = () => {
         className="py-16 border-b border-[var(--theme-border)]"
       >
         <motion.div variants={fadeUp} className="mb-8">
-          <span className="section-index">02 / MANIFIESTO &amp; PRINCIPIOS DE INGENIERÍA</span>
+          <span className="section-index">02 / CÓMO TRABAJO</span>
           <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
-            Mis Reglas No Negociables de Arquitectura
+            Principios que aplico en el código y en el aula
           </h2>
-          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
-            Criterio técnico forjado liderando sistemas empresariales institucionales y cátedras universitarias.
+          <p className="text-sm text-[var(--theme-ink-muted)] mt-1">
+            Aprendidos construyendo sistemas para una institución educativa y enseñando a programar.
           </p>
         </motion.div>
 
@@ -292,8 +341,8 @@ export const HomePage: React.FC = () => {
           <div>
             <span className="section-index">03 / {t('projects.badge')}</span>
             <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">{t('projects.title')}</h2>
-            <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
-              Cores institucionales, aplicaciones móviles, software nativo de escritorio y motores de videojuegos.
+            <p className="text-sm text-[var(--theme-ink-muted)] mt-1">
+              Sistemas institucionales, una app móvil publicada y proyectos personales.
             </p>
           </div>
           <Link
@@ -356,12 +405,12 @@ export const HomePage: React.FC = () => {
         className="py-16 border-b border-[var(--theme-border)]"
       >
         <motion.div variants={fadeUp} className="mb-6">
-          <span className="section-index">04 / INGENIERÍA DE SOFTWARE &amp; ARQUITECTURA</span>
+          <span className="section-index">04 / ARQUITECTURA</span>
           <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
-            Diseño por Capas &amp; Patrón CQRS (.NET 8)
+            Diseño por capas y CQRS en .NET 8
           </h2>
-          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
-            Explora interactivamente la estructura desacoplada utilizada en los cores de <strong>Gacad</strong> y <strong>Mi ISTPET</strong>.
+          <p className="text-sm text-[var(--theme-ink-muted)] mt-1">
+            Recorre la estructura que uso en sistemas como <strong>GAcad</strong> y <strong>Mi ISTPET</strong>.
           </p>
         </motion.div>
 
@@ -370,7 +419,7 @@ export const HomePage: React.FC = () => {
         </motion.div>
       </motion.section>
 
-      {/* ─── 05 / UNIVERSIDAD & DOCENCIA TÉCNICA (LEADERSHIP) ─── */}
+      {/* ─── 05 / DOCENCIA ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
@@ -378,40 +427,36 @@ export const HomePage: React.FC = () => {
         variants={stagger}
         className="py-16 border-b border-[var(--theme-border)]"
       >
-        <motion.div variants={fadeUp} className="mb-8">
-          <span className="section-index">05 / LIDERAZGO &amp; DOCENCIA UNIVERSITARIA</span>
-          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
-            Formación Técnica &amp; Mentoría Universitaria
-          </h2>
-          <p className="text-xs font-mono text-[var(--theme-ink-muted)] mt-1">
-            Impartiendo cátedras de programación avanzada, estructuras de datos y buenas prácticas de ingeniería en ISTPET.
-          </p>
+        <motion.div variants={fadeUp} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <span className="section-index">05 / DOCENCIA</span>
+            <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
+              Enseño con casos reales, no solo con teoría
+            </h2>
+            <p className="text-sm text-[var(--theme-ink-muted)] mt-1 max-w-2xl">
+              Docente de la carrera de Desarrollo de Software en el ISTPET. Llevo al aula lo que vivo en el trabajo:
+              equipos, código heredado y proyectos que los estudiantes construyen en GitHub.
+            </p>
+          </div>
+          <Link to="/docencia" className="btn-secondary shrink-0">
+            Ver mi perfil docente <FiArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {teachingHighlights.map((teach, i) => (
-            <motion.div key={i} variants={fadeUp} className="editorial-card p-5 rounded-xl space-y-3 flex flex-col justify-between">
+          {teachingHighlights.map((teach) => (
+            <motion.div key={teach.subject} variants={fadeUp} className="glass-card p-5 space-y-3 flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between gap-2 border-b border-[var(--theme-border)] pb-2 mb-2">
-                  <div className="flex items-center gap-2 text-[var(--theme-accent)]">
-                    <FiBookOpen className="w-4 h-4" />
-                    <span className="font-mono text-[10px] font-bold uppercase">{teach.studentsCount}</span>
-                  </div>
-                  <FiAward className="w-3.5 h-3.5 text-amber-500" />
+                <div className="flex items-center gap-2 text-[var(--theme-accent)] mb-2">
+                  <FiBookOpen className="w-4 h-4" />
+                  <span className="font-mono text-[11px] font-semibold uppercase">{teach.studentsCount}</span>
                 </div>
-                <h3 className="font-mono text-xs font-bold text-[var(--theme-ink)] mb-1">
-                  {teach.subject}
-                </h3>
-                <p className="text-xs text-[var(--theme-ink-muted)] font-light leading-relaxed">
-                  {teach.description}
-                </p>
+                <h3 className="text-sm font-semibold text-[var(--theme-ink)] mb-1">{teach.subject}</h3>
+                <p className="text-sm text-[var(--theme-ink-muted)] leading-relaxed">{teach.description}</p>
               </div>
-
               <div className="flex flex-wrap gap-1 pt-2">
                 {teach.focus.map((f) => (
-                  <span key={f} className="badge text-[9px] py-0.5">
-                    {f}
-                  </span>
+                  <span key={f} className="badge text-[11px] py-0.5">{f}</span>
                 ))}
               </div>
             </motion.div>
@@ -473,10 +518,10 @@ export const HomePage: React.FC = () => {
       >
         <span className="section-index">08 / {t('contact.badge')}</span>
         <h2 className="text-3xl sm:text-4xl font-bold text-[var(--theme-ink)] tracking-tight mt-2 mb-6">
-          ¿Construimos algo extraordinario juntos?
+          ¿Trabajamos juntos?
         </h2>
         <p className="text-sm font-light text-[var(--theme-ink-muted)] max-w-xl mb-6">
-          Disponible para roles de Full Stack Senior / Lead (.NET 8 + Angular / React + Mobile), Arquitectura de Software y proyectos de alto rendimiento.
+          Abierto a puestos de desarrollo Full Stack (Angular, React, Ionic y .NET), clases y talleres de programación, mentorías y consultorías.
         </p>
         <div className="flex flex-wrap gap-3">
           <Magnetic>
