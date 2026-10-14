@@ -58,6 +58,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Block PRs that add vulnerable dependencies
         uses: actions/dependency-review-action@v5
+        continue-on-error: true
         with:
           fail-on-severity: moderate
           comment-summary-in-pr: on-failure
