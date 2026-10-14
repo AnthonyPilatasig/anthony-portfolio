@@ -1,0 +1,46 @@
+name: Sync music playlist
+
+# Manual (Actions → Sync music playlist → Run workflow): reads the Spotify playlist, finds
+# each new song on YouTube, commits public/music/playlist.json and redeploys. No secrets
+# needed. YouTube sometimes blocks requests from cloud servers; if this run finds nothing,
+# run `npm run music:sync` on your own computer and commit the file instead.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-playlist
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Build playlist.json
+        run: npm run music:sync
+
+      - name: Commit changes and redeploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- public/music/playlist.json; then
+            echo "Playlist unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/music/playlist.json
+          git commit -m "chore(music): sync playlist from Spotify"
+          git push
+          # Pushes made with GITHUB_TOKEN don't trigger other workflows, so start the
+          # deploy explicitly (workflow_dispatch is the allowed exception).
+          gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"

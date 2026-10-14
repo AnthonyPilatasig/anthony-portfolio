@@ -117,6 +117,35 @@ Este repositorio almacena una aplicación web interactiva diseñada bajo un arqu
 
 ---
 
+## 🎵 Música del casete (Spotify → YouTube)
+
+El embed de Spotify solo reproduce 30 segundos a quien no tiene sesión en Spotify. Por eso el casete
+reproduce las canciones completas desde YouTube, usando la lista que genera `scripts/sync-playlist.mjs`
+en `public/music/playlist.json`. Mientras esa lista esté vacía, el casete usa el embed de Spotify como respaldo.
+
+No necesita cuentas ni API keys: el script lee la lista de la página pública del reproductor de Spotify y
+toma el primer resultado de YouTube que se pueda reproducir en el sitio (la duración no tiene que coincidir;
+solo descarta recopilaciones de más de 15 minutos). Si no encuentra nada, prueba con búsquedas más simples.
+El casete solo reproduce el audio: el video de YouTube queda oculto.
+
+**Cuando cambies la playlist en Spotify:**
+
+```bash
+npm run music:sync     # actualiza public/music/playlist.json
+git add public/music/playlist.json && git commit -m "chore(music): sync playlist"
+```
+
+- Solo busca las canciones nuevas; las que ya están conservan su video.
+- Si un video no corresponde, cambia su `youtubeId` a mano en `playlist.json` (no se sobrescribe).
+  Para volver a buscar una canción, borra su entrada.
+- Spotify entrega como máximo 100 canciones de la playlist por esta vía.
+- También se puede lanzar desde GitHub: *Actions → Sync music playlist → Run workflow*. YouTube a veces
+  bloquea las búsquedas desde servidores en la nube; en ese caso, ejecútalo en tu computadora.
+- Usa páginas públicas en lugar de las APIs oficiales, así que puede dejar de funcionar si Spotify o YouTube
+  cambian su página. La lista ya generada sigue funcionando igual.
+
+---
+
 ## 📂 Estructura del Proyecto
 
 ```text

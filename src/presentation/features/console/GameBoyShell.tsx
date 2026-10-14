@@ -10,7 +10,7 @@ interface GameBoyShellProps {
 /** A CSS-drawn retro handheld console shell — screen bezel, D-pad, A/B, start/select. */
 export const GameBoyShell: React.FC<GameBoyShellProps> = ({ children, onClose, title = 'DEV•BOY' }) => {
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
+    <div data-lenis-prevent className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-[360px] rounded-[28px] rounded-tr-[70px] p-5 pb-7 shadow-2xl"

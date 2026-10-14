@@ -466,7 +466,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
               </span>
               <span className="hidden sm:block w-1 h-1 rounded-full bg-slate-600 shrink-0" />
               <a
-                href="https://twitch.tv/anthony_pilatasig"
+                href="https://www.twitch.tv/anthonworld"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1 font-semibold hover:underline min-w-0"
@@ -474,7 +474,7 @@ export const ConsoleDashboard: React.FC<ConsoleDashboardProps> = ({ embeddedFull
                 title="Streams de game dev y arquitectura en Twitch"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#9146FF] animate-pulse shrink-0" />
-                <span className="truncate hidden sm:inline">twitch.tv/anthony_pilatasig</span>
+                <span className="truncate hidden sm:inline">twitch.tv/anthonworld</span>
                 <span className="sm:hidden">Twitch</span>
               </a>
             </div>

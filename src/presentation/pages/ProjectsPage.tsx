@@ -46,6 +46,8 @@ const Lightbox: React.FC<{ gallery: Gallery; onClose: () => void }> = ({ gallery
 
   return (
     <motion.div
+      // Lenis (smooth scroll) would otherwise swallow wheel events and scroll the page behind.
+      data-lenis-prevent
       className="fixed inset-0 z-[60] flex flex-col bg-black/90"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -130,6 +132,9 @@ const ProjectDetails: React.FC<{ project: IProject; onClose: () => void; onOpen:
 
   return (
     <motion.div
+      // Lenis (smooth scroll) would otherwise swallow wheel events, so the dialog wouldn't
+      // scroll and the page behind it would.
+      data-lenis-prevent
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

@@ -9,6 +9,10 @@ interface PixelCassetteProps {
   tapeCounter: number;
   /** Real cover art (playlist/album/track) — spins inside the reel hole once known. */
   coverArtUrl?: string;
+  /** Source badge on the label (e.g. SPOTIFY, YOUTUBE). */
+  sourceBadge?: string;
+  /** Text after the play state on the label, e.g. the playlist name. */
+  labelNote?: string;
 }
 
 // Reel hole: the real cover art spinning like a mini vinyl once we have one, falling
@@ -53,6 +57,8 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
   isPlaying,
   tapeCounter,
   coverArtUrl,
+  sourceBadge = 'SPOTIFY',
+  labelNote = 'LIKED SONGS',
 }) => {
   return (
     <div
@@ -85,12 +91,12 @@ export const PixelCassette: React.FC<PixelCassetteProps> = ({
         <div className="flex items-center justify-between text-[8px] font-mono font-black border-b border-slate-300 pb-0.5 mb-1">
           <div className="flex items-center gap-1">
             <span className="px-1 py-[1px] bg-[#10b981] text-black font-black rounded-[1px]">
-              SPOTIFY
+              {sourceBadge}
             </span>
             <span className="text-slate-600">C-60 • HQ</span>
           </div>
           <span className="text-emerald-700 font-bold">
-            {sideLabel ? `${sideLabel} · LIKED SONGS ♫` : 'LIKED SONGS ♫'}
+            {sideLabel ? `${sideLabel} · ${labelNote} ♫` : `${labelNote} ♫`}
           </span>
         </div>
 

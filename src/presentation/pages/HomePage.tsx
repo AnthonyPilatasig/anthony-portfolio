@@ -15,7 +15,6 @@ import { RevealText } from '@presentation/components/ui/RevealText';
 import { Magnetic } from '@presentation/components/ui/Magnetic';
 import { ProjectReel } from '@presentation/features/projects/ProjectReel';
 import { AnimeGridCanvas } from '@presentation/components/ui/AnimeGridCanvas';
-import { ArchitectureDiagram } from '@presentation/features/projects/ArchitectureDiagram';
 import { TwitchLiveStatus } from '@presentation/features/about/TwitchLiveStatus';
 import type { IProject } from '@domain/entities/portfolio.entity';
 
@@ -396,30 +395,7 @@ export const HomePage: React.FC = () => {
         </motion.div>
       </motion.section>
 
-      {/* ─── 04 / ARQUITECTURA & CQRS EN VIVO ─────────────────── */}
-      <motion.section
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: '-60px' }}
-        variants={stagger}
-        className="py-16 border-b border-[var(--theme-border)]"
-      >
-        <motion.div variants={fadeUp} className="mb-6">
-          <span className="section-index">04 / ARQUITECTURA</span>
-          <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
-            Diseño por capas y CQRS en .NET 8
-          </h2>
-          <p className="text-sm text-[var(--theme-ink-muted)] mt-1">
-            Recorre la estructura que uso en sistemas como <strong>GAcad</strong> y <strong>Mi ISTPET</strong>.
-          </p>
-        </motion.div>
-
-        <motion.div variants={fadeUp}>
-          <ArchitectureDiagram />
-        </motion.div>
-      </motion.section>
-
-      {/* ─── 05 / DOCENCIA ─── */}
+      {/* ─── 04 / DOCENCIA ─── */}
       <motion.section
         initial="hidden"
         whileInView="show"
@@ -429,7 +405,7 @@ export const HomePage: React.FC = () => {
       >
         <motion.div variants={fadeUp} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="section-index">05 / DOCENCIA</span>
+            <span className="section-index">04 / DOCENCIA</span>
             <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight">
               Enseño con casos reales, no solo con teoría
             </h2>
@@ -473,7 +449,7 @@ export const HomePage: React.FC = () => {
         className="py-16 border-b border-[var(--theme-border)]"
       >
         <motion.div variants={fadeUp}>
-          <span className="section-index">06 / {t('techShowcase.badge')}</span>
+          <span className="section-index">05 / {t('techShowcase.badge')}</span>
           <h2 className="text-2xl font-semibold text-[var(--theme-ink)] tracking-tight mb-8">
             {t('techShowcase.title')}
           </h2>
@@ -504,8 +480,8 @@ export const HomePage: React.FC = () => {
         variants={fadeUp}
         className="py-12 border-b border-[var(--theme-border)]"
       >
-        <span className="section-index mb-2 block">07 / COMUNIDAD &amp; STREAMING EN VIVO</span>
-        <TwitchLiveStatus channel="anthony_pilatasig" />
+        <span className="section-index mb-2 block">06 / COMUNIDAD &amp; STREAMING</span>
+        <TwitchLiveStatus channel="anthonworld" />
       </motion.section>
 
       {/* ─── 08 / GET IN TOUCH ────────────────────────── */}
@@ -516,7 +492,7 @@ export const HomePage: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="py-20"
       >
-        <span className="section-index">08 / {t('contact.badge')}</span>
+        <span className="section-index">07 / {t('contact.badge')}</span>
         <h2 className="text-3xl sm:text-4xl font-bold text-[var(--theme-ink)] tracking-tight mt-2 mb-6">
           ¿Trabajamos juntos?
         </h2>
